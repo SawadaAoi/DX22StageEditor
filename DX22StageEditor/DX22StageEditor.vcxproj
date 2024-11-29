@@ -236,10 +236,6 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TimeManager.cpp" />
-    <ClCompile Include="UIComponentBase.cpp" />
-    <ClCompile Include="UIComponentSprite.cpp" />
-    <ClCompile Include="UIComponentTransform.cpp" />
-    <ClCompile Include="UIObjectBase.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="WindowAPI.cpp" />
     <ClCompile Include="ModelStaticMake.cpp" />
@@ -312,11 +308,6 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TimeManager.h" />
-    <ClInclude Include="UIComponentBase.h" />
-    <ClInclude Include="UIComponentOrder.h" />
-    <ClInclude Include="UIComponentSprite.h" />
-    <ClInclude Include="UIComponentTransform.h" />
-    <ClInclude Include="UIObjectBase.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="VertexShader.h" />
@@ -388,7 +379,6 @@
     <None Include="ImGui\imgui.ini" />
     <None Include="ObjectBase.inl" />
     <None Include="SceneBase.inl" />
-    <None Include="UIObjectBase.inl" />
     <None Include="Vector2.inl" />
     <None Include="Vector3.inl" />
   </ItemGroup>

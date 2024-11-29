@@ -48,28 +48,6 @@ void SceneGameTest::InitLocal()
 	m_StaticPlane->AddChildObject(AddSceneObject<ObjectGround>("Ground"));
 	m_StaticPlane->AddChildObject(AddSceneObject<ObjectGround>("Ground"));
 
-
-	UIObjectBase* UI_1 =  AddUIObject<UIObjectBase>("UIObject");
-	UI_1->AddComponent<UIComponentSprite>();
-
-	UI_1->GetComponent<UIComponentTransform>()->SetLocalPosition(Vector2<float>(0.0f, 0.0f));
-	UI_1->GetComponent<UIComponentTransform>()->SetLocalScale(Vector2<float>(100.0f, 100.0f));
-
-	UI_1->GetComponent<UIComponentSprite>()->SetIsVisible(false);
-
-	UIObjectBase* UI_2 = AddUIObject<UIObjectBase>("UIObject2");
-	UI_2->AddComponent<UIComponentSprite>();
-
-	UI_2->GetComponent<UIComponentTransform>()->SetLocalPosition(Vector2<float>(-100.0f, 0.0f));
-	UI_2->GetComponent<UIComponentTransform>()->SetLocalScale(Vector2<float>(0.5f, 0.5f));
-	UI_2->GetComponent<UIComponentSprite>()->SetIsVisible(false);
-
-
-	UI_1->AddChildObject(UI_2);
-	AddSceneObject<ObjectCamera>("Camera");
-
-	ObjectCamera* pCamera = AddSceneObject<ObjectCamera>("Camera");
-	pCamera->GetComponent<ComponentTransform>()->SetLocalPosition(Vector3(-3.0f, 3.0f, -5.0f));
 }
 
 void SceneGameTest::UpdateLocal()

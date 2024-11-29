@@ -22,7 +22,6 @@ SceneBase::SceneBase()
 	: m_bIsUpdating(false)	// 更新中フラグを初期化
 	, m_pObjects()			// シーンに所属するオブジェクト一覧
 	, m_pStandbyObjects()	// オブジェクトを一時的に保存しておく配列
-	, m_pUIObjects()		// シーンに所属するUIオブジェクト一覧
 	, m_pObjectCollision()	// 各オブジェクトが持つ衝突判定コンポーネント
 {
 }
@@ -36,13 +35,11 @@ void SceneBase::Init()
 {
 #ifdef _DEBUG
 	InitObjectList();
-	InitUIList();
 #endif // _DEBUG
 
 	// クリア
 	m_pObjects.clear();			// シーンに所属するオブジェクト一覧
 	m_pStandbyObjects.clear();	// オブジェクトを一時的に保存しておく配列
-	m_pUIObjects.clear();		// シーンに所属するUIオブジェクト一覧
 	InitLocal();				// 個別初期化処理
 
 	CAMERA_MNG_INST.Init(this);	// シーンのカメラを初期化
@@ -64,13 +61,6 @@ void SceneBase::Uninit()
 
 #endif // _DEBUG
 
-
-	// 所持UIオブジェクト配列の全要素を削除
-	for (auto& pObject : m_pUIObjects)
-	{
-		pObject->Uninit();
-	}
-	m_pUIObjects.clear();	// クリア
 
 	// 所持オブジェクト配列の全要素を削除
 	for (auto& pObject : m_pObjects)
@@ -136,12 +126,6 @@ void SceneBase::Update()
 		}
 	}
 
-	// 所持UIオブジェクト配列の全要素を更新
-	for (auto& pObject : m_pUIObjects)
-	{
-		pObject->Update();
-	}
-
 
 	UpdateLocal();	// 個別更新処理
 }
@@ -157,12 +141,6 @@ void SceneBase::Draw()
 	for (auto& pObject : m_pObjects)
 	{
 		pObject->Draw();	
-	}
-
-	// 所持UIオブジェクト配列の全要素を描画
-	for (auto& pUIObject : m_pUIObjects)
-	{
-		pUIObject->Draw();
 	}
 
 	DrawLocal();	// 個別描画処理
@@ -334,58 +312,6 @@ void SceneBase::InitObjectInfo(std::string sName)
 	}
 }
 
-/* ========================================
-	ウィンドウ初期化(UIオブジェクト一覧)関数
-	-------------------------------------
-	内容：UIオブジェクト一覧の初期化を行う
-=========================================== */
-void SceneBase::InitUIList()
-{
-	DebugUI::Item::ConstCallback  FuncListClick = [this](const void* arg) {
-		// クリックされたオブジェクトの情報を表示
-
-		std::string sUIName = reinterpret_cast<const char*>(arg);
-
-		// 名前に"L"が含まれている場合(子オブジェクトの場合)
-		if (sUIName.find(DebugUI::CHILD_HEAD_TEXT) != std::string::npos)
-		{
-			// "L"を除去した名前に変換
-			int nHeadTextCnt = sUIName.find(DebugUI::CHILD_HEAD_TEXT);
-			sUIName = sUIName.substr(nHeadTextCnt + DebugUI::CHILD_HEAD_TEXT.size());
-		}
-
-		InitUIInfo(sUIName);
-	};
-
-	DebugUI::Item* pList = DebugUI::Item::CreateList(ITEM_UI_LIST_NAME.c_str(), FuncListClick, false);
-	WIN_UI_LIST.AddItem(pList);
-}
-
-/* ========================================
-	ウィンドウ初期化(UIオブジェクト情報)関数
-	-------------------------------------
-	内容：UIオブジェクト情報の初期化を行う
-		　※一覧のオブジェクト名をクリックする度呼ばれる
-	-------------------------------------
-	引数：string UIオブジェクト名
-=========================================== */
-void SceneBase::InitUIInfo(std::string sName)
-{
-	using namespace DebugUI;
-
-	WIN_UI_INFO.Clear();	// 表示リセット
-
-	// 名前が一致するオブジェクトを検索
-	for (auto& pUI : m_pUIObjects)
-	{
-		if (pUI->GetName() == sName)
-		{
-			// オブジェクト情報を表示
-			pUI->Debug();
-			break;
-		}
-	}
-}
 
 
 #endif

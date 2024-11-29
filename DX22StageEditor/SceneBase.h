@@ -45,13 +45,6 @@ public:
 	template<typename T>
 	std::vector<T*> GetSceneObjects();		// オブジェクト取得
 
-	// UIオブジェクト関連
-	template<typename T>
-	T* AddUIObject(std::string sName);	// UIオブジェクト追加
-	template<typename T>
-	T* GetUIObject(std::string sName);	// UIオブジェクト取得
-	template<typename T>
-	std::vector<T*> GetUIObjects();		// UIオブジェクト取得
 
 
 	// 衝突判定関連
@@ -67,8 +60,6 @@ private:
 #ifdef _DEBUG
 	void InitObjectList();
 	void InitObjectInfo(std::string sName);
-	void InitUIList();
-	void InitUIInfo(std::string sName);
 #endif // _DEBUG
 private:
 	std::string CreateUniqueName(std::string sName);	// 名前が重複している場合は連番を付ける
@@ -76,7 +67,6 @@ private:
 	std::vector<std::unique_ptr<ObjectBase>>	m_pObjects;			// シーンに所属するオブジェクト一覧
 	std::vector<std::unique_ptr<ObjectBase>>	m_pStandbyObjects;	// オブジェクトを一時的に保存しておく配列
 	std::vector<ComponentCollisionBase*>		m_pObjectCollision;	// 各オブジェクトが持つ衝突判定コンポーネント
-	std::vector<std::unique_ptr<UIObjectBase>>	m_pUIObjects;		// シーンに所属するUIオブジェクト一覧
 
 	bool m_bIsUpdating;	// 更新中かどうか
 

@@ -111,21 +111,6 @@
     <Filter Include="ソース ファイル\ImGui">
       <UniqueIdentifier>{7db26d3c-735f-4fe8-b7e5-f107b6971c18}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\App\UI">
-      <UniqueIdentifier>{d7509e90-3fa8-4ed4-b777-aef575dc4ef7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\App\UI\Object">
-      <UniqueIdentifier>{45951ca2-d78b-4edd-b9ee-8f89cfd94a3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\App\UI\Object\0_Super">
-      <UniqueIdentifier>{acd247e3-4dbb-4551-938f-57768022be07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\App\UI\Component">
-      <UniqueIdentifier>{ea6f310b-7f5a-4588-9456-c5c08e1661a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\App\UI\Component\0_Super">
-      <UniqueIdentifier>{5cda0377-2022-49be-9c3f-8898e23f0eb3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\App\Component\Ground">
       <UniqueIdentifier>{3f221bb8-7898-4775-8b9c-a9036af8b9f4}</UniqueIdentifier>
     </Filter>
@@ -298,18 +283,6 @@
     </ClCompile>
     <ClCompile Include="DebugWindowSetting.cpp">
       <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="UIComponentBase.cpp">
-      <Filter>ソース ファイル\App\UI\Component\0_Super</Filter>
-    </ClCompile>
-    <ClCompile Include="UIObjectBase.cpp">
-      <Filter>ソース ファイル\App\UI\Object\0_Super</Filter>
-    </ClCompile>
-    <ClCompile Include="UIComponentTransform.cpp">
-      <Filter>ソース ファイル\App\UI\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="UIComponentSprite.cpp">
-      <Filter>ソース ファイル\App\UI\Component</Filter>
     </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
@@ -529,20 +502,8 @@
     <ClInclude Include="DebugWindowSetting.h">
       <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
     </ClInclude>
-    <ClInclude Include="UIComponentBase.h">
-      <Filter>ソース ファイル\App\UI\Component\0_Super</Filter>
-    </ClInclude>
-    <ClInclude Include="UIObjectBase.h">
-      <Filter>ソース ファイル\App\UI\Object\0_Super</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectTag.h">
       <Filter>ソース ファイル\App\GameObject\0_Super</Filter>
-    </ClInclude>
-    <ClInclude Include="UIComponentTransform.h">
-      <Filter>ソース ファイル\App\UI\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="UIComponentSprite.h">
-      <Filter>ソース ファイル\App\UI\Component</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
       <Filter>ソース ファイル\Manager</Filter>
@@ -579,9 +540,6 @@
     </ClInclude>
     <ClInclude Include="ComponentOrder.h">
       <Filter>ソース ファイル\App\Component\0_Super</Filter>
-    </ClInclude>
-    <ClInclude Include="UIComponentOrder.h">
-      <Filter>ソース ファイル\App\UI\Component\0_Super</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -631,9 +589,6 @@
     </None>
     <None Include="ImGui\imgui.ini">
       <Filter>ソース ファイル\ImGui</Filter>
-    </None>
-    <None Include="UIObjectBase.inl">
-      <Filter>ソース ファイル\App\UI\Object\0_Super</Filter>
     </None>
   </ItemGroup>
 </Project>

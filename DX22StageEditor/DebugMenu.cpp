@@ -58,7 +58,7 @@ void Menu::Init()
 	IMGUI_CHECKVERSION();	// ImGuiライブラリとアプリケーションコードの間で互換性があるか確認
 	ImGui::CreateContext();	// ImGuiコンテキストの作成(ウィジェットの状態、スタイル、データを保持)
 
-
+	
 	ImGuiIO& io = ImGui::GetIO();
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	// キーボード入力
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// ゲームパッド入力
@@ -211,7 +211,7 @@ void Menu::Draw()
 		{
 			// ウィンドウ内の描画開始-------------------------------------
 			ImGui::Begin(windowIt->name.c_str());
-
+			//ImGui::Begin(windowIt->name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);	// 大きさ、位置固定
 			// アイテムごとに描画
 			auto itemIt = windowIt->items.begin();
 			while (itemIt != windowIt->items.end())
