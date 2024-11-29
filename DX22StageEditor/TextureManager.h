@@ -1,0 +1,62 @@
+/* ========================================
+	DX22/Dropin
+	------------------------------------
+	画像データ管理用ヘッダ
+	------------------------------------
+	説明:画像データをまとめて読み込んで管理する
+	------------------------------------
+	TextureManager.h
+========================================== */
+#pragma once
+
+// =============== インクルード ===================
+#include "Texture.h"
+#include <vector>
+#include <unordered_map>
+#include <memory>
+#include <string>
+
+// =============== 定数定義 =======================
+#define TEX_KEY				TextureManager::E_TEX_KEY	// キー省略
+#define GET_TEXTURE_DATA	TextureManager::GetInstance().GetTextureData	// 文章省略
+#define TEXTURE_MNG_INST TextureManager::GetInstance()	// インスタンス取得
+
+class TextureManager
+{
+public:
+	// モデルデータ種類
+	enum E_TEX_KEY
+	{
+		TEST,			// テスト画像
+		TEST2,			// 
+		CAMERA_ICON,	// デバッグ用カメラアイコン
+		MAX,
+	};
+
+	// 画像データ保存先パス
+	const std::unordered_map < TextureManager::E_TEX_KEY, std::string > MODEL_TEX_PATH
+	{
+		{TEX_KEY::TEST,			"Assets/Texture/Test.png"			},	// テスト画像
+		{TEX_KEY::TEST2,		"Assets/Texture/Star.png"			},
+		{TEX_KEY::CAMERA_ICON,	"Assets/Texture/Debug_Camera_Icon.png"	},
+
+
+	};
+
+public:
+	static TextureManager& GetInstance();
+	void Init();
+
+	// ゲッター
+	Texture* GetTextureData(E_TEX_KEY e_GetKey);
+
+	std::unordered_map <E_TEX_KEY, std::shared_ptr<Texture>> GetTextureDatas();
+	std::unordered_map <E_TEX_KEY, std::string> GetTexturePaths();
+private:
+	TextureManager();
+private:
+	std::unordered_map <E_TEX_KEY, std::shared_ptr<Texture>> m_apTextureDatas;	// モデルデータを格納しておく
+	bool bIsInit;
+
+};
+

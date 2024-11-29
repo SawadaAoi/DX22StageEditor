@@ -1,0 +1,513 @@
+/* ========================================
+	DX22Base/
+	------------------------------------
+	オブジェクト用cpp
+	------------------------------------
+	ObjectBase.cpp
+========================================== */
+
+// =============== インクルード =====================
+#include "ObjectBase.h"
+#include "ComponentBase.h"
+#include <windows.h>
+#include "ComponentTransform.h"
+#include "DebugMenu.h"
+
+/* ========================================
+	コンストラクタ関数
+	-------------------------------------
+	内容：初期化
+	-------------------------------------
+	引数1：所有シーン
+=========================================== */
+ObjectBase::ObjectBase(SceneBase* pScene)
+	: m_pOwnerScene(pScene)				// 所有シーンを設定
+	, m_eState(E_State::STATE_ACTIVE)	// 状態をアクティブに設定
+	, m_pParentObj(nullptr)				// 親オブジェクトをnullptrに設定
+	, m_pChildObjs()					// 子オブジェクト配列を初期化
+	, m_pComponents()					// コンポーネント配列を初期化
+	, m_eTag(E_ObjectTag::None)			// タグをNoneに設定
+	, m_sName("NoName")					// オブジェクト名をNoNameに設定
+{
+	// 所有者オブジェクトがnullptrの場合はエラーを出力
+	if (pScene == nullptr)
+	{
+		OutputDebugStringA("ObjectBase::ObjectBase() : 所有シーンがnullptrです。\n");
+	}
+
+}
+
+/* ========================================
+	初期化関数
+	-------------------------------------
+	内容：初期化処理
+	-------------------------------------
+	引数：オブジェクト名
+=========================================== */
+void ObjectBase::Init(std::string sName)
+{
+	m_pComponents.clear();	// クリア
+	SetName(sName);			// オブジェクト名を設定
+	InitDefaultComponent();	// デフォルトコンポーネント追加
+
+	InitLocal();	// 個別初期化処理
+}
+
+/* ========================================
+	終了関数
+	-------------------------------------
+	内容：終了処理
+=========================================== */
+void ObjectBase::Uninit()
+{
+	// 所持コンポーネント配列の全要素を削除
+	for (auto& pComponent : m_pComponents)
+	{
+		pComponent->Uninit();
+		pComponent.reset();	// メモリ解放
+
+	}
+	m_pComponents.clear();	// クリア
+
+	UninitLocal();	// 個別終了処理
+}
+
+/* ========================================
+	更新関数
+	-------------------------------------
+	内容：更新処理
+=========================================== */
+void ObjectBase::Update()
+{
+	// 所持コンポーネント配列の全要素を更新
+	for (auto& pComponent : m_pComponents)
+	{
+		pComponent->Update();
+	}
+
+	UpdateLocal();	// 個別更新処理
+
+	// 子オブジェクトの更新
+	for (auto pChildObj : m_pChildObjs)
+	{
+		pChildObj->Update();
+	}
+}
+
+/* ========================================
+	描画関数
+	-------------------------------------
+	内容：描画処理
+=========================================== */
+void ObjectBase::Draw()
+{
+	// 所持コンポーネント配列の全要素を描画
+	for (auto& pComponent : m_pComponents)
+	{
+		pComponent->Draw();
+	}
+
+	DrawLocal();	// 個別描画処理
+}
+
+
+/* ========================================
+	デフォルトコンポーネント追加関数
+	-------------------------------------
+	内容：オブジェクトにデフォルトで持たせる
+		　コンポーネントを追加する
+=========================================== */
+void ObjectBase::InitDefaultComponent()
+{
+	AddComponent<ComponentTransform>();	// Transformコンポーネントを追加	
+}
+
+/* ========================================
+	衝突開始処理関数
+	-------------------------------------
+	内容：他オブジェクトと衝突した際に呼ばれる
+	-------------------------------------
+	引数1：衝突したオブジェクト
+=========================================== */
+void ObjectBase::OnCollisionEnter(ObjectBase* pHit)
+{
+	// 継承して各オブジェクトで処理を記述
+}
+
+/* ========================================
+	衝突中処理関数
+	-------------------------------------
+	内容：他オブジェクトと衝突している間呼ばれる
+	-------------------------------------
+	引数1：衝突しているオブジェクト
+=========================================== */
+void ObjectBase::OnCollisionStay(ObjectBase* pHit)
+{
+	// 継承して各オブジェクトで処理を記述
+}
+
+/* ========================================
+	衝突終了処理関数
+	-------------------------------------
+	内容：他オブジェクトと衝突が終了した際に呼ばれる
+	-------------------------------------
+	引数1：衝突が終了したオブジェクト
+=========================================== */
+void ObjectBase::OnCollisionExit(ObjectBase* pHit)
+{
+	// 継承して各オブジェクトで処理を記述
+
+}
+
+/* ========================================
+	親オブジェクト設定関数
+	-------------------------------------
+	内容：親オブジェクトを設定する
+	-------------------------------------
+	引数1：親に設定するオブジェクト
+=========================================== */
+void ObjectBase::SetParentObject(ObjectBase* pParentObj)
+{
+	// 既に親オブジェクトが設定されている場合
+	if (m_pParentObj != nullptr)
+	{
+		// 親オブジェクトから自身を削除
+		m_pParentObj->RemoveChildObject(this);
+	}
+
+#ifdef _DEBUG
+
+	// 削除するオブジェクト名をリストから削除
+	ITEM_OBJ_LIST.RemoveListItem(this->GetName().c_str(), DebugUI::CHILD_HEAD_TEXT);
+
+	m_pParentObj = pParentObj;	// 自オブジェクトの更新
+
+	// 親オブジェクトのリスト番号取得
+	int nParentNum = ITEM_OBJ_LIST.GetListNo(m_pParentObj->GetListName().c_str()) + 1;
+
+	// オブジェクト一覧リストで親オブジェクトの下に追加
+	ITEM_OBJ_LIST.InsertListItem(this->GetListName().c_str(), nParentNum);
+
+	// 子オブジェクトを持っている場合
+	for (auto& pChild : m_pChildObjs)
+	{
+		// 子オブジェクトの親を更新(リストの表示を更新するため)
+		pChild->SetParentObject(this);	
+	}
+#else
+	m_pParentObj = pParentObj;	// 自オブジェクトの更新
+
+#endif // _DEBUG
+
+	// 既に親オブジェクトが更新済みかチェック
+	// ※子オブジェクト追加関数から呼び出された場合
+	for (auto& pChild : m_pParentObj->m_pChildObjs)
+	{
+		if (pChild == this)
+		{
+			return;
+		}
+	}
+
+
+	m_pParentObj->AddChildObject(this);	// 親オブジェクトの更新
+}
+
+/* ========================================
+	子オブジェクト追加関数
+	-------------------------------------
+	内容：子オブジェクトを追加する
+	-------------------------------------
+	引数1：子オブジェクトにするオブジェクト
+=========================================== */
+void ObjectBase::AddChildObject(ObjectBase* pChildObj)
+{
+	// 既に子オブジェクトに登録されている場合は追加しない
+	for (auto& pChild : m_pChildObjs)
+	{
+		if (pChild == pChildObj)
+		{
+			return;
+		}
+	}
+	m_pChildObjs.push_back(pChildObj);	// 自オブジェクトの更新
+
+	// 既に子オブジェクトが更新済みかチェック
+	// ※親オブジェクト設定関数から呼び出された場合
+	if (pChildObj->GetParentObject() != this)	
+	{
+		pChildObj->SetParentObject(this);	// 子オブジェクトの更新
+	}
+}
+
+/* ========================================
+	親オブジェクト解除関数
+	-------------------------------------
+	内容：親オブジェクトを解除する
+=========================================== */
+void ObjectBase::RemoveParentObject()
+{
+	// 親オブジェクトがない場合は処理しない
+	if (m_pParentObj == nullptr) return;
+
+	m_pParentObj->RemoveChildObject(this);	// 親オブジェクトから自身を削除
+	m_pParentObj = nullptr;					// 親オブジェクトを空に設定
+	GetComponent<ComponentTransform>()->ClearParent();	// Transformコンポーネントの親解除処理
+
+#ifdef _DEBUG
+
+	ITEM_OBJ_LIST.RemoveListItem(this->GetName().c_str(), DebugUI::CHILD_HEAD_TEXT);
+
+	// オブジェクト一覧の一番下に追加
+	ITEM_OBJ_LIST.AddListItem(this->GetListName().c_str());
+
+#endif
+}
+
+/* ========================================
+	子オブジェクト削除関数
+	-------------------------------------
+	内容：子オブジェクトを削除する
+	-------------------------------------
+	引数1：削除する子オブジェクト
+=========================================== */
+void ObjectBase::RemoveChildObject(ObjectBase* pChildObj)
+{
+	// 子オブジェクトを検索して配列から削除
+	m_pChildObjs.erase(
+		std::remove(m_pChildObjs.begin(), m_pChildObjs.end(), pChildObj), m_pChildObjs.end());
+
+	
+	pChildObj->m_pParentObj = nullptr;								// 親オブジェクトを空に設定
+	pChildObj->GetComponent<ComponentTransform>()->ClearParent();	// Transformコンポーネントの親解除処理
+
+#ifdef _DEBUG
+
+	ITEM_OBJ_LIST.RemoveListItem(pChildObj->GetName().c_str(), DebugUI::CHILD_HEAD_TEXT);
+
+	// オブジェクト一覧の一番下に追加
+	ITEM_OBJ_LIST.AddListItem(pChildObj->GetListName().c_str());
+
+#endif
+}
+
+/* ========================================
+	全子オブジェクト削除関数
+	-------------------------------------
+	内容：全子オブジェクトを削除する
+=========================================== */
+void ObjectBase::RemoveAllChildObjects()
+{
+	// 子オブジェクトを全て配列から削除
+	for (auto pChild : m_pChildObjs)
+	{
+		pChild->m_pParentObj = nullptr;								// 親オブジェクトを空に設定
+		pChild->GetComponent<ComponentTransform>()->ClearParent();	// Transformコンポーネントの親解除処理
+
+#ifdef _DEBUG
+
+		ITEM_OBJ_LIST.RemoveListItem(pChild->GetName().c_str(), DebugUI::CHILD_HEAD_TEXT);
+
+		// オブジェクト一覧の一番下に追加
+		ITEM_OBJ_LIST.AddListItem(pChild->GetListName().c_str());
+
+#endif
+	}
+	m_pChildObjs.clear();
+}
+
+/* ========================================
+	世代数取得関数
+	-------------------------------------
+	内容：自身の世代数を取得する
+	-------------------------------------
+	戻り値：世代数
+=========================================== */
+int ObjectBase::GetGenerationCount()
+{
+	// 親オブジェクトがない場合
+	if (m_pParentObj == nullptr)
+	{
+		return 0;
+	}
+	else
+	{
+		return m_pParentObj->GetGenerationCount() + 1;
+	}
+}
+
+
+/* ========================================
+	ゲッター(所持シーン)関数
+	-------------------------------------
+	戻値：所有シーンのポインタ
+=========================================== */
+SceneBase* ObjectBase::GetOwnerScene() const
+{
+	return m_pOwnerScene;
+}
+
+/* ========================================
+	ゲッター(状態)関数
+	-------------------------------------
+	戻値：状態
+=========================================== */
+ObjectBase::E_State ObjectBase::GetState() const
+{
+	return m_eState;
+}
+
+/* ========================================
+	ゲッター(オブジェクトID)関数
+	-------------------------------------
+	戻値：オブジェクトID
+=========================================== */
+size_t ObjectBase::GetTypeID() const
+{
+	return GetStaticTypeID();
+}
+
+/* ========================================
+	ゲッター(静的オブジェクトID)関数
+	-------------------------------------
+	戻値：静的オブジェクトID
+=========================================== */
+size_t ObjectBase::GetStaticTypeID()
+{
+	return reinterpret_cast<size_t>(&GetStaticTypeID);
+}
+
+/* ========================================
+	ゲッター(親オブジェクト)関数
+	-------------------------------------
+	戻値：親オブジェクトのポインタ
+=========================================== */
+ObjectBase* ObjectBase::GetParentObject() const
+{
+	return m_pParentObj;
+}
+
+
+/* ========================================
+	ゲッター(子オブジェクト)関数
+	-------------------------------------
+	戻値：子オブジェクト配列
+=========================================== */
+std::vector<ObjectBase*> ObjectBase::GetChildObjects() const
+{
+	return m_pChildObjs;
+}
+
+/* ========================================
+	ゲッター(タグ)関数
+	-------------------------------------
+	戻値：タグ
+=========================================== */
+E_ObjectTag ObjectBase::GetTag() const
+{
+	return m_eTag;
+}
+
+/* ========================================
+	ゲッター(オブジェクト名)関数
+	-------------------------------------
+	戻値：オブジェクト名
+=========================================== */
+std::string ObjectBase::GetName() const
+{
+	return m_sName;
+}
+
+/* ========================================
+	セッター(状態)関数
+	-------------------------------------
+	引数1：状態
+=========================================== */
+void ObjectBase::SetState(E_State eState)
+{
+	m_eState = eState;
+}
+
+/* ========================================
+	セッター(タグ)関数
+	-------------------------------------
+	引数1：タグ
+=========================================== */
+void ObjectBase::SetTag(E_ObjectTag eTag)
+{
+	m_eTag = eTag;
+}
+
+/* ========================================
+	セッター(オブジェクト名)関数
+	-------------------------------------
+	引数1：オブジェクト名
+=========================================== */
+void ObjectBase::SetName(std::string sName)
+{
+	m_sName = sName;
+}
+
+
+
+
+#ifdef _DEBUG
+/* ========================================
+	デバッグ用関数
+	-------------------------------------
+	内容：デバッグ用の処理
+		　例：オブジェクト情報(所持コンポーネント等)の表示
+=========================================== */
+void ObjectBase::Debug()
+{
+	DebugUI::Window& pObjInfo = WIN_OBJ_INFO;
+
+	// オブジェクト詳細情報を更新
+	pObjInfo.AddItem(DebugUI::Item::CreateValue("ObjectName", DebugUI::Item::Text, false));	// 名前
+	pObjInfo["ObjectName"].SetText(this->GetName().c_str());							// オブジェクト名を設定
+
+	// 各コンポーネント情報をオブジェクト情報ウィンドウに表示
+	auto it = m_pComponents.begin();
+	while (it != m_pComponents.end())
+	{
+		(*it)->Debug(pObjInfo);
+		++it;
+	}
+}
+
+/* ========================================
+	リスト表示名取得関数
+	-------------------------------------
+	内容：リスト表示用の名前を取得する
+	-------------------------------------
+	戻り値：リスト表示用の名前
+=========================================== */
+std::string ObjectBase::GetListName()
+{
+	std::string sName;							// リスト表示名
+	int nGeneCnt = this->GetGenerationCount();	// 世代数取得
+	
+	// 親オブジェクトがある場合
+	if (nGeneCnt > 0)
+	{
+		// 世代数分のスペースを追加(表示を段階的にするため)
+		for (int i = 0; i < nGeneCnt; i++)
+		{
+			sName += DebugUI::CHILD_HEAD_SPACE;
+		}
+		sName += DebugUI::CHILD_HEAD_TEXT + this->GetName();
+	}
+	// 無い場合はそのまま表示
+	else
+	{
+		sName = this->GetName();
+	}
+
+	return sName;
+}
+
+#endif // _DEBUG
+
+
+
+

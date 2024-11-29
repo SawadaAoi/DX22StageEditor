@@ -1,0 +1,639 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\System">
+      <UniqueIdentifier>{4e17ff4f-a004-4e4a-9470-879b9af60429}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App">
+      <UniqueIdentifier>{2c3db676-bf36-4efc-a80a-29f79c26d16f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\PixelShader">
+      <UniqueIdentifier>{a9755fd2-e8f8-4e2e-854e-68fcfb6a9b68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\VertexShader">
+      <UniqueIdentifier>{e4c96e83-672c-4720-aa96-8ee0c9525558}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DirectX">
+      <UniqueIdentifier>{4e65b264-f84d-4758-867f-457aeb6ce2e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Model">
+      <UniqueIdentifier>{590ff50c-7511-4199-b469-b28ef39ebeb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Camera">
+      <UniqueIdentifier>{e660287a-f4fb-495b-9981-40a4e8b25ec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\WindowAPI">
+      <UniqueIdentifier>{94be1c73-a0ed-4d7c-ae64-5416431a2d26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DirectX\View">
+      <UniqueIdentifier>{6c2fae60-0789-408f-99b0-a5cbc004c330}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Shape">
+      <UniqueIdentifier>{afca91df-9103-444d-8c7b-380eebaeffab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Shape\Super">
+      <UniqueIdentifier>{d072c312-85f2-4cf6-878b-5a638da1c847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DirectX\Shader">
+      <UniqueIdentifier>{3d021c32-716e-4d2a-b527-1d2c9713d27e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DirectX\Shader\Super">
+      <UniqueIdentifier>{23d3c3a9-2abb-4915-b924-642c99c60efa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Debug">
+      <UniqueIdentifier>{758d8947-35bd-4835-b6c9-815ccd5e22df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component">
+      <UniqueIdentifier>{a9449099-59fb-4344-831d-54eebe1916bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject">
+      <UniqueIdentifier>{f4f8c27a-9983-410c-a484-7f1c27f2b5f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Scene">
+      <UniqueIdentifier>{29dd6011-d701-4220-b214-6ee8b0f0a4d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Utilities">
+      <UniqueIdentifier>{87958971-2d61-4168-bb20-fb48500a043b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Utilities\Vector">
+      <UniqueIdentifier>{ec2ea53d-dec9-42aa-b192-faf3d4869c16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Utilities\Constant">
+      <UniqueIdentifier>{85141e2a-d565-4ba5-bafb-7401b100f2b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Time">
+      <UniqueIdentifier>{f6313675-3c3f-4391-91f8-a748f1be0802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Input">
+      <UniqueIdentifier>{a42612b8-f147-45c9-ba01-071e070df9bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Camera">
+      <UniqueIdentifier>{b539b08a-deaf-4c1f-b2c3-e304e05c8852}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Manager">
+      <UniqueIdentifier>{2c798582-218b-4ea5-913f-0967b772ab9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Collision">
+      <UniqueIdentifier>{951b9a7d-6b7a-45f8-8e3f-0715f1268108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\0_Super">
+      <UniqueIdentifier>{3c39bcfc-fb04-48a3-979b-37be7d10ddce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\0_Super">
+      <UniqueIdentifier>{5892e6a7-39ec-4aba-917b-8cbb5787ca27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Scene\0_Super">
+      <UniqueIdentifier>{cf56b238-8ca2-4b55-83da-0a7c2a5315f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Collision\0_Super">
+      <UniqueIdentifier>{4c5ad1b1-8ae2-47fb-a8e2-2259274981af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Camera\0_Super">
+      <UniqueIdentifier>{d3cc2aaa-1774-4957-8019-9cc7aed6335f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DirectX\View\0_Super">
+      <UniqueIdentifier>{f7580663-27bd-4330-b952-2f05f160626e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Player">
+      <UniqueIdentifier>{816ab1e8-dafb-4cec-b592-457cfbdefe8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Debug\DebugImGui">
+      <UniqueIdentifier>{dcb8e429-9346-49ca-bf03-668ccea97843}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ImGui">
+      <UniqueIdentifier>{7db26d3c-735f-4fe8-b7e5-f107b6971c18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\UI">
+      <UniqueIdentifier>{d7509e90-3fa8-4ed4-b777-aef575dc4ef7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\UI\Object">
+      <UniqueIdentifier>{45951ca2-d78b-4edd-b9ee-8f89cfd94a3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\UI\Object\0_Super">
+      <UniqueIdentifier>{acd247e3-4dbb-4551-938f-57768022be07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\UI\Component">
+      <UniqueIdentifier>{ea6f310b-7f5a-4588-9456-c5c08e1661a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\UI\Component\0_Super">
+      <UniqueIdentifier>{5cda0377-2022-49be-9c3f-8898e23f0eb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Ground">
+      <UniqueIdentifier>{3f221bb8-7898-4775-8b9c-a9036af8b9f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Visual">
+      <UniqueIdentifier>{3503a0e1-8cb2-418c-9698-e7c6a95b27c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Model">
+      <UniqueIdentifier>{72090c30-ccb4-4d29-926f-c5de99561356}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Model\Static">
+      <UniqueIdentifier>{d78718fd-3d7a-41c0-a49b-5d2ad9cbb85d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Model\Anime">
+      <UniqueIdentifier>{78e47fff-a5ba-42ff-80ad-d7aa47044da2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AppController.cpp">
+      <Filter>ソース ファイル\App</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshBuffer.cpp">
+      <Filter>ソース ファイル\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXManager.cpp">
+      <Filter>ソース ファイル\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="AppStart.cpp">
+      <Filter>ソース ファイル\System\WindowAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowAPI.cpp">
+      <Filter>ソース ファイル\System\WindowAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencil.cpp">
+      <Filter>ソース ファイル\DirectX\View</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>ソース ファイル\DirectX\View</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>ソース ファイル\DirectX\View\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeBase.cpp">
+      <Filter>ソース ファイル\System\Shape\Super</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>ソース ファイル\DirectX\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>ソース ファイル\DirectX\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>ソース ファイル\DirectX\Shader\Super</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugConsole.cpp">
+      <Filter>ソース ファイル\System\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeBox.cpp">
+      <Filter>ソース ファイル\System\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeSphere.cpp">
+      <Filter>ソース ファイル\System\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>ソース ファイル\App\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGameTest.cpp">
+      <Filter>ソース ファイル\App\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneBase.cpp">
+      <Filter>ソース ファイル\App\Scene\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectBase.cpp">
+      <Filter>ソース ファイル\App\GameObject\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectPlayer.cpp">
+      <Filter>ソース ファイル\App\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentBase.cpp">
+      <Filter>ソース ファイル\App\Component\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTransform.cpp">
+      <Filter>ソース ファイル\App\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GridLine.cpp">
+      <Filter>ソース ファイル\System\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeLine.cpp">
+      <Filter>ソース ファイル\System\Shape\Super</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>ソース ファイル\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>ソース ファイル\System\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>ソース ファイル\System\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>ソース ファイル\System\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerDirectInput.cpp">
+      <Filter>ソース ファイル\System\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectCamera.cpp">
+      <Filter>ソース ファイル\App\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCameraDebug.cpp">
+      <Filter>ソース ファイル\App\Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>ソース ファイル\System\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCollisionBase.cpp">
+      <Filter>ソース ファイル\App\Component\Collision\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCameraBase.cpp">
+      <Filter>ソース ファイル\App\Component\Camera\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCollisionAABB.cpp">
+      <Filter>ソース ファイル\App\Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCollisionSphere.cpp">
+      <Filter>ソース ファイル\App\Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCollisionOBB.cpp">
+      <Filter>ソース ファイル\App\Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapePlane.cpp">
+      <Filter>ソース ファイル\System\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectGround.cpp">
+      <Filter>ソース ファイル\App\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentGroundRaycast.cpp">
+      <Filter>ソース ファイル\App\Component\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRigidbody.cpp">
+      <Filter>ソース ファイル\App\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentPlayerController.cpp">
+      <Filter>ソース ファイル\App\Component\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugMenu.cpp">
+      <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugItem.cpp">
+      <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugWindow.cpp">
+      <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugWindowSetting.cpp">
+      <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="UIComponentBase.cpp">
+      <Filter>ソース ファイル\App\UI\Component\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="UIObjectBase.cpp">
+      <Filter>ソース ファイル\App\UI\Object\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="UIComponentTransform.cpp">
+      <Filter>ソース ファイル\App\UI\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="UIComponentSprite.cpp">
+      <Filter>ソース ファイル\App\UI\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentGround.cpp">
+      <Filter>ソース ファイル\App\Component\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentGeometry.cpp">
+      <Filter>ソース ファイル\App\Component\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentBillboard.cpp">
+      <Filter>ソース ファイル\App\Component\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentModelStatic.cpp">
+      <Filter>ソース ファイル\App\Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelStaticManager.cpp">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelStatic.cpp">
+      <Filter>ソース ファイル\System\Model\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelStaticMake.cpp">
+      <Filter>ソース ファイル\System\Model\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelAnime.cpp">
+      <Filter>ソース ファイル\System\Model\Anime</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelAnimation.cpp">
+      <Filter>ソース ファイル\System\Model\Anime</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelAnimeMake.cpp">
+      <Filter>ソース ファイル\System\Model\Anime</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentModelAnime.cpp">
+      <Filter>ソース ファイル\App\Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelAnimeManager.cpp">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AppController.h">
+      <Filter>ソース ファイル\App</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXManager.h">
+      <Filter>ソース ファイル\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshBuffer.h">
+      <Filter>ソース ファイル\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowAPI.h">
+      <Filter>ソース ファイル\System\WindowAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingWindowAPI.h">
+      <Filter>ソース ファイル\System\WindowAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencil.h">
+      <Filter>ソース ファイル\DirectX\View</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>ソース ファイル\DirectX\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>ソース ファイル\DirectX\View\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeBase.h">
+      <Filter>ソース ファイル\System\Shape\Super</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>ソース ファイル\DirectX\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>ソース ファイル\DirectX\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>ソース ファイル\DirectX\Shader\Super</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>ソース ファイル\Utilities\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugConsole.h">
+      <Filter>ソース ファイル\System\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>ソース ファイル\Utilities\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeBox.h">
+      <Filter>ソース ファイル\System\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeSphere.h">
+      <Filter>ソース ファイル\System\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>ソース ファイル\App\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGameTest.h">
+      <Filter>ソース ファイル\App\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneBase.h">
+      <Filter>ソース ファイル\App\Scene\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectBase.h">
+      <Filter>ソース ファイル\App\GameObject\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectPlayer.h">
+      <Filter>ソース ファイル\App\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentBase.h">
+      <Filter>ソース ファイル\App\Component\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTransform.h">
+      <Filter>ソース ファイル\App\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GridLine.h">
+      <Filter>ソース ファイル\System\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeLine.h">
+      <Filter>ソース ファイル\System\Shape\Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorVec3.h">
+      <Filter>ソース ファイル\Utilities\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtils.h">
+      <Filter>ソース ファイル\Utilities\Constant</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>ソース ファイル\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>ソース ファイル\System\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>ソース ファイル\System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>ソース ファイル\System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerDirectInput.h">
+      <Filter>ソース ファイル\System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCamera.h">
+      <Filter>ソース ファイル\App\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCameraDebug.h">
+      <Filter>ソース ファイル\App\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>ソース ファイル\System\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCollisionBase.h">
+      <Filter>ソース ファイル\App\Component\Collision\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCameraBase.h">
+      <Filter>ソース ファイル\App\Component\Camera\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCollisionAABB.h">
+      <Filter>ソース ファイル\App\Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCollisionSphere.h">
+      <Filter>ソース ファイル\App\Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCollisionOBB.h">
+      <Filter>ソース ファイル\App\Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapePlane.h">
+      <Filter>ソース ファイル\System\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectGround.h">
+      <Filter>ソース ファイル\App\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentGroundRaycast.h">
+      <Filter>ソース ファイル\App\Component\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentRigidbody.h">
+      <Filter>ソース ファイル\App\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentPlayerController.h">
+      <Filter>ソース ファイル\App\Component\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx11.h">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMenu.h">
+      <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugItem.h">
+      <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugWindow.h">
+      <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugWindowSetting.h">
+      <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponentBase.h">
+      <Filter>ソース ファイル\App\UI\Component\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObjectBase.h">
+      <Filter>ソース ファイル\App\UI\Object\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTag.h">
+      <Filter>ソース ファイル\App\GameObject\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponentTransform.h">
+      <Filter>ソース ファイル\App\UI\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponentSprite.h">
+      <Filter>ソース ファイル\App\UI\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentGround.h">
+      <Filter>ソース ファイル\App\Component\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentGeometry.h">
+      <Filter>ソース ファイル\App\Component\Visual</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentBillboard.h">
+      <Filter>ソース ファイル\App\Component\Visual</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentModelStatic.h">
+      <Filter>ソース ファイル\App\Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelStaticManager.h">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelStatic.h">
+      <Filter>ソース ファイル\System\Model\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelAnime.h">
+      <Filter>ソース ファイル\System\Model\Anime</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentModelAnime.h">
+      <Filter>ソース ファイル\App\Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelAnimeManager.h">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentOrder.h">
+      <Filter>ソース ファイル\App\Component\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponentOrder.h">
+      <Filter>ソース ファイル\App\UI\Component\0_Super</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VS_Shape.hlsl">
+      <Filter>リソース ファイル\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_Shape.hlsl">
+      <Filter>リソース ファイル\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_Line.hlsl">
+      <Filter>リソース ファイル\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_Line.hlsl">
+      <Filter>リソース ファイル\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_Sprite.hlsl">
+      <Filter>リソース ファイル\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_Sprite.hlsl">
+      <Filter>リソース ファイル\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_ModelStatic.hlsl">
+      <Filter>リソース ファイル\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_ModelStatic.hlsl">
+      <Filter>リソース ファイル\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_ModelAnime.hlsl">
+      <Filter>リソース ファイル\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_ModelAnime.hlsl">
+      <Filter>リソース ファイル\PixelShader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Vector3.inl">
+      <Filter>ソース ファイル\Utilities\Vector</Filter>
+    </None>
+    <None Include="Vector2.inl">
+      <Filter>ソース ファイル\Utilities\Vector</Filter>
+    </None>
+    <None Include="ObjectBase.inl">
+      <Filter>ソース ファイル\App\GameObject\0_Super</Filter>
+    </None>
+    <None Include="SceneBase.inl">
+      <Filter>ソース ファイル\App\Scene\0_Super</Filter>
+    </None>
+    <None Include="ImGui\imgui.ini">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </None>
+    <None Include="UIObjectBase.inl">
+      <Filter>ソース ファイル\App\UI\Object\0_Super</Filter>
+    </None>
+  </ItemGroup>
+</Project>
