@@ -11,4 +11,3 @@ Float,BasicSettings/Grid/Size,10.000000
 Float,BasicSettings/Grid/Margin,1.000000
 Color,BasicSettings/Grid/Color,0.000000/0.031373/0.000000/0.000000
 Bool,BasicSettings/Grid/Axis,1
-Vector,ObjectInfo/Transform/Position ,00

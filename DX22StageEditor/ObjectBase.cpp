@@ -286,8 +286,12 @@ void ObjectBase::RemoveChildObject(ObjectBase* pChildObj)
 
 	ITEM_OBJ_LIST.RemoveListItem(pChildObj->GetName().c_str(), DebugUI::CHILD_HEAD_TEXT);
 
-	// オブジェクト一覧の一番下に追加
-	ITEM_OBJ_LIST.AddListItem(pChildObj->GetListName().c_str());
+	// 子オブジェクトが削除対象でない場合
+	if (pChildObj->GetState() != E_State::STATE_DEAD)
+	{
+		// オブジェクト一覧の一番下に追加
+		ITEM_OBJ_LIST.AddListItem(pChildObj->GetListName().c_str());
+	}
 
 #endif
 }

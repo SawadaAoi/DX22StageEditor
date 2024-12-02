@@ -33,6 +33,8 @@ public:
 
 	// ゲッター
 	ObjectCamera* GetActiveCamera();
+	int GetCameraNum();
+
 private:
 	CCameraManager();	// コンストラクタ	
 	void ResetActiveCamera();	// アクティブカメラをリセット

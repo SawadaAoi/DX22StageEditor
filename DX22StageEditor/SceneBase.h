@@ -37,6 +37,8 @@ public:
 	virtual void UpdateLocal() {};	// 個別更新処理
 	virtual void DrawLocal() {};	// 個別描画処理
 
+	void RemoveDeadObjects();	// 死亡状態オブジェクトを削除
+
 	// オブジェクト関連
 	template<typename T>
 	T* AddSceneObject(std::string sName);	// オブジェクト追加
@@ -47,6 +49,9 @@ public:
 
 	void AddSceneObjectBase(ObjectBase* pObject);	// オブジェクト追加
 	ObjectBase* FindSceneObject(std::string sName);	// オブジェクト検索
+
+	void RemoveSceneObject(ObjectBase* pObject);	// オブジェクト削除
+
 
 	// 衝突判定関連
 	void AddObjectCollision(ComponentCollisionBase* pCollision);	// 衝突判定コンポーネント追加
@@ -71,7 +76,9 @@ private:
 	std::vector<ComponentCollisionBase*>		m_pObjectCollision;	// 各オブジェクトが持つ衝突判定コンポーネント
 
 	bool m_bIsUpdating;	// 更新中かどうか
-
+#ifdef _DEBUG
+	int m_nObjectListSelectNo;	// オブジェクトリストの番号
+#endif // _DEBUG
 };
 
 #include "SceneBase.inl"

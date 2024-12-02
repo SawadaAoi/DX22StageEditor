@@ -23,6 +23,9 @@ SceneBase::SceneBase()
 	, m_pObjects()			// シーンに所属するオブジェクト一覧
 	, m_pStandbyObjects()	// オブジェクトを一時的に保存しておく配列
 	, m_pObjectCollision()	// 各オブジェクトが持つ衝突判定コンポーネント
+#ifdef _DEBUG
+	, m_nObjectListSelectNo(-1)
+#endif // _DEBUG
 {
 }
 
@@ -105,24 +108,8 @@ void SceneBase::Update()
 	// 各当たり判定更新(死亡したオブジェクトをm_bColStatesMapから削除するためにこの位置に記述)
 	UpdateCollision();	
 
-	// 死亡状態のオブジェクトを削除
-	for (auto it = m_pObjects.begin(); it != m_pObjects.end();)
-	{
-		// 死亡状態かどうか
-		if ((*it)->GetState() == ObjectBase::E_State::STATE_DEAD)
-		{
-#ifdef _DEBUG
-			// オブジェクト一覧リストから削除
-			ITEM_OBJ_LIST.RemoveListItem((*it)->GetName().c_str());
-#endif
-			(*it)->Uninit();			// 終了処理
-			it = m_pObjects.erase(it);	// 削除
-		}
-		else
-		{
-			++it;	// 次の要素へ
-		}
-	}
+	RemoveDeadObjects();		// 死亡状態のオブジェクトを削除
+
 
 
 	UpdateLocal();	// 個別更新処理
@@ -142,6 +129,56 @@ void SceneBase::Draw()
 	}
 
 	DrawLocal();	// 個別描画処理
+}
+
+
+/* ========================================
+	オブジェクト削除関数
+	-------------------------------------
+	内容：死亡状態のオブジェクトを削除
+=========================================== */
+void SceneBase::RemoveDeadObjects()
+{
+	// 死亡状態のオブジェクトを削除
+	for (auto it = m_pObjects.begin(); it != m_pObjects.end();)
+	{
+		ObjectBase* pObject = it->get();
+		// 死亡状態かどうか
+		if (pObject->GetState() == ObjectBase::E_State::STATE_DEAD)
+		{
+#ifdef _DEBUG
+			// オブジェクト一覧リストから削除
+			if (m_nObjectListSelectNo == WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].GetListNo(pObject->GetListName().c_str()))
+			{
+				WIN_OBJ_INFO.Clear();	// オブジェクト情報ウィンドウクリア
+
+				m_nObjectListSelectNo = -1;								// 選択番号をリセット
+				WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].SetListNo(-1);	// 選択番号をリセット
+			}
+			ITEM_OBJ_LIST.RemoveListItem(pObject->GetListName().c_str());	// オブジェクト一覧から削除
+#endif
+			// 親オブジェクトがある場合
+			if (pObject->GetParentObject())
+			{
+				pObject->GetParentObject()->RemoveChildObject(pObject);	// 親オブジェクトから削除
+			}
+			// 子オブジェクトがある場合
+			if (pObject->GetChildObjects().size() > 0)
+			{
+				for (auto& pChild : pObject->GetChildObjects())
+				{
+					this->RemoveSceneObject(pChild);	// 子オブジェクトを削除
+				}
+			}
+
+			pObject->Uninit();			// 終了処理
+			it = m_pObjects.erase(it);	// 削除
+		}
+		else
+		{
+			++it;	// 次の要素へ
+		}
+	}
 }
 
 /* ========================================
@@ -194,6 +231,26 @@ ObjectBase* SceneBase::FindSceneObject(std::string sName)
 
 	return nullptr;
 }
+
+/* ========================================
+	オブジェクト削除関数
+	-------------------------------------
+	内容：シーンに所属するオブジェクトを削除
+		　※死亡状態のオブジェクトを削除する場合に使用(子オブジェクトの削除時)
+	-------------------------------------
+	引数：pObject	削除するオブジェクトポインタ
+=========================================== */
+void SceneBase::RemoveSceneObject(ObjectBase* pObject)
+{
+#ifdef _DEBUG
+	WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].RemoveListItem(pObject->GetListName().c_str());
+#endif // _DEBUG
+
+	// シーンのオブジェクト配列から削除
+	m_pObjects.erase(std::remove_if(m_pObjects.begin(), m_pObjects.end(),
+		[pObject](const std::unique_ptr<ObjectBase>& pObj) { return pObj.get() == pObject; }), m_pObjects.end());
+}
+
 
 /* ========================================
 	衝突判定配列追加関数
@@ -335,25 +392,53 @@ std::vector<ObjectBase*> SceneBase::GetAllSceneObjects()
 =========================================== */
 void SceneBase::InitObjectList()
 {
-	DebugUI::Item::ConstCallback  FuncListClick = [this](const void* arg) {
+	using namespace DebugUI;
+
+	Item::ConstCallback  FuncListClick = [this](const void* arg) {
 		// クリックされたオブジェクトの情報を表示
 
 		std::string sObjName = reinterpret_cast<const char*>(arg);
+		m_nObjectListSelectNo = WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].GetListNo(sObjName.c_str());	// 選択番号を取得
 
 		// 名前に"L"が含まれている場合(子オブジェクトの場合)
-		if (sObjName.find(DebugUI::CHILD_HEAD_TEXT) != std::string::npos) 
+		if (sObjName.find(CHILD_HEAD_TEXT) != std::string::npos)
 		{
 			// "L"を除去した名前に変換
-			int nHeadTextCnt = sObjName.find(DebugUI::CHILD_HEAD_TEXT);					
-			sObjName = sObjName.substr(nHeadTextCnt + DebugUI::CHILD_HEAD_TEXT.size());	
+			int nHeadTextCnt = sObjName.find(CHILD_HEAD_TEXT);
+			sObjName = sObjName.substr(nHeadTextCnt + CHILD_HEAD_TEXT.size());
 		}
 
-
 		InitObjectInfo(sObjName);
+
 	};
 
-	DebugUI::Item* pList = DebugUI::Item::CreateList(ITEM_OBJ_LIST_NAME.c_str(), FuncListClick, false);
+	Item* pList = Item::CreateList(ITEM_OBJ_LIST_NAME.c_str(), FuncListClick, false);
 	WIN_OBJ_LIST.AddItem(pList);
+
+	// オブジェクト削除ボタン
+	WIN_OBJ_LIST.AddItem(Item::CreateCallBack("ObjectRemove", Item::Kind::Command, [this](bool isWrite, void* arg)
+	{
+		if (m_nObjectListSelectNo == -1) return;					// 選択されていない場合は処理しない
+		std::string sName = WIN_OBJ_INFO["ObjectName"].GetText();	// 選択されたオブジェクト名を取得
+
+		// 名前が一致するオブジェクトを検索
+		for (auto& pObject : m_pObjects)
+		{
+			if (pObject->GetName() == sName)
+			{
+				// シーン上のカメラが1つの場合、カメラオブジェクトは削除不可
+				if (dynamic_cast<ObjectCamera*>(pObject.get()) != nullptr && CAMERA_MNG_INST.GetCameraNum() == 1)
+				{
+					break;
+				}
+
+				pObject->SetState(ObjectBase::E_State::STATE_DEAD);		// 死亡状態に設定
+				break;
+			}
+
+		}
+
+	}));
 }
 
 /* ========================================

@@ -163,3 +163,15 @@ ObjectCamera* CCameraManager::GetActiveCamera()
 {
 	return m_pActiveCamera;
 }
+
+/* ========================================
+	カメラ数取得関数
+	-------------------------------------
+	内容：シーン上のカメラ数を取得
+	-------------------------------------
+	戻値：int		カメラ数
+============================================ */
+int CCameraManager::GetCameraNum()
+{
+	return m_pCameraList.size();
+}
