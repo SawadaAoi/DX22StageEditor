@@ -25,7 +25,7 @@ public:
 	void DrawLocal();
 
 	// ゲッター
-	DEFINE_OBJECT_TYPE	// オブジェクトの種類ID取得関数
+	DEFINE_OBJECT_TYPE(ObjectPlayer)	// オブジェクトの種類ID取得関数
 
 private:
 	ComponentTransform* m_pTransform;

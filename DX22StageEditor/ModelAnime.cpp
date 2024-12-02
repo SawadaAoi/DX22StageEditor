@@ -17,23 +17,23 @@
 
 
 #if _MSC_VER >= 1930
-	#ifdef _DEBUG
-		#pragma comment(lib, "assimp-vc143-mtd.lib")
-	#else
-		#pragma comment(lib, "assimp-vc143-mt.lib")
-	#endif
+#ifdef _DEBUG
+#pragma comment(lib, "assimp-vc143-mtd.lib")
+#else
+#pragma comment(lib, "assimp-vc143-mt.lib")
+#endif
 #elif _MSC_VER >= 1920
-	#ifdef _DEBUG
-		#pragma comment(lib, "assimp-vc142-mtd.lib")
-	#else
-		#pragma comment(lib, "assimp-vc142-mt.lib")
-	#endif
+#ifdef _DEBUG
+#pragma comment(lib, "assimp-vc142-mtd.lib")
+#else
+#pragma comment(lib, "assimp-vc142-mt.lib")
+#endif
 #elif _MSC_VER >= 1910
-	#ifdef _DEBUG
-		#pragma comment(lib, "assimp-vc141-mtd.lib")
-	#else
-		#pragma comment(lib, "assimp-vc141-mt.lib")
-	#endif
+#ifdef _DEBUG
+#pragma comment(lib, "assimp-vc141-mtd.lib")
+#else
+#pragma comment(lib, "assimp-vc141-mt.lib")
+#endif
 #endif
 
 
@@ -93,7 +93,7 @@ ModelAnime::ModelAnime(const ModelAnime& other)
 	, m_pPS(nullptr)
 	, m_nActiveNo(0)
 	, m_nBlendNo(0)
-	, m_nParametricAnimeNos{0,0}
+	, m_nParametricAnimeNos{ 0,0 }
 	, m_fBlendTime(0.0f)
 	, m_fBlendTimeTotal(0.0f)
 	, m_fParametricBlendRatio(0.0f)
@@ -105,26 +105,26 @@ ModelAnime::ModelAnime(const ModelAnime& other)
 {
 	if (this == &other)	return;
 
-	this->m_fLoadScale				= other.m_fLoadScale;
-	this->m_LoadFlip				= other.m_LoadFlip;
-	this->m_NodeList				= other.m_NodeList;
-	this->m_AnimeList				= other.m_AnimeList;
-	this->m_pVS						= other.m_pVS;
-	this->m_pPS						= other.m_pPS;
-	this->m_nActiveNo				= other.m_nActiveNo;
-	this->m_nBlendNo				= other.m_nBlendNo;
-	this->m_nParametricAnimeNos[0]	= other.m_nParametricAnimeNos[0];
-	this->m_nParametricAnimeNos[1]	= other.m_nParametricAnimeNos[1];
-	this->m_fBlendTime				= other.m_fBlendTime;
-	this->m_fBlendTimeTotal			= other.m_fBlendTimeTotal;
-	this->m_fParametricBlendRatio	= other.m_fParametricBlendRatio;
-	this->m_sModelName				= other.m_sModelName;
+	this->m_fLoadScale = other.m_fLoadScale;
+	this->m_LoadFlip = other.m_LoadFlip;
+	this->m_NodeList = other.m_NodeList;
+	this->m_AnimeList = other.m_AnimeList;
+	this->m_pVS = other.m_pVS;
+	this->m_pPS = other.m_pPS;
+	this->m_nActiveNo = other.m_nActiveNo;
+	this->m_nBlendNo = other.m_nBlendNo;
+	this->m_nParametricAnimeNos[0] = other.m_nParametricAnimeNos[0];
+	this->m_nParametricAnimeNos[1] = other.m_nParametricAnimeNos[1];
+	this->m_fBlendTime = other.m_fBlendTime;
+	this->m_fBlendTimeTotal = other.m_fBlendTimeTotal;
+	this->m_fParametricBlendRatio = other.m_fParametricBlendRatio;
+	this->m_sModelName = other.m_sModelName;
 #ifdef _DEBUG
 	this->m_pBoneLine = std::make_unique<ShapeLine>(*other.m_pBoneLine);
 #endif // _DEBUG
 
 	// 各変数が持つポインタをディープコピーする
-	
+
 	// メッシュ配列
 	this->m_MeshList = other.m_MeshList;
 	for (auto& mesh : this->m_MeshList)
@@ -147,7 +147,7 @@ ModelAnime::ModelAnime(const ModelAnime& other)
 			m_NodeTransform[i][j] = other.m_NodeTransform[i][j];
 		}
 	}
-	
+
 
 }
 
@@ -219,9 +219,7 @@ void ModelAnime::Update(float tick)
 =========================================== */
 void ModelAnime::Draw(const std::vector<UINT>* order)
 {
-	// シェーダー設定
-	m_pVS->Bind();
-	m_pPS->Bind();
+	if (m_pPS == nullptr || m_pVS == nullptr) { return; }
 
 	// 描画数設定
 	size_t drawNum = m_MeshList.size();
@@ -248,12 +246,14 @@ void ModelAnime::Draw(const std::vector<UINT>* order)
 			meshNo = i;
 		}
 
-		
+
 		// 描画コールバック
-		const T_Mesh*		pMesh		= this->GetMesh(meshNo);
-		const T_Material& pMaterial	= *this->GetMaterial(pMesh->materialID);
+		const T_Mesh* pMesh = this->GetMesh(meshNo);
+		const T_Material& pMaterial = *this->GetMaterial(pMesh->materialID);
 
 		m_pPS->SetTexture(0, pMaterial.pTexture);	// テクスチャセット
+		m_pPS->Bind();
+
 
 		DirectX::XMFLOAT4X4 bones[200];
 		for (int i = 0; i < pMesh->bones.size() && i < 200; ++i)
@@ -265,10 +265,12 @@ void ModelAnime::Draw(const std::vector<UINT>* order)
 			));
 		}
 		m_pVS->WriteBuffer(1, bones);
+		m_pVS->Bind();
 
 		// 描画
 		m_MeshList[meshNo].pMesh->Draw();
 	}
+
 }
 
 /* ========================================

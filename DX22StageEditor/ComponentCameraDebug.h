@@ -11,11 +11,12 @@
 
 // =============== インクルード ===================
 #include "ComponentBase.h"
-
+#include "Vector2.h"
+#include "Input.h"
 
 // =============== クラス定義 =====================
 class ComponentCameraDebug :
-    public ComponentBase
+	public ComponentBase
 {
 public:
 	ComponentCameraDebug(class ObjectBase* pObject);
@@ -30,11 +31,17 @@ public:
 
 private:
 	void Move();
-	void Rotate();
+	void RotateKey();
+	void RotateMouse();
 private:
 
 	class ComponentCameraBase* m_pCameraBase;	// カメラの基本機能
 	float m_fMoveSpeed;		// 移動速度
 	float m_fRotSpeed;	// 回転速度
+
+	Vector2<float> m_vMouseMove;	// マウス移動量
+	POINT m_CursorPosOld;			// 1フレーム前のカーソル座標
+
+	bool m_bRotateMouse;	// 回転入力
 };
 

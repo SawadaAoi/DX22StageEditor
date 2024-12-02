@@ -28,7 +28,7 @@ public:
 	void UpdateLocal() override;
 	void DrawLocal() override;
 
-	DEFINE_OBJECT_TYPE	// オブジェクトの種類ID取得関数
+	DEFINE_OBJECT_TYPE(ObjectGround)	// オブジェクトの種類ID取得関数
 
 private:
 	class ComponentTransform* m_pTransform;	// 座標、回転、スケール

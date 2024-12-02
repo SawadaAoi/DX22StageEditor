@@ -21,12 +21,13 @@ const float CAMERA_DEFAULT_FOVY = DirectX::XMConvertToRadians(60.0f);	// 縦画�
 const float CAMERA_DEFAULT_ASPECT = WINDOW_INST.GetAspectRatio();	// アスペクト比
 const float CAMERA_DEFAULT_NEAR = 0.1f;		// 最小距離
 const float CAMERA_DEFAULT_FAR = 100.0f;	// 最大距離
+const float CAMERA_DEFAULT_ORTHO_WIDTH = 20.0f;	// 平行投影の幅
 
 // UI用の定数
-const float SCREEN_LEFT_EDGE	= WindowConfig::SCREEN_WIDTH  / 2.0f * -1.0;	// 画面左端
-const float SCREEN_RIGHT_EDGE	= WindowConfig::SCREEN_WIDTH  / 2.0f;			// 画面右端
-const float SCREEN_TOP_EDGE		= WindowConfig::SCREEN_HEIGHT / 2.0f;			// 画面上端
-const float SCREEN_BOTTOM_EDGE	= WindowConfig::SCREEN_HEIGHT / 2.0f * -1.0;	// 画面下端
+const float SCREEN_LEFT_EDGE = WindowConfig::SCREEN_WIDTH / 2.0f * -1.0;	// 画面左端
+const float SCREEN_RIGHT_EDGE = WindowConfig::SCREEN_WIDTH / 2.0f;			// 画面右端
+const float SCREEN_TOP_EDGE = WindowConfig::SCREEN_HEIGHT / 2.0f;			// 画面上端
+const float SCREEN_BOTTOM_EDGE = WindowConfig::SCREEN_HEIGHT / 2.0f * -1.0;	// 画面下端
 
 // 視錐台の線の色
 const int LINE_NUM = 12;
@@ -48,6 +49,7 @@ ComponentCameraBase::ComponentCameraBase(ObjectBase* pOwner)
 	, m_fAspect(CAMERA_DEFAULT_ASPECT)
 	, m_fNear(CAMERA_DEFAULT_NEAR)
 	, m_fFar(CAMERA_DEFAULT_FAR)
+	, m_fOrthoWidth(CAMERA_DEFAULT_ORTHO_WIDTH)
 	, m_fPitch(0.0f)
 	, m_pFrustumLine(nullptr)
 	, m_vNearHW(0.0f, 0.0f)
@@ -67,8 +69,8 @@ ComponentCameraBase::ComponentCameraBase(ObjectBase* pOwner)
 void ComponentCameraBase::Init()
 {
 	// 所有者オブジェクトのTransformコンポーネントを取得
-	m_pTransform	= m_pOwnerObj->GetComponent<ComponentTransform>();
-	m_pFrustumLine	= std::make_unique<ShapeLine>(LINE_NUM);
+	m_pTransform = m_pOwnerObj->GetComponent<ComponentTransform>();
+	m_pFrustumLine = std::make_unique<ShapeLine>(LINE_NUM);
 
 	SetNearFarClipPos();	// ニアクリップ面とファークリップ面の座標をセット
 	InitNearFarClipLine();	// ニアクリップ面とファークリップ面のライン座標を初期化
@@ -152,7 +154,7 @@ void ComponentCameraBase::Rotate(float pitch, float yaw, float roll)
 	Quaternion qRot = m_pCompTransform->GetLocalRotation() * qYaw;
 
 
-	Vector3<float> vAxisXRot = qRot.Rotate(Vector3<float>::Right());
+	Vector3<float> vAxisXRot = qRot.RotateKey(Vector3<float>::Right());
 
 	Quaternion qPitch = Quaternion::FromAxisAngleNormalized(vAxisXRot, MathUtils::ToRadian(pitch));
 	qRot = qRot * qPitch;
@@ -201,8 +203,8 @@ void ComponentCameraBase::RotateLimit(float pitch, float yaw, float LimitPitch)
 	}
 
 	// カメラ回転作成
-	Quaternion qYaw		= Quaternion::FromAxisAngle(Vector3<float>::Up(), MathUtils::ToRadian(yaw));				// ワールド座標系で回転
-	Quaternion qPitch	= Quaternion::FromAxisAngle(m_pTransform->GetRightVector(), MathUtils::ToRadian(pitch));	// ローカル座標系で回転
+	Quaternion qYaw = Quaternion::FromAxisAngle(Vector3<float>::Up(), MathUtils::ToRadian(yaw));				// ワールド座標系で回転
+	Quaternion qPitch = Quaternion::FromAxisAngle(m_pTransform->GetRightVector(), MathUtils::ToRadian(pitch));	// ローカル座標系で回転
 
 	m_pTransform->Rotate(qYaw * qPitch);	// 回転
 }
@@ -278,12 +280,12 @@ DirectX::XMFLOAT4X4 ComponentCameraBase::GetViewMatrix()
 	m_vLook = m_pTransform->GetWorldPosition() + m_pTransform->GetForwardVector();
 	m_vUp = m_pTransform->GetUpVector();
 
-	DirectX::XMVECTOR pos	= m_pTransform->GetWorldPosition().ToXMVECTOR();				// 自オブジェクトの位置を取得
-	DirectX::XMVECTOR look	= m_vLook.ToXMVECTOR();	//(自オブジェクトの位置 + 自オブジェクトの正面ベクトル)
-	DirectX::XMVECTOR up	= m_vUp.ToXMVECTOR();						// 自オブジェクトの上方向ベクトルを取得
+	DirectX::XMVECTOR pos = m_pTransform->GetWorldPosition().ToXMVECTOR();				// 自オブジェクトの位置を取得
+	DirectX::XMVECTOR look = m_vLook.ToXMVECTOR();	//(自オブジェクトの位置 + 自オブジェクトの正面ベクトル)
+	DirectX::XMVECTOR up = m_vUp.ToXMVECTOR();						// 自オブジェクトの上方向ベクトルを取得
 
 	// ビュー行列を作成(カメラの位置、カメラの注視点、カメラの上方向を指定)
-	DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(pos, look, up);	
+	DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(pos, look, up);
 
 	// ビュー行列を作成(シェーダーに渡す為にXMFLOAT4X4型に変換)
 	DirectX::XMFLOAT4X4 mat;
@@ -358,7 +360,28 @@ DirectX::XMMATRIX ComponentCameraBase::GetInvViewMatrix()
 DirectX::XMFLOAT4X4 ComponentCameraBase::GetProjectionMatrix()
 {
 	// プロジェクション行列を作成
-	DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(m_fFovY, m_fAspect, m_fNear, m_fFar);	
+	DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(m_fFovY, m_fAspect, m_fNear, m_fFar);
+
+	// プロジェクション行列を作成(シェーダーに渡す為にXMFLOAT4X4型に変換)
+	DirectX::XMFLOAT4X4 mat;
+
+	proj = DirectX::XMMatrixTranspose(proj);	// 転置
+	DirectX::XMStoreFloat4x4(&mat, proj);		// 変換
+
+	return mat;
+}
+
+/* ========================================
+	平行投影プロジェクション行列取得関数
+	-------------------------------------
+	内容：平行投影プロジェクション行列を取得する
+	-------------------------------------
+	戻値：平行投影プロジェクション行列(XMFLOAT4X4型)
+=========================================== */
+DirectX::XMFLOAT4X4 ComponentCameraBase::GetProjectionMatrixOrtho()
+{
+	// プロジェクション行列を作成
+	DirectX::XMMATRIX proj = DirectX::XMMatrixOrthographicLH(m_fOrthoWidth, m_fOrthoWidth / m_fAspect, m_fNear, m_fFar);
 
 	// プロジェクション行列を作成(シェーダーに渡す為にXMFLOAT4X4型に変換)
 	DirectX::XMFLOAT4X4 mat;
@@ -431,7 +454,7 @@ void ComponentCameraBase::SetNearFarClipPos()
 		m_CornersNear[i] = Vector3<float>::FromXMVECTOR(DirectX::XMVector3Transform(m_CornersNear[i].ToXMVECTOR(), invViewMat));
 		m_CornersFar[i] = Vector3<float>::FromXMVECTOR(DirectX::XMVector3Transform(m_CornersFar[i].ToXMVECTOR(), invViewMat));
 	}
-	
+
 }
 
 /* ========================================
@@ -449,10 +472,10 @@ void ComponentCameraBase::InitNearFarClipLine()
 	m_pFrustumLine->AddLine(m_CornersNear[2], m_CornersNear[0], LINE_COLOR);
 
 	// ファークリップ面四角形のライン
-	m_pFrustumLine->AddLine(m_CornersFar[0], m_CornersFar[1],LINE_COLOR);
-	m_pFrustumLine->AddLine(m_CornersFar[1], m_CornersFar[3],LINE_COLOR);
-	m_pFrustumLine->AddLine(m_CornersFar[3], m_CornersFar[2],LINE_COLOR);
-	m_pFrustumLine->AddLine(m_CornersFar[2], m_CornersFar[0],LINE_COLOR);
+	m_pFrustumLine->AddLine(m_CornersFar[0], m_CornersFar[1], LINE_COLOR);
+	m_pFrustumLine->AddLine(m_CornersFar[1], m_CornersFar[3], LINE_COLOR);
+	m_pFrustumLine->AddLine(m_CornersFar[3], m_CornersFar[2], LINE_COLOR);
+	m_pFrustumLine->AddLine(m_CornersFar[2], m_CornersFar[0], LINE_COLOR);
 
 	// ニアクリップ面とファークリップ面を繋ぐライン(視錐台の線)
 	m_pFrustumLine->AddLine(m_CornersNear[0], m_CornersFar[0], LINE_COLOR);
@@ -479,10 +502,10 @@ void ComponentCameraBase::UpdateNearFarClipLine()
 	m_pFrustumLine->UpdateLine(7, m_CornersFar[3], m_CornersFar[2], LINE_COLOR);
 	m_pFrustumLine->UpdateLine(8, m_CornersFar[2], m_CornersFar[0], LINE_COLOR);
 
-	m_pFrustumLine->UpdateLine(9,	m_CornersNear[0], m_CornersFar[0], LINE_COLOR);
-	m_pFrustumLine->UpdateLine(10,	m_CornersNear[1], m_CornersFar[1], LINE_COLOR);
-	m_pFrustumLine->UpdateLine(11,	m_CornersNear[2], m_CornersFar[2], LINE_COLOR);
-	m_pFrustumLine->UpdateLine(12,	m_CornersNear[3], m_CornersFar[3], LINE_COLOR);
+	m_pFrustumLine->UpdateLine(9, m_CornersNear[0], m_CornersFar[0], LINE_COLOR);
+	m_pFrustumLine->UpdateLine(10, m_CornersNear[1], m_CornersFar[1], LINE_COLOR);
+	m_pFrustumLine->UpdateLine(11, m_CornersNear[2], m_CornersFar[2], LINE_COLOR);
+	m_pFrustumLine->UpdateLine(12, m_CornersNear[3], m_CornersFar[3], LINE_COLOR);
 }
 
 

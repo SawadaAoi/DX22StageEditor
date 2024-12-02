@@ -49,7 +49,7 @@ void ObjectCamera::InitLocal()
 
 	CAMERA_MNG_INST.AddCamera(this);	// カメラマネージャにカメラを追加
 
-	
+
 	AddComponent<ComponentBillboard>();	// ビルボード
 	GetComponent<ComponentBillboard>()->SetTexture(GET_TEXTURE_DATA(TEX_KEY::CAMERA_ICON));	// テクスチャ
 }
@@ -92,7 +92,22 @@ DirectX::XMMATRIX ObjectCamera::GetInvViewMatrix()
 =========================================== */
 DirectX::XMFLOAT4X4 ObjectCamera::GetProjectionMatrix()
 {
+#ifdef _DEBUG
+	// デバッグメニューの平行投影フラグがONの場合
+	if (WIN_CAMERA_INFO["IsOrthographic"].GetBool())
+	{
+		return m_pCameraBase->GetProjectionMatrixOrtho();
+	}
+	else
+	{
+		return m_pCameraBase->GetProjectionMatrix();
+	}
+
+#else
 	return m_pCameraBase->GetProjectionMatrix();
+
+#endif // _DEBUG
+
 }
 
 /* ========================================
@@ -103,6 +118,16 @@ DirectX::XMFLOAT4X4 ObjectCamera::GetProjectionMatrix()
 DirectX::XMFLOAT4X4 ObjectCamera::GetProjectionMatrixUI()
 {
 	return m_pCameraBase->GetProjectionMatrixUI();
+}
+
+/* ========================================
+	ゲッター(平行投影プロジェクション行列)関数
+	-------------------------------------
+	戻値：平行投影プロジェクション行列
+=========================================== */
+DirectX::XMFLOAT4X4 ObjectCamera::GetProjectionMatrixOrtho()
+{
+	return m_pCameraBase->GetProjectionMatrixOrtho();
 }
 
 /* ========================================

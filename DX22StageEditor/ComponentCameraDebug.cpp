@@ -8,10 +8,10 @@
 
 // =============== インクルード ===================
 #include "ComponentCameraDebug.h"
-#include "Input.h"
 #include "ObjectBase.h"				// 所持オブジェクト
 #include "ComponentCameraBase.h"	// カメラの基本機能(移動、回転)
 #include "ObjectCamera.h"			// 所持オブジェクトをカメラにキャスト
+#include "WindowAPI.h"
 
 // =============== 定数定義 =======================
 const float LIMIT_PITCH = 90.0f;	// 縦回転制限
@@ -28,6 +28,9 @@ ComponentCameraDebug::ComponentCameraDebug(ObjectBase* pObject)
 	, m_fMoveSpeed(2.0f)
 	, m_fRotSpeed(50.0f)
 	, m_pCameraBase(nullptr)
+	, m_vMouseMove(0.0f, 0.0f)
+	, m_CursorPosOld{ 0, 0 }
+	, m_bRotateMouse(true)
 {
 }
 
@@ -50,12 +53,22 @@ void ComponentCameraDebug::Init()
 void ComponentCameraDebug::Update()
 {
 	// カメラがアクティブでない場合は処理しない
-	if (static_cast<ObjectCamera*>(m_pOwnerObj)->GetActive() == false) return;	
+	if (static_cast<ObjectCamera*>(m_pOwnerObj)->GetActive() == false) return;
 
-	if (!Input::IsKeyPress(VK_SHIFT)) return;
 
 	Move();
-	Rotate();	
+
+
+	if (m_bRotateMouse)
+	{
+		RotateMouse();
+	}
+	else
+	{
+		RotateKey();
+	}
+
+
 }
 
 
@@ -66,6 +79,9 @@ void ComponentCameraDebug::Update()
 =========================================== */
 void ComponentCameraDebug::Move()
 {
+	// 移動はShiftキーを押しながらのみ有効
+	if (!Input::IsKeyPress(VK_SHIFT)) return;
+
 	Vector3<float> vFowrard = m_pCameraBase->GetForward();	// カメラの前方向
 	Vector3<float> vRight = m_pCameraBase->GetRight();		// カメラの右方向
 	Vector3<float> vUp = m_pCameraBase->GetUp();			// カメラの上方向
@@ -83,12 +99,15 @@ void ComponentCameraDebug::Move()
 }
 
 /* ========================================
-	回転関数
+	回転(キー入力)関数
 	-------------------------------------
-	内容：回転処理
+	内容：カメラの回転処理
 =========================================== */
-void ComponentCameraDebug::Rotate()
+void ComponentCameraDebug::RotateKey()
 {
+	// キー回転はShiftキーを押しながらのみ有効
+	if (!Input::IsKeyPress(VK_SHIFT)) return;
+
 	float pitch = 0.0f;	// 縦回転
 	float yaw = 0.0f;	// 横回転
 	if (Input::IsKeyPress(VK_UP))		pitch = -m_fRotSpeed;
@@ -98,6 +117,39 @@ void ComponentCameraDebug::Rotate()
 
 	// Z軸回転はしない
 	m_pCameraBase->RotateLimit(pitch * DELTA_TIME, yaw * DELTA_TIME, LIMIT_PITCH);	// 回転処理(制限付き
+}
+
+/* ========================================
+	回転(マウス)関数
+	-------------------------------------
+	内容：カメラの回転処理
+=========================================== */
+void ComponentCameraDebug::RotateMouse()
+{
+	if (Input::IsKeyPress(VK_RBUTTON))	// 右クリック押下時
+	{
+		// マウス移動量
+		POINT cursorPos;
+		GetCursorPos(&cursorPos);
+
+		m_vMouseMove = Vector2<float>(
+			static_cast<float>(cursorPos.x - m_CursorPosOld.x),
+			static_cast<float>(cursorPos.y - m_CursorPosOld.y));
+
+		m_CursorPosOld = cursorPos;
+
+		// マウスの移動量 / 画面サイズ の比率から、画面全体でどれだけ回転するか指定する。
+		float angleX = 360.0f * m_vMouseMove.x / WINDOW_INST.GetScreenSize().nWidth;
+		float angleY = 180.0f * m_vMouseMove.y / WINDOW_INST.GetScreenSize().nHeight;
+
+		m_pCameraBase->RotateLimit(angleY, 0, LIMIT_PITCH);
+		m_pCameraBase->RotateLimit(0, angleX, LIMIT_PITCH);
+	}
+	else
+	{
+		GetCursorPos(&m_CursorPosOld);
+		m_vMouseMove = { 0.0f, 0.0f };
+	}
 }
 
 
@@ -117,6 +169,8 @@ void ComponentCameraDebug::Debug(DebugUI::Window& window)
 
 	pGroupCameraDebug->AddGroupItem(Item::CreateBind("MoveSpeed", Item::Kind::Float, &m_fMoveSpeed));
 	pGroupCameraDebug->AddGroupItem(Item::CreateBind("RotSpeed", Item::Kind::Float, &m_fRotSpeed));
+
+	pGroupCameraDebug->AddGroupItem(Item::CreateBind("RotateMouse", Item::Kind::Bool, &m_bRotateMouse));
 
 	window.AddItem(pGroupCameraDebug);
 }

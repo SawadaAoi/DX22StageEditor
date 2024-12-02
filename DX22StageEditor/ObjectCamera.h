@@ -29,9 +29,11 @@ public:
 
 	DirectX::XMFLOAT4X4 GetProjectionMatrix();	// プロジェクション行列取得関数
 	DirectX::XMFLOAT4X4 GetProjectionMatrixUI();	// 2D用プロジェクション行列取得関数
+	DirectX::XMFLOAT4X4 GetProjectionMatrixOrtho();	// 平行投影プロジェクション行列取得関数
+
 	bool GetActive();
 
-	DEFINE_OBJECT_TYPE;	// オブジェクトの種類ID取得関数
+	DEFINE_OBJECT_TYPE(ObjectCamera)	// オブジェクトの種類ID取得関数
 
 	// セッター
 	void SetActive(bool bActive);

@@ -18,7 +18,7 @@
 
 // =============== クラス定義 =====================
 class ComponentCameraBase :
-    public ComponentBase
+	public ComponentBase
 {
 public:
 	ComponentCameraBase(ObjectBase* pOwner);
@@ -34,12 +34,12 @@ public:
 	void RotateY(float fAngle, bool world);						// Y軸回転関数
 
 
-	DirectX::XMFLOAT4X4 GetViewMatrix();		// ビュー行列取得関数
+	DirectX::XMFLOAT4X4 GetViewMatrix();					// ビュー行列取得関数
 	DirectX::XMFLOAT4X4 GetViewMatrixNotTransposed();		// ビュー行列取得関数
-	DirectX::XMMATRIX GetInvViewMatrix();		// ビュー行列の逆行列取得関数
+	DirectX::XMMATRIX GetInvViewMatrix();					// ビュー行列の逆行列取得関数
 
-	DirectX::XMFLOAT4X4 GetProjectionMatrix();	// プロジェクション行列取得関数
-
+	DirectX::XMFLOAT4X4 GetProjectionMatrix();			// プロジェクション行列取得関数
+	DirectX::XMFLOAT4X4 GetProjectionMatrixOrtho();		// 平行投影プロジェクション行列取得関数
 	DirectX::XMFLOAT4X4 GetProjectionMatrixUI();		// 2D用ビュー行列取得関数
 
 	// ゲッター
@@ -66,12 +66,12 @@ private:
 	Vector3<float> m_vUp;		// カメラの上方向
 
 	// プロジェクション行列を作成する値
-	float m_fFovY;		// 縦方向の画角
-	float m_fAspect;	// アスペクト比
-	float m_fNear;		// カメラとの最小距離
-	float m_fFar;		// カメラとの最大距離
-
-	float m_fPitch;		// X軸回転角度
+	float m_fFovY;			// 縦方向の画角
+	float m_fAspect;		// アスペクト比
+	float m_fNear;			// カメラとの最小距離
+	float m_fFar;			// カメラとの最大距離
+	float m_fOrthoWidth;	// 平行投影の幅
+	float m_fPitch;			// X軸回転角度
 
 	std::unique_ptr<ShapeLine> m_pFrustumLine;	// カメラ描画範囲の視錐台ライン
 	bool m_bDispLine;							// ライン表示フラグ
