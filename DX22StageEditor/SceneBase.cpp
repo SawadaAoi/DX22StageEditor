@@ -431,6 +431,11 @@ void SceneBase::InitObjectList()
 				{
 					break;
 				}
+				// カメラオブジェクトがアクティブの場合、削除不可
+				if (CAMERA_MNG_INST.GetActiveCamera() == pObject.get())
+				{
+					break;
+				}
 
 				pObject->SetState(ObjectBase::E_State::STATE_DEAD);		// 死亡状態に設定
 				break;

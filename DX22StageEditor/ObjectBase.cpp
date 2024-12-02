@@ -494,6 +494,8 @@ void ObjectBase::Debug()
 		ChangeName();
 	}));
 
+	pGroupObjectBase->AddGroupItem(InitParentList());	// 親オブジェクトリスト
+
 	pObjInfo.AddItem(pGroupObjectBase);		// グループを追加
 
 	// 各コンポーネント情報をオブジェクト情報ウィンドウに表示
@@ -503,6 +505,46 @@ void ObjectBase::Debug()
 		(*it)->Debug(pObjInfo);
 		++it;
 	}
+}
+
+/* ========================================
+	親オブジェクトリスト初期化関数
+	-------------------------------------
+	内容：親オブジェクトリストの初期化
+	-------------------------------------
+	戻り値：親オブジェクトリスト
+=========================================== */
+DebugUI::Item* ObjectBase::InitParentList()
+{
+	using namespace DebugUI;
+
+	// 親オブジェクトリスト作成
+	Item* pParentList = Item::CreateList("ParentObject", [this](const void* arg)
+	{
+		std::string sParentName = reinterpret_cast<const char*>(arg);
+		ChangeParentList(sParentName);	// 親オブジェクト変更
+
+	}, false, true);
+
+	// シーン上のオブジェクトをリストに追加
+	int nParentNo = 0;					// 選択中のオブジェクト番号
+	pParentList->AddListItem("None");	// リストの先頭は親オブジェクトなし
+
+	// シーン上のオブジェクトをリストに追加
+	for (const auto pObj : SceneManager::GetScene()->GetAllSceneObjects())
+	{
+		if (pObj == this) continue;	// 自身は追加しない
+		pParentList->AddListItem(pObj->GetName().c_str());	// シーン上のオブジェクト名を追加
+	}
+	// 親オブジェクトがある場合
+	if (m_pParentObj)
+	{
+		nParentNo = pParentList->GetListNo(m_pParentObj->GetName().c_str());	// 親オブジェクトを選択
+	}
+
+	pParentList->SetListNo(nParentNo);	// 選択中のオブジェクトを設定
+
+	return pParentList;
 }
 
 /* ========================================
@@ -530,6 +572,29 @@ void ObjectBase::ChangeName()
 	WIN_OBJ_INFO["ObjectName"].SetText(this->GetName().c_str());		// オブジェクト詳細の名前を変更
 }
 
+/* ========================================
+	親オブジェクトリスト変更関数
+	-------------------------------------
+	内容：親オブジェクトを変更する
+	-------------------------------------
+	引数：新しい親オブジェクト名
+=========================================== */
+void ObjectBase::ChangeParentList(std::string sParentName)
+{
+	ObjectBase* pParentNew = SceneManager::GetScene()->FindSceneObject(sParentName);	// 親オブジェクト取得
+
+	// 既に設定されている親オブジェクトと同じ場合は処理しない
+	if (pParentNew == m_pParentObj) return;
+
+	if (pParentNew)
+	{
+		this->SetParentObject(pParentNew);	// 新しい親オブジェクトに設定
+	}
+	else
+	{
+		this->RemoveParentObject();			// 親オブジェクトがない場合(Noneを選択)は解除
+	}
+}
 
 /* ========================================
 	リスト表示名取得関数
