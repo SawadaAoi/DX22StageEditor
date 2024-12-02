@@ -102,6 +102,7 @@ public:
 #ifdef _DEBUG
 	void Debug();					// デバッグ用の処理(オブジェクト情報ウィンドウに表示)
 	virtual void DebugLocal() {};	// 個別デバッグ処理
+	void ChangeName();	// 名前変更
 
 	std::string GetListName();	// リスト表示用の名前取得
 #endif

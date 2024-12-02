@@ -12,6 +12,7 @@
 #include <windows.h>
 #include "ComponentTransform.h"
 #include "DebugMenu.h"
+#include "SceneManager.h"
 
 /* ========================================
 	コンストラクタ関数
@@ -472,11 +473,24 @@ void ObjectBase::SetName(std::string sName)
 =========================================== */
 void ObjectBase::Debug()
 {
-	DebugUI::Window& pObjInfo = WIN_OBJ_INFO;
+	using namespace DebugUI;
+
+	Window& pObjInfo = WIN_OBJ_INFO;
 
 	// オブジェクト詳細情報を更新
-	pObjInfo.AddItem(DebugUI::Item::CreateValue("ObjectName", DebugUI::Item::Text, false));	// 名前
-	pObjInfo["ObjectName"].SetText(this->GetName().c_str());							// オブジェクト名を設定
+	pObjInfo.AddItem(Item::CreateValue("ObjectName", Item::Text, false));	// 名前
+	pObjInfo["ObjectName"].SetText(this->GetName().c_str());				// オブジェクト名を設定
+
+	Item* pGroupObjectBase = Item::CreateGroup("ObjectBase");	// オブジェクト基本情報グループ
+
+	// オブジェクト名変更
+	pGroupObjectBase->AddGroupItem(Item::CreateValue("ObjectReName", Item::Path));	// 変更後の名前
+	pGroupObjectBase->AddGroupItem(Item::CreateCallBack("ChangeName", Item::Kind::Command, [this](bool isWrite, void* arg)	// 名前変更ボタン
+	{
+		ChangeName();
+	}));
+
+	pObjInfo.AddItem(pGroupObjectBase);		// グループを追加
 
 	// 各コンポーネント情報をオブジェクト情報ウィンドウに表示
 	auto it = m_pComponents.begin();
@@ -486,6 +500,32 @@ void ObjectBase::Debug()
 		++it;
 	}
 }
+
+/* ========================================
+	名前変更関数
+	-------------------------------------
+	内容：オブジェクト名を変更する
+=========================================== */
+void ObjectBase::ChangeName()
+{
+	std::string sReName = WIN_OBJ_INFO["ObjectBase"]["ObjectReName"].GetPath();	// 変更後の名前
+	std::string sOldName = this->GetName();										// 変更前の名前
+
+	if (sReName.empty()) return;		// 変更後の名前が空の場合は処理しない
+	if (sReName == sOldName) return;	// 同じ名前の場合は処理しない
+
+	sReName = SceneManager::GetScene()->CreateUniqueName(sReName);	// 重複しない名前に変更
+
+	// オブジェクト名変更
+	int listNo = ITEM_OBJ_LIST.GetListNo(this->GetListName().c_str());			// オブジェクト一覧の表示位置取得
+	ITEM_OBJ_LIST.RemoveListItem(sOldName.c_str(), DebugUI::CHILD_HEAD_TEXT);	// 変更前の名前をリストから削除
+
+	this->SetName(sReName);												// 内部の名前変更
+	ITEM_OBJ_LIST.InsertListItem(this->GetListName().c_str(), listNo);	// オブジェクト一覧に変更後の名前を追加
+
+	WIN_OBJ_INFO["ObjectName"].SetText(this->GetName().c_str());		// オブジェクト詳細の名前を変更
+}
+
 
 /* ========================================
 	リスト表示名取得関数
