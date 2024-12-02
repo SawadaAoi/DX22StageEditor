@@ -14,6 +14,7 @@
 
 // =============== 前方宣言 =======================
 class SceneBase;
+class ObjectBase;
 
 // =============== 定数定義 =====================
 #define CAMERA_MNG_INST CCameraManager::GetInstance()	// instance取得
@@ -30,6 +31,8 @@ public:
 
 	void AddCamera(ObjectCamera* pCamera);	// カメラ追加
 	void RemoveCamera(ObjectCamera* pCamera);	// カメラ削除
+
+	void FocusMoveCamera(ObjectBase* pObj);	// カメラを指定オブジェクトにフォーカス移動
 
 	// ゲッター
 	ObjectCamera* GetActiveCamera();

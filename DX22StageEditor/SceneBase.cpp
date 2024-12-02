@@ -444,6 +444,27 @@ void SceneBase::InitObjectList()
 		}
 
 	}));
+
+	// オブジェクトフォーカスボタン
+	WIN_OBJ_LIST.AddItem(Item::CreateCallBack("ObjectFocus", Item::Kind::Command, [this](bool isWrite, void* arg)
+	{
+		if (m_nObjectListSelectNo == -1) return;					// 選択されていない場合は処理しない
+		std::string sName = WIN_OBJ_INFO["ObjectName"].GetText();	// 選択されたオブジェクト名を取得
+
+		// 名前が一致するオブジェクトを検索
+		for (auto& pObject : m_pObjects)
+		{
+			if (pObject->GetName() == sName)
+			{
+				if (pObject.get() == CAMERA_MNG_INST.GetActiveCamera()) break; // アクティブカメラはフォーカス移動不可
+
+				CAMERA_MNG_INST.FocusMoveCamera(pObject.get());	// カメラを指定オブジェクトにフォーカス移動
+				break;
+			}
+
+		}
+
+	}));
 }
 
 /* ========================================

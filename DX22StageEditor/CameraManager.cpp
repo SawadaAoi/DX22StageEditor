@@ -11,8 +11,13 @@
 #include "SceneBase.h"		// シーン基底クラス
 #include "DebugMenu.h"
 
+// オブジェクトフォーカスに使用
+#include "ObjectBase.h"
+#include "ComponentTransform.h"
+
 // =============== 定数定義 =======================
 const std::string DEFAULT_CAMERA_NAME = "DefaultCamera";	// デフォルトカメラ名
+const Vector3<float> FOCUS_OFFSET = Vector3<float>(0.0f, 2.0f, -5.0f);	// フォーカス時のカメラ位置
 
 /* ========================================
 	コンストラクタ関数
@@ -136,6 +141,31 @@ void CCameraManager::RemoveCamera(ObjectCamera* pCamera)
 
 #endif // _DEBUG
 }
+
+/* ========================================
+	カメラフォーカス移動関数
+	-------------------------------------
+	内容：カメラを指定オブジェクトにフォーカス移動
+	-------------------------------------
+	引数：オブジェクトのポインタ
+=========================================== */
+void CCameraManager::FocusMoveCamera(ObjectBase* pObj)
+{
+	ComponentTransform* pCameraTrans = GetActiveCamera()->GetComponent<ComponentTransform>();	// カメラのトランスフォーム取得
+	ComponentTransform* pTargetTrans = pObj->GetComponent<ComponentTransform>();				// ターゲットのトランスフォーム取得
+
+	// トランスフォームが取得できない場合は処理しない
+	if (pCameraTrans == nullptr || pTargetTrans == nullptr) return;
+
+	Vector3<float> vTargetPos = pTargetTrans->GetWorldPosition();
+	vTargetPos += FOCUS_OFFSET;	// 斜め後ろから見下ろすように位置を調整
+
+	// カメラの位置と向きを設定
+	pCameraTrans->SetLocalPosition(vTargetPos);
+	pCameraTrans->LookAt(pTargetTrans->GetWorldPosition());
+
+}
+
 
 /* ========================================
 	アクティブカメラリセット関数
