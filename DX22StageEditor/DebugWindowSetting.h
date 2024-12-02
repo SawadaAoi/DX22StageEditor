@@ -20,15 +20,12 @@
 #define WIN_SCENE_LIST		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::SCENE_LIST])
 #define WIN_OBJ_LIST		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::OBJECT_LIST])
 #define WIN_OBJ_INFO		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::OBJECT_INFO])
-#define WIN_UI_LIST			DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::UI_LIST])
-#define WIN_UI_INFO			DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::UI_INFO])
+#define WIN_DATA_INOUT		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::DATA_INOUT])
 
 // アイテム呼び出し用マクロ
 const std::string ITEM_OBJ_LIST_NAME = "Objects";
 #define ITEM_OBJ_LIST	WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()]
 
-const std::string ITEM_UI_LIST_NAME = "UIs";
-#define ITEM_UI_LIST	WIN_UI_LIST[ITEM_UI_LIST_NAME.c_str()]
 
 // =============== 名前空間 ===================
 namespace DebugUI
@@ -46,8 +43,7 @@ namespace DebugUI
 		SCENE_LIST,		// シーン一覧
 		OBJECT_LIST,	// オブジェクト一覧
 		OBJECT_INFO,	// オブジェクト情報
-		UI_LIST,
-		UI_INFO,
+		DATA_INOUT,		// データ入出力
 		MAX,
 	};
 
@@ -59,6 +55,7 @@ namespace DebugUI
 	void InitBasicSettings();
 	void InitCameraInfo();
 	void InitSceneList();
+	void InitDataInOut();
 
 }
 

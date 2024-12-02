@@ -168,20 +168,29 @@ void Menu::Update()
 	auto& mainWindow = m_WindowList[0];	// メインウィンドウ
 
 	// デバッグメニューの表示切り替え
-	if (Input::IsKeyPress(VK_SHIFT) && Input::IsKeyPress(VK_SPACE)) {
+	if (Input::IsKeyPress(VK_SHIFT) && Input::IsKeyPress(VK_SPACE))
+	{
 		if (Input::IsKeyTrigger(VK_RETURN))
-			mainWindow.enable ^= true;
+		{
+			//mainWindow.enable ^= true;
+			for (int i = 1; i < m_WindowList.size(); i++)
+			{
+				m_WindowList[i].enable ^= true;
+			}
+		}
+
+			
 	}
 
 	// Menuの各ウィンドウの表示切り替え
-	int cnt = 1;						// 0は自身のウィンドウ
-	auto it = mainWindow.items.begin();	
-	while (it != mainWindow.items.end())
-	{
-		m_WindowList[cnt].enable = (*it)->GetBool();
-		++it;
-		++cnt;
-	}
+	//int cnt = 1;						// 0は自身のウィンドウ
+	//auto it = mainWindow.items.begin();	
+	//while (it != mainWindow.items.end())
+	//{
+	//	m_WindowList[cnt].enable = (*it)->GetBool();
+	//	++it;
+	//	++cnt;
+	//}
 
 }
 
@@ -194,8 +203,8 @@ void Menu::Update()
 void Menu::Draw()
 {
 	// メインウィドウが有効になっていなければ非表示
-	if (!m_WindowList[0].enable)
-		return;
+	/*if (!m_WindowList[0].enable)
+		return;*/
 
 	// Imguiの描画準備
 	ImGui_ImplDX11_NewFrame();

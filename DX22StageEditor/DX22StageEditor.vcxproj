@@ -173,6 +173,8 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="ObjectTypeRegistry.cpp" />
     <ClCompile Include="ModelAnimeManager.cpp" />
     <ClCompile Include="ComponentBase.cpp" />
     <ClCompile Include="ComponentBillboard.cpp" />
@@ -242,6 +244,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ComponentOrder.h" />
+    <ClInclude Include="FileManager.h" />
+    <ClInclude Include="ObjectTypeRegistry.h" />
     <ClInclude Include="ModelAnimeManager.h" />
     <ClInclude Include="ColorVec3.h" />
     <ClInclude Include="ComponentBase.h" />

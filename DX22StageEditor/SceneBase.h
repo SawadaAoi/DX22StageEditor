@@ -45,15 +45,17 @@ public:
 	template<typename T>
 	std::vector<T*> GetSceneObjects();		// オブジェクト取得
 
-
+	void AddSceneObjectBase(ObjectBase* pObject);	// オブジェクト追加
+	ObjectBase* FindSceneObject(std::string sName);	// オブジェクト検索
 
 	// 衝突判定関連
 	void AddObjectCollision(ComponentCollisionBase* pCollision);	// 衝突判定コンポーネント追加
 	void RemoveObjectCollision(ComponentCollisionBase* pCollision);	// 衝突判定コンポーネント削除
 
-	// ゲッター
-	std::vector<ObjectBase*> GetSceneObjectsTag(E_ObjectTag tag);	// タグに対応するオブジェクトを取得
 
+	// ゲッター
+	std::vector<ObjectBase*> GetAllSceneObjects();					// シーン上に存在する全てのオブジェクトを取得 
+	std::vector<ObjectBase*> GetSceneObjectsTag(E_ObjectTag tag);	// タグに対応するオブジェクトを取得
 private:
 	void UpdateCollision();	// 衝突判定更新関数
 

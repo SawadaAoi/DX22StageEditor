@@ -27,14 +27,17 @@ class SceneBase;	// シーン基底クラス
 // 使い方：クラス定義内でDEFINE_OBJECT_TYPE(クラス名)を記述する
 // 例：DEFINE_OBJECT_TYPE(ObjectPlayer);
 // 関数のポインタをIDとして扱うため、コンポーネントの種類によって異なるIDを取得できる
-#define DEFINE_OBJECT_TYPE												\
+#define DEFINE_OBJECT_TYPE(name)												\
     static size_t GetStaticTypeID() {									\
 		static const size_t typeID = reinterpret_cast<size_t>(&typeID); \
 		return typeID;													\
     }																	\
     size_t GetTypeID() const override {									\
         return GetStaticTypeID();										\
-    }
+    }																	\
+	std::string GetObjClassName() const override {						\
+		return #name;													\
+	} 
 
 // =============== クラス定義 =====================
 class ObjectBase
@@ -85,6 +88,7 @@ public:
 	E_State GetState() const;							// 状態の取得
 	virtual size_t GetTypeID() const;					// コンポーネントの種類IDの取得
 	static size_t GetStaticTypeID();					// コンポーネントの種類IDの取得(静的)
+	virtual std::string GetObjClassName() const;		// クラス名の取得
 	ObjectBase* GetParentObject() const;				// 親オブジェクトの取得
 	std::vector<ObjectBase*> GetChildObjects() const;	// 子オブジェクトの取得
 	E_ObjectTag GetTag() const;							// タグの取得

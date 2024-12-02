@@ -20,6 +20,7 @@
 #include "ModelStaticManager.h"
 #include "ModelAnimeManager.h"
 #include "TextureManager.h"
+#include "ObjectTypeRegistry.h"
 
 #include "WindowAPI.h"
 
@@ -52,7 +53,7 @@ HRESULT AppController::Init()
 	DebugUI::InitDebugWindow();
 #endif
 
-
+	ObjectTypeRegistry::RegisterAllObjectTypes();	// オブジェクトタイプ登録
 	SceneManager::Init();	// シーン管理初期化
 
 	//DebugConsole::Init();	// デバッグコンソール初期化

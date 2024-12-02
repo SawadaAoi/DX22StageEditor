@@ -126,6 +126,9 @@
     <Filter Include="ソース ファイル\System\Model\Anime">
       <UniqueIdentifier>{78e47fff-a5ba-42ff-80ad-d7aa47044da2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\System\DataInOut">
+      <UniqueIdentifier>{d6143fca-2caa-431e-9976-485a4b63ddb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -325,6 +328,12 @@
     </ClCompile>
     <ClCompile Include="ModelAnimeManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectTypeRegistry.cpp">
+      <Filter>ソース ファイル\System\DataInOut</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>ソース ファイル\System\DataInOut</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -540,6 +549,12 @@
     </ClInclude>
     <ClInclude Include="ComponentOrder.h">
       <Filter>ソース ファイル\App\Component\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTypeRegistry.h">
+      <Filter>ソース ファイル\System\DataInOut</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>ソース ファイル\System\DataInOut</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

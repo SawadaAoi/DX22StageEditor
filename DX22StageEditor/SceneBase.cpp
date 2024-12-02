@@ -55,8 +55,6 @@ void SceneBase::Uninit()
 #ifdef _DEBUG
 	WIN_OBJ_LIST.Clear();
 	WIN_OBJ_INFO.Clear();
-	WIN_UI_LIST.Clear();
-	WIN_UI_INFO.Clear();
 	WIN_CAMERA_INFO["CameraList"].RemoveListItemAll();
 
 #endif // _DEBUG
@@ -147,6 +145,58 @@ void SceneBase::Draw()
 }
 
 /* ========================================
+	オブジェクト追加関数
+	-------------------------------------
+	内容：シーンにオブジェクトを追加
+		　※ファイルデータからオブジェクトを追加する場合に使用
+	-------------------------------------
+	引数：追加するオブジェクトポインタ
+=========================================== */
+void SceneBase::AddSceneObjectBase(ObjectBase* pObject)
+{
+
+	// シーンが更新中かどうかをチェックします
+	if (m_bIsUpdating)
+	{
+		// 一時保存用の配列にユニークポインタを移動します
+		m_pStandbyObjects.push_back(std::unique_ptr<ObjectBase>(pObject));
+	}
+	else
+	{
+		// シーンのオブジェクト配列にユニークポインタを移動します
+		m_pObjects.push_back(std::unique_ptr<ObjectBase>(pObject));
+	}
+
+#ifdef _DEBUG
+	// オブジェクト一覧に追加
+	ITEM_OBJ_LIST.AddListItem(pObject->GetName().c_str());
+#endif
+}
+
+/* ========================================
+	オブジェクト検索関数
+	-------------------------------------
+	内容：シーンに所属するオブジェクトを検索
+	-------------------------------------
+	引数：sName	オブジェクト名
+	-------------------------------------
+	戻値：取得オブジェクトポインタ
+=========================================== */
+ObjectBase* SceneBase::FindSceneObject(std::string sName)
+{
+	// 名前が一致するオブジェクトを検索
+	for (auto& pObject : m_pObjects)
+	{
+		if (pObject->GetName() == sName)
+		{
+			return pObject.get();
+		}
+	}
+
+	return nullptr;
+}
+
+/* ========================================
 	衝突判定配列追加関数
 	-------------------------------------
 	内容：衝突判定を管理する配列に追加
@@ -174,6 +224,8 @@ void SceneBase::RemoveObjectCollision(ComponentCollisionBase* pCollision)
 		std::remove(m_pObjectCollision.begin(), m_pObjectCollision.end(), pCollision), m_pObjectCollision.end());
 }
 
+
+
 /* ========================================
 	当たり判定配列更新関数
 	-------------------------------------
@@ -196,12 +248,12 @@ void SceneBase::UpdateCollision()
 	}
 }
 
+
 /* ========================================
 	タグ別オブジェクト収集関数
 	-------------------------------------
 	内容：シーンに所属する特定のタグのオブジェクト
 		　を全て収集する
-		 ※テンプレートではないが、似たような処理の為、ここに記載。
 	-------------------------------------
 	戻値：取得したオブジェクトのポインタ配列
 ========================================== */
@@ -222,6 +274,26 @@ std::vector<ObjectBase*> SceneBase::GetSceneObjectsTag(E_ObjectTag tag)
 
 	return objects;	// 取得したオブジェクトの配列を返す
 }
+
+/* ========================================
+	全オブジェクト取得関数
+	-------------------------------------
+	内容：シーンに所属する全てのオブジェクトを取得
+	-------------------------------------
+	戻値：取得したオブジェクトのポインタ配列
+=========================================== */
+std::vector<ObjectBase*> SceneBase::GetAllSceneObjects()
+{
+	std::vector<ObjectBase*> objects;
+
+	for (const auto& pObject : m_pObjects)
+	{
+		objects.push_back(pObject.get());
+	}
+
+	return objects;
+}
+
 
 /* ========================================
 	ユニーク名前生成関数
