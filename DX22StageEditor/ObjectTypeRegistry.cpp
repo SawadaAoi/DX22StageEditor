@@ -72,3 +72,13 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectCamera);
     
 }
+
+/* ========================================
+	ゲッター(オブジェクトマップ)関数
+	-------------------------------------
+	戻値：unordered_map<std::string, CreateFunction*>& オブジェクトマップ
+=========================================== */
+std::unordered_map<std::string, ObjectTypeRegistry::CreateFunction*>& ObjectTypeRegistry::GetObjectTypeMap()
+{
+	return m_ObjectTypeMap;
+}

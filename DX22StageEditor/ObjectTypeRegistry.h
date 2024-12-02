@@ -13,6 +13,9 @@
 #include "ObjectBase.h"
 #include "SceneManager.h"
 
+
+// =============== 定数定義 =======================
+#define OBJ_TYPE_REGISTRY_INST ObjectTypeRegistry::GetInstance()    // インスタンス取得用マクロ
 #define REGISTER_OBJECT_TYPE(className)                                             \
     ObjectTypeRegistry::GetInstance().Register(#className,                          \
         []() -> ObjectBase* { return new className(SceneManager::GetScene()); })    \
@@ -28,6 +31,10 @@ public:
 	ObjectBase* CreateObject(const std::string& sClassName);            // オブジェクト生成
 
 	static void RegisterAllObjectTypes();                               // オブジェクトの登録を行う関数
+
+    // ゲッター
+    std::unordered_map<std::string, CreateFunction*>& GetObjectTypeMap();
+
 private:
 	// 文字列とクラス生成関数のマップ
     std::unordered_map<std::string, CreateFunction*> m_ObjectTypeMap; 

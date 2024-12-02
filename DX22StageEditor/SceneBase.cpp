@@ -154,7 +154,6 @@ void SceneBase::Draw()
 =========================================== */
 void SceneBase::AddSceneObjectBase(ObjectBase* pObject)
 {
-
 	// シーンが更新中かどうかをチェックします
 	if (m_bIsUpdating)
 	{
@@ -248,6 +247,36 @@ void SceneBase::UpdateCollision()
 	}
 }
 
+/* ========================================
+	ユニーク名前生成関数
+	-------------------------------------
+	内容：名前が重複している場合に、
+		　連番をつけた名前を生成する
+	-------------------------------------
+	引数：sName	オブジェクト名
+	-------------------------------------
+	戻値：調整後の名前
+=========================================== */
+std::string SceneBase::CreateUniqueName(std::string sName)
+{
+	// 名前が重複している場合は連番を付ける
+	int nDupCnt = 0;	// 重複回数
+	for (auto& pObject : m_pObjects)
+	{
+		// 名前が含まれている場合(既に連番をつけている場合を想定して)
+		if (pObject->GetName().find(sName) != std::string::npos)
+		{
+			nDupCnt++;
+		}
+	}
+
+	if (nDupCnt > 0)
+	{
+		sName += "_" + std::to_string(nDupCnt);
+	}
+
+	return sName;
+}
 
 /* ========================================
 	タグ別オブジェクト収集関数
@@ -294,37 +323,6 @@ std::vector<ObjectBase*> SceneBase::GetAllSceneObjects()
 	return objects;
 }
 
-
-/* ========================================
-	ユニーク名前生成関数
-	-------------------------------------
-	内容：名前が重複している場合に、
-		　連番をつけた名前を生成する
-	-------------------------------------
-	引数：sName	オブジェクト名
-	-------------------------------------
-	戻値：調整後の名前
-=========================================== */
-std::string SceneBase::CreateUniqueName(std::string sName)
-{
-	// 名前が重複している場合は連番を付ける
-	int nDupCnt = 0;	// 重複回数
-	for (auto& pObject : m_pObjects)
-	{
-		// 名前が含まれている場合(既に連番をつけている場合を想定して)
-		if (pObject->GetName().find(sName) != std::string::npos)
-		{
-			nDupCnt++;
-		}
-	}
-
-	if (nDupCnt > 0)
-	{
-		sName += "_" + std::to_string(nDupCnt);
-	}
-
-	return sName;
-}
 
 
 // デバッグ用 ========================================================

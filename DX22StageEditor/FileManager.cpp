@@ -94,6 +94,8 @@ void FileManager::StageObjectInput(std::string sPath)
 		return;
 	}
 
+	SceneBase* pScene = SceneManager::GetScene();	// シーン取得
+
 	// ファイルの終端まで読み込む
 	while (!file.eof())
 	{
@@ -107,11 +109,11 @@ void FileManager::StageObjectInput(std::string sPath)
 		}
 
 		// オブジェクトの生成(渡したクラス名から生成)
-		ObjectBase* pObject = ObjectTypeRegistry::GetInstance().CreateObject(data.cClassType);
+		ObjectBase* pObject = OBJ_TYPE_REGISTRY_INST.CreateObject(data.cClassType);
 
 		if (pObject)
 		{
-			pObject->Init(data.cObjectName);	// オブジェクト初期化
+			pObject->Init(pScene->CreateUniqueName(data.cObjectName));	// オブジェクト初期化(名前重複避ける)
 			
 			// 位置、回転、拡大の設定
 			ComponentTransform* pTransform = pObject->GetComponent<ComponentTransform>();
@@ -120,7 +122,7 @@ void FileManager::StageObjectInput(std::string sPath)
 			pTransform->SetLocalScale(data.vScale);
 
 			// シーンに追加
-			SceneManager::GetScene()->AddSceneObjectBase(pObject);
+			pScene->AddSceneObjectBase(pObject);
 		}
  	}
 
@@ -148,8 +150,6 @@ void FileManager::StageObjectInput(std::string sPath)
 
 		// 親オブジェクトがいない場合はスキップ
 		if (sParentName.empty())	continue;
-
-		SceneBase* pScene = SceneManager::GetScene();	// シーン取得
 
 		// オブジェクトと親オブジェクトを取得
 		ObjectBase* pObject = pScene->FindSceneObject(sObjectName);

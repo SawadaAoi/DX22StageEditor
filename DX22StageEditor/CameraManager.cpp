@@ -11,6 +11,8 @@
 #include "SceneBase.h"		// シーン基底クラス
 #include "DebugMenu.h"
 
+// =============== 定数定義 =======================
+const std::string DEFAULT_CAMERA_NAME = "DefaultCamera";	// デフォルトカメラ名
 
 /* ========================================
 	コンストラクタ関数
@@ -53,7 +55,7 @@ void CCameraManager::Init(SceneBase* pScene)
 	m_pScene = pScene;	// シーンクラスのポインタを取得
 
 	// カメラ一覧をクリア
-	m_pCameraList.clear();	
+	m_pCameraList.clear();
 
 	// シーンからカメラリストを取得
 	m_pCameraList = m_pScene->GetSceneObjects<ObjectCamera>();
@@ -66,7 +68,7 @@ void CCameraManager::Init(SceneBase* pScene)
 	// カメラが存在しない場合
 	else
 	{
-		m_pScene->AddSceneObject<ObjectCamera>("Camera_0");				// カメラ追加
+		m_pScene->AddSceneObject<ObjectCamera>(DEFAULT_CAMERA_NAME);				// カメラ追加
 		SwitchCamera(0);												// アクティブにする
 	}
 }

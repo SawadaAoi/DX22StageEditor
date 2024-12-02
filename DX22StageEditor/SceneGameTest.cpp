@@ -20,33 +20,30 @@
 
 void SceneGameTest::InitLocal()
 {
-	//m_pPlayer = AddSceneObject<ObjectPlayer>("Player");
-	//m_pPlayer->GetComponent<ComponentTransform>()->SetLocalPosition(Vector3(-2.0f, 3.0f, 0.0f));
+
+	ObjectBase* ptest = AddSceneObject<ObjectBase>("Sphere");
+	ptest->AddComponent<ComponentCollisionSphere>();
+	ptest->AddComponent<ComponentGeometry>();
+	ptest->GetComponent<ComponentGeometry>()->SetShapeType(ComponentGeometry::E_ShapeType::TYPE_SPHERE);
+	ptest->GetComponent<ComponentTransform>()->SetLocalPosition(Vector3(0.0f, 0.5f, 0.0f));
+
+	ObjectBase* ptest2 = AddSceneObject<ObjectBase>("Box");
+	ptest2->AddComponent<ComponentCollisionAABB>();
+	ptest2->AddComponent<ComponentGeometry>();
+	ptest2->GetComponent<ComponentGeometry>()->SetShapeType(ComponentGeometry::E_ShapeType::TYPE_BOX);
+	ptest2->GetComponent<ComponentTransform>()->SetLocalPosition(Vector3(1.5f, 0.5f, 0.0f));
 
 
-	//ObjectBase* ptest = AddSceneObject<ObjectBase>("Sphere");
-	//ptest->AddComponent<ComponentCollisionSphere>();
-	//ptest->AddComponent<ComponentGeometry>();
-	//ptest->GetComponent<ComponentGeometry>()->SetShapeType(ComponentGeometry::E_ShapeType::TYPE_SPHERE);
-	//ptest->GetComponent<ComponentTransform>()->SetLocalPosition(Vector3(0.0f, 0.5f, 0.0f));
+	AddSceneObject<ObjectGround>("Ground");
 
-	//ObjectBase* ptest2 = AddSceneObject<ObjectBase>("Box");
-	//ptest2->AddComponent<ComponentCollisionAABB>();
-	//ptest2->AddComponent<ComponentGeometry>();
-	//ptest2->GetComponent<ComponentGeometry>()->SetShapeType(ComponentGeometry::E_ShapeType::TYPE_BOX);
-	//ptest2->GetComponent<ComponentTransform>()->SetLocalPosition(Vector3(1.5f, 0.5f, 0.0f));
+	m_StaticPlane = GetSceneObject<ObjectGround>("Ground");
+	m_StaticPlane->GetComponent<ComponentTransform>()->SetLocalPosition(Vector3(0.0f, 0.0f, 0.0f));
+	m_StaticPlane->GetComponent<ComponentTransform>()->SetLocalScale(Vector3(5.0f, 0.0f, 5.0f));
+	//m_StaticPlane->GetComponent<ComponentTransform>()->RotateZ(50.0f);	// ‰ñ“]
 
-
-	//AddSceneObject<ObjectGround>("Ground");
-
-	//m_StaticPlane = GetSceneObject<ObjectGround>("Ground");
-	//m_StaticPlane->GetComponent<ComponentTransform>()->SetLocalPosition(Vector3(0.0f, 0.0f, 0.0f));
-	//m_StaticPlane->GetComponent<ComponentTransform>()->SetLocalScale(Vector3(5.0f, 0.0f, 5.0f));
-	////m_StaticPlane->GetComponent<ComponentTransform>()->RotateZ(50.0f);	// ‰ñ“]
-
-	//m_StaticPlane->AddChildObject(AddSceneObject<ObjectGround>("Ground"));
-	//m_StaticPlane->AddChildObject(AddSceneObject<ObjectGround>("Ground"));
-	//m_StaticPlane->AddChildObject(AddSceneObject<ObjectGround>("Ground"));
+	m_StaticPlane->AddChildObject(AddSceneObject<ObjectGround>("Ground"));
+	m_StaticPlane->AddChildObject(AddSceneObject<ObjectGround>("Ground"));
+	m_StaticPlane->AddChildObject(AddSceneObject<ObjectGround>("Ground"));
 
 }
 

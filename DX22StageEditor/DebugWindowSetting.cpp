@@ -15,6 +15,8 @@
 #include "SceneManager.h"
 #include "CameraManager.h"	// カメラマネージャ
 #include "FileManager.h"
+#include "ObjectTypeRegistry.h"
+
 // シーン
 #include <type_traits>
 #include "SceneGameTest.h"
@@ -35,6 +37,7 @@ namespace DebugUI
 		"ObjectList",
 		"ObjectInfo",
 		"DataInOut",
+		"ObjectTypeList",
 	};
 
 	// シーン名、シーン変更関数のマップ
@@ -60,6 +63,7 @@ namespace DebugUI
 		InitCameraInfo();
 		InitSceneList();
 		InitDataInOut();
+		InitObjectTypeList();
 	}
 
 	/* ========================================
@@ -179,6 +183,40 @@ namespace DebugUI
 			FileManager::StageObjectInput(WIN_DATA_INOUT["DataPath"].GetPath());
 		}));
 
+	}
+
+	/* ========================================
+		ウィンドウ初期化(オブジェクトタイプ一覧)関数
+		-------------------------------------
+		内容：オブジェクトタイプ一覧の初期化を行う
+	=========================================== */
+	void InitObjectTypeList()
+	{
+		// オブジェクトタイプ一覧
+		Item* pObjectTypeList = Item::CreateList("ObjectTypes", [](const void* arg)
+		{
+			// 選択したらそのタイプのオブジェクトを生成
+			std::string sObjTypeName = reinterpret_cast<const char*>(arg);	// リスト項目名
+
+			// オブジェクト生成
+			ObjectBase* pObject = OBJ_TYPE_REGISTRY_INST.CreateObject(sObjTypeName);
+			if (pObject)
+			{
+				SceneBase* pScene = SceneManager::GetScene();			// シーン取得
+				pObject->Init(pScene->CreateUniqueName(sObjTypeName));	// オブジェクト初期化(名前重複避ける)
+				pScene->AddSceneObjectBase(pObject);					// シーンに追加
+			}
+
+		}, false);
+
+		// リスト初期化
+		std::unordered_map<std::string, ObjectTypeRegistry::CreateFunction*> objectTypeMap = OBJ_TYPE_REGISTRY_INST.GetObjectTypeMap();
+		for (auto& objectType : objectTypeMap)
+		{
+			pObjectTypeList->AddListItem(objectType.first.c_str());
+		}
+
+		WIN_OBJ_TYPE_LIST.AddItem(pObjectTypeList);
 	}
 
 }

@@ -52,6 +52,8 @@ public:
 	void AddObjectCollision(ComponentCollisionBase* pCollision);	// 衝突判定コンポーネント追加
 	void RemoveObjectCollision(ComponentCollisionBase* pCollision);	// 衝突判定コンポーネント削除
 
+	// 名前連番付与関数(重複チェック)
+	std::string CreateUniqueName(std::string sName);	
 
 	// ゲッター
 	std::vector<ObjectBase*> GetAllSceneObjects();					// シーン上に存在する全てのオブジェクトを取得 
@@ -63,8 +65,6 @@ private:
 	void InitObjectList();
 	void InitObjectInfo(std::string sName);
 #endif // _DEBUG
-private:
-	std::string CreateUniqueName(std::string sName);	// 名前が重複している場合は連番を付ける
 private:
 	std::vector<std::unique_ptr<ObjectBase>>	m_pObjects;			// シーンに所属するオブジェクト一覧
 	std::vector<std::unique_ptr<ObjectBase>>	m_pStandbyObjects;	// オブジェクトを一時的に保存しておく配列

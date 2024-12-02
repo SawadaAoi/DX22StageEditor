@@ -48,12 +48,13 @@ HRESULT AppController::Init()
 	MODEL_ANIME_MNG_INST.Init();	// アニメーションモデル管理初期化
 	TEXTURE_MNG_INST.Init();		// テクスチャ管理初期化
 
+	ObjectTypeRegistry::RegisterAllObjectTypes();	// オブジェクトタイプ登録
+
 #ifdef _DEBUG
 	DebugUI::Menu::Init();
 	DebugUI::InitDebugWindow();
 #endif
 
-	ObjectTypeRegistry::RegisterAllObjectTypes();	// オブジェクトタイプ登録
 	SceneManager::Init();	// シーン管理初期化
 
 	//DebugConsole::Init();	// デバッグコンソール初期化
