@@ -71,11 +71,11 @@ public:
 	virtual ~Item();
 
 	// 項目生成
-	static Item* CreateValue(const char* name, Kind kind, bool isSave = false);
-	static Item* CreateBind(const char* name, Kind kind, void* ptr, bool isSave = false);
-	static Item* CreateCallBack(const char* name, Kind kind, Callback func, bool isSave = false);
+	static Item* CreateValue(const char* name, Kind kind, bool isSave = false, bool isSameLine = false);
+	static Item* CreateBind(const char* name, Kind kind, void* ptr, bool isSave = false, bool isSameLine = false);
+	static Item* CreateCallBack(const char* name, Kind kind, Callback func, bool isSave = false, bool isSameLine = false);
 	static Item* CreateGroup(const char* name);
-	static Item* CreateList(const char* name, ConstCallback func = nullptr, bool isSave = false, bool bIsDropDown = false);
+	static Item* CreateList(const char* name, ConstCallback func = nullptr, bool isSave = false, bool bIsDropDown = false, bool isSameLine = false);
 
 public:
 
@@ -122,10 +122,10 @@ public:
 	void SetText(std::string value);
 	void SetListNo(int value);
 
-
 public:
-	static inline Item* dummy;	// 指定データが取得できなかった場合のダミー
-	bool		m_bSave;	// 保存フラグ
+	static inline Item* dummy;			// 指定データが取得できなかった場合のダミー
+	bool				m_bSave;		// 保存フラグ
+	bool				m_bSameLine;	// 同じ行に表示するか
 private:
 	std::string m_sName;	// 項目名
 	Kind		m_eKind;	// 項目種別

@@ -22,6 +22,7 @@
 #include "SceneGameTest.h"
 
 
+
 // =============== 名前空間 ===================
 namespace DebugUI
 {
@@ -231,23 +232,25 @@ namespace DebugUI
 	void InitTransformEdit()
 	{
 		// 編集モード表示
-		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("Mode", Item::Kind::Text, false));		
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("Mode", Item::Kind::Text, false));	
+
 
 		// 編集モードOffボタン
 		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("EditOff", Item::Kind::Command,	[](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(0); }));	
 
+		// リセットボタン
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Reset   ", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->ResetTransformEdit(); }, false, true));
+
 		// 編集モード切り替え(移動)
 		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Position", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(1);}));
-		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("ValuePos", Item::Kind::Float, false));
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("ValuePos", Item::Kind::Float, false, true));
 		// 編集モード切り替え(回転)
 		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Rotation", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(2); }));
-		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("ValueRot", Item::Kind::Float, false));
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("ValueRot", Item::Kind::Float, false, true));
 		// 編集モード切り替え(拡縮)
 		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Scale   ", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(3); }));
-		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("ValueScale", Item::Kind::Float, false));
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("ValueScale", Item::Kind::Float, false, true));
 
-		// リセットボタン
-		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Reset   ", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->ResetTransformEdit(); }));
 
 		// 初期値
 		WIN_TRANSFORM_EDIT["ValuePos"].SetFloat(1.0f);

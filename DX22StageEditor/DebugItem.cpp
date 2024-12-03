@@ -23,6 +23,7 @@ Item::Item()
 	, m_eKind(Kind::Label)
 	, m_bSave(false)
 	, m_uValue{}
+	, m_bSameLine(false)
 {
 
 }
@@ -44,15 +45,17 @@ Item::~Item()
 	引数：const char* name		項目名
 	引数：Kind kind				項目種別
 	引数：bool isSave			保存するか
+	引数：bool isSameLine		同じ行に表示するか
 	-------------------------------------
 	戻り値：Item* 項目ポインタ
 =========================================== */
-Item* Item::CreateValue(const char* name, Kind kind, bool isSave)
+Item* Item::CreateValue(const char* name, Kind kind, bool isSave, bool isSameLine)
 {
 	ItemValue* item		= new ItemValue;
-	item->m_sName			= name;		
-	item->m_eKind			= kind;
-	item->m_bSave			= isSave;
+	item->m_sName		= name;		
+	item->m_eKind		= kind;
+	item->m_bSave		= isSave;
+	item->m_bSameLine	= isSameLine;
 	return item;
 }
 
@@ -64,16 +67,19 @@ Item* Item::CreateValue(const char* name, Kind kind, bool isSave)
 	引数：const char* name		項目名
 	引数：Kind kind				項目種別
 	引数：void* ptr				変数ポインタ
+	引数：bool isSave			保存するか
+	引数：bool isSameLine		同じ行に表示するか
 	-------------------------------------
 	戻り値：Item* 項目ポインタ
 =========================================== */
-Item* Item::CreateBind(const char* name, Kind kind, void* ptr, bool isSave)
+Item* Item::CreateBind(const char* name, Kind kind, void* ptr, bool isSave, bool isSameLine)
 {
-	ItemBind* item	= new ItemBind;
+	ItemBind* item		= new ItemBind;
 	item->m_sName		= name;
 	item->m_eKind		= kind;
 	item->m_pBindVar	= ptr;
 	item->m_bSave		= isSave;
+	item->m_bSameLine = isSameLine;
 	return item;
 }
 
@@ -86,16 +92,18 @@ Item* Item::CreateBind(const char* name, Kind kind, void* ptr, bool isSave)
 	引数：const char* name		項目名
 	引数：Kind kind				項目種別
 	引数：Callback func			コールバック関数
+	引数：bool isSave			保存するか
 	-------------------------------------
 	戻り値：Item* 項目ポインタ
 =========================================== */
-Item* Item::CreateCallBack(const char* name, Kind kind, Callback func, bool isSave)
+Item* Item::CreateCallBack(const char* name, Kind kind, Callback func, bool isSave, bool isSameLine)
 {
 	ItemCallback* item	= new ItemCallback;
 	item->m_sName			= name;
 	item->m_eKind			= kind;
 	item->m_CallbackFunc	= func;
 	item->m_bSave			= isSave;
+	item->m_bSameLine = isSameLine;
 	return item;
 }
 
@@ -126,10 +134,11 @@ Item* Item::CreateGroup(const char* name)
 	引数2：ConstCallback func	コールバック関数
 	引数3：bool isSave			保存するか
 	引数4：bool isDropDown		表示形式をドロップダウンにするか
+	引数5：bool isSameLine		同じ行に表示するか
 	-------------------------------------
 	戻り値：Item* 項目ポインタ
 =========================================== */
-Item* Item::CreateList(const char* name, ConstCallback func, bool isSave, bool bIsDropDown)
+Item* Item::CreateList(const char* name, ConstCallback func, bool isSave, bool bIsDropDown, bool isSameLine)
 {
 	ItemList* item			= new ItemList;
 	item->m_sName			= name;
@@ -138,6 +147,7 @@ Item* Item::CreateList(const char* name, ConstCallback func, bool isSave, bool b
 	item->m_bSave			= isSave;
 	item->m_uValue.nValue	= -1;		// 最初は何も選択していない状態
 	item->m_bIsDropDown		= bIsDropDown;
+	item->m_bSameLine = isSameLine;
 	return item;
 }
 
@@ -612,6 +622,8 @@ void Item::SetListNo(int value)
 	if (m_eKind == List)
 		reinterpret_cast<ItemValue*>(this)->m_uValue.nValue = value;
 }
+
+
 
 
 }

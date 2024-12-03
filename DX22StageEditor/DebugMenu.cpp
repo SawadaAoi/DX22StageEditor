@@ -307,6 +307,9 @@ void Menu::DrawImgui(Item* item)
 	ItemBind*		pBind		= static_cast<ItemBind*>(item);
 	ItemCallback*	pCallback	= static_cast<ItemCallback*>(item);
 
+	// ˆê‚Â‘O‚Ì€–Ú‚Æ‰¡•À‚Ñ‚É•\Ž¦
+	if (item->m_bSameLine)	ImGui::SameLine();
+
 	// €–Ú‚ÌŽí—Þ
 	switch (item->GetKind())
 	{
