@@ -22,6 +22,7 @@
 #define WIN_OBJ_INFO		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::OBJECT_INFO])
 #define WIN_DATA_INOUT		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::DATA_INOUT])
 #define WIN_OBJ_TYPE_LIST	DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::OBJECT_TYPE_LIST])
+#define WIN_TRANSFORM_EDIT	DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::TRANSFORM_EDIT])
 
 // アイテム呼び出し用マクロ
 const std::string ITEM_OBJ_LIST_NAME = "Objects";
@@ -46,6 +47,7 @@ namespace DebugUI
 		OBJECT_INFO,		// オブジェクト情報
 		DATA_INOUT,			// データ入出力
 		OBJECT_TYPE_LIST,	// オブジェクトタイプ一覧
+		TRANSFORM_EDIT,		// オブジェクト変形エディタ
 		MAX,
 	};
 
@@ -59,6 +61,7 @@ namespace DebugUI
 	void InitSceneList();
 	void InitDataInOut();
 	void InitObjectTypeList();
+	void InitTransformEdit();
 
 }
 

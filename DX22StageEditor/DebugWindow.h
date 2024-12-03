@@ -33,6 +33,9 @@ public:
 	// 全アイテム削除
 	void Clear();
 
+	// セッター
+	void SetEnable(bool enable);
+
 private:
 	// アイテムの探索
 	Items::iterator FindItem(const char* name);

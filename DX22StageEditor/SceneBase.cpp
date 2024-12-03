@@ -13,6 +13,10 @@
 #include "CameraManager.h"
 #include "ComponentCollisionBase.h"
 
+// トランスフォームエディタ用
+#include "Input.h"	
+#include "ComponentTransform.h"
+
 /* ========================================
 	コンストラクタ関数
 	-------------------------------------
@@ -24,7 +28,9 @@ SceneBase::SceneBase()
 	, m_pStandbyObjects()	// オブジェクトを一時的に保存しておく配列
 	, m_pObjectCollision()	// 各オブジェクトが持つ衝突判定コンポーネント
 #ifdef _DEBUG
+	, m_pSelectObj(nullptr)	// 選択中のオブジェクト
 	, m_nObjectListSelectNo(-1)
+	, m_nTransEditMode(0)
 #endif // _DEBUG
 {
 }
@@ -107,12 +113,17 @@ void SceneBase::Update()
 
 	// 各当たり判定更新(死亡したオブジェクトをm_bColStatesMapから削除するためにこの位置に記述)
 	UpdateCollision();	
+	// 死亡状態のオブジェクトを削除
+	RemoveDeadObjects();	
+	// 個別更新処理
+	UpdateLocal();				
 
-	RemoveDeadObjects();		// 死亡状態のオブジェクトを削除
+#ifdef _DEBUG
+	UpdateTransformEdit();	// 変形エディタ更新
+	// リスト未選択時は選択オブジェクトをクリア
+	if (m_nObjectListSelectNo == -1) m_pSelectObj = nullptr;	
+#endif // _DEBUG
 
-
-
-	UpdateLocal();	// 個別更新処理
 }
 
 /* ========================================
@@ -418,51 +429,26 @@ void SceneBase::InitObjectList()
 	// オブジェクト削除ボタン
 	WIN_OBJ_LIST.AddItem(Item::CreateCallBack("ObjectRemove", Item::Kind::Command, [this](bool isWrite, void* arg)
 	{
-		if (m_nObjectListSelectNo == -1) return;					// 選択されていない場合は処理しない
-		std::string sName = WIN_OBJ_INFO["ObjectName"].GetText();	// 選択されたオブジェクト名を取得
+		// 選択されていない場合は処理しない
+		if (m_nObjectListSelectNo == -1) return;					
+		// シーン上のカメラが1つの場合、カメラオブジェクトは削除不可
+		if (dynamic_cast<ObjectCamera*>(m_pSelectObj) != nullptr && CAMERA_MNG_INST.GetCameraNum() == 1) return;
+		// カメラオブジェクトがアクティブの場合、削除不可
+		if (CAMERA_MNG_INST.GetActiveCamera() == m_pSelectObj)	return;
 
-		// 名前が一致するオブジェクトを検索
-		for (auto& pObject : m_pObjects)
-		{
-			if (pObject->GetName() == sName)
-			{
-				// シーン上のカメラが1つの場合、カメラオブジェクトは削除不可
-				if (dynamic_cast<ObjectCamera*>(pObject.get()) != nullptr && CAMERA_MNG_INST.GetCameraNum() == 1)
-				{
-					break;
-				}
-				// カメラオブジェクトがアクティブの場合、削除不可
-				if (CAMERA_MNG_INST.GetActiveCamera() == pObject.get())
-				{
-					break;
-				}
-
-				pObject->SetState(ObjectBase::E_State::STATE_DEAD);		// 死亡状態に設定
-				break;
-			}
-
-		}
+		m_pSelectObj->SetState(ObjectBase::E_State::STATE_DEAD);	// 死亡状態に設定
 
 	}));
 
 	// オブジェクトフォーカスボタン
 	WIN_OBJ_LIST.AddItem(Item::CreateCallBack("ObjectFocus", Item::Kind::Command, [this](bool isWrite, void* arg)
 	{
-		if (m_nObjectListSelectNo == -1) return;					// 選択されていない場合は処理しない
-		std::string sName = WIN_OBJ_INFO["ObjectName"].GetText();	// 選択されたオブジェクト名を取得
+		// 選択されていない場合は処理しない
+		if (m_nObjectListSelectNo == -1) return;					
+		// アクティブカメラはフォーカス移動不可
+		if (m_pSelectObj == CAMERA_MNG_INST.GetActiveCamera()) return; 
 
-		// 名前が一致するオブジェクトを検索
-		for (auto& pObject : m_pObjects)
-		{
-			if (pObject->GetName() == sName)
-			{
-				if (pObject.get() == CAMERA_MNG_INST.GetActiveCamera()) break; // アクティブカメラはフォーカス移動不可
-
-				CAMERA_MNG_INST.FocusMoveCamera(pObject.get());	// カメラを指定オブジェクトにフォーカス移動
-				break;
-			}
-
-		}
+		CAMERA_MNG_INST.FocusMoveCamera(m_pSelectObj);	// カメラを指定オブジェクトにフォーカス移動
 
 	}));
 }
@@ -488,8 +474,125 @@ void SceneBase::InitObjectInfo(std::string sName)
 		{
 			// オブジェクト情報を表示
 			pObject->Debug();
+			m_pSelectObj = pObject.get();	// 選択中のオブジェクトを保持
 			break;
 		}
+	}
+}
+
+/* ========================================
+	変形エディタモード設定関数
+	-------------------------------------
+	内容：変形エディタのモードを設定
+	-------------------------------------
+	引数：int モード(0:なし, 1:移動, 2:回転, 3:拡大)
+=========================================== */
+void SceneBase::SetTransformEditMode(int nMode)
+{
+	m_nTransEditMode = nMode;
+}
+
+/* ========================================
+	変形エディタリセット関数
+	-------------------------------------
+	内容：変形エディタのリセットボタンが押された時の処理
+=========================================== */
+void SceneBase::ResetTransformEdit()
+{
+	if (m_nObjectListSelectNo == -1) return;	// 選択されていない場合は処理しない
+
+	// 選択中のオブジェクトのトランスフォームを取得
+	ComponentTransform* pTrans = m_pSelectObj->GetComponent<ComponentTransform>();
+
+	// 変形エディタのモードによってリセット処理を変更
+	switch (m_nTransEditMode)
+	{
+	// Noneの場合は全てリセット
+	case 0:
+		pTrans->SetLocalPosition(Vector3<float>(0.0f, 0.0f, 0.0f));
+		pTrans->SetLocalRotationEuler(Vector3<float>(0.0f, 0.0f, 0.0f));
+		pTrans->SetLocalScale(Vector3<float>(1.0f, 1.0f, 1.0f));
+		break;
+	// 移動の場合は位置リセット
+	case 1:
+		pTrans->SetLocalPosition(Vector3<float>(0.0f, 0.0f, 0.0f));
+		break;
+	// 回転の場合は回転リセット
+	case 2:
+		pTrans->SetLocalRotationEuler(Vector3<float>(0.0f, 0.0f, 0.0f));
+		break;
+	// 拡大の場合は拡大リセット
+	case 3:
+		pTrans->SetLocalScale(Vector3<float>(1.0f, 1.0f, 1.0f));
+		break;
+	}
+}
+
+/* ========================================
+	変形エディタ更新関数
+	-------------------------------------
+	内容：変形エディタの更新処理
+=========================================== */
+void SceneBase::UpdateTransformEdit()
+{
+	if (m_nObjectListSelectNo == -1) return;	// 選択されていない場合は処理しない
+	if (Input::IsKeyPress(VK_SHIFT)) return;	// Shiftキーが押されている場合は処理しない
+
+	// 選択中のオブジェクトのトランスフォームを取得
+	ComponentTransform* pTrans = m_pSelectObj->GetComponent<ComponentTransform>();
+	// デバッグメニューのモードテキストを取得
+	DebugUI::Item* pModeText = &WIN_TRANSFORM_EDIT["Mode"];
+	pModeText->SetText("None");	// 選択なしはNone
+
+	// 変形エディタのモードによって処理を変更
+	switch (m_nTransEditMode)
+	{
+	case 1:	// 移動
+	{
+		pModeText->SetText("Position");
+		float fChangeVal = WIN_TRANSFORM_EDIT["ValuePos"].GetFloat() * DELTA_TIME;	// 変化値
+
+		// 移動処理
+		if (Input::IsKeyPress('W')) pTrans->TranslateZ(fChangeVal);
+		if (Input::IsKeyPress('S')) pTrans->TranslateZ(-fChangeVal);
+		if (Input::IsKeyPress('A')) pTrans->TranslateX(-fChangeVal);
+		if (Input::IsKeyPress('D')) pTrans->TranslateX(fChangeVal);
+		if (Input::IsKeyPress('E')) pTrans->TranslateY(fChangeVal);
+		if (Input::IsKeyPress('Q')) pTrans->TranslateY(-fChangeVal);
+		break;
+	}
+	case 2:	// 回転
+	{
+		pModeText->SetText("Rotation");
+		float fChangeVal = WIN_TRANSFORM_EDIT["ValueRot"].GetFloat() * DELTA_TIME;	// 変化値
+
+		// 回転処理
+		if (Input::IsKeyPress('W')) pTrans->RotateX(fChangeVal);
+		if (Input::IsKeyPress('S')) pTrans->RotateX(-fChangeVal);
+		if (Input::IsKeyPress('A')) pTrans->RotateY(-fChangeVal);
+		if (Input::IsKeyPress('D')) pTrans->RotateY(fChangeVal);
+		if (Input::IsKeyPress('E')) pTrans->RotateZ(fChangeVal);
+		if (Input::IsKeyPress('Q')) pTrans->RotateZ(-fChangeVal);
+		break;
+	}
+	case 3:	// 拡大
+	{
+		pModeText->SetText("Scale");
+		float fChangeVal = WIN_TRANSFORM_EDIT["ValueScale"].GetFloat() * DELTA_TIME;	// 変化値
+
+		// 拡大率
+		float fChangPlus	= 1.0f + fChangeVal;
+		float fChangMinus	= 1.0f - fChangeVal;
+
+		// 拡大処理
+		if (Input::IsKeyPress('W')) pTrans->ScaleZ(fChangPlus);
+		if (Input::IsKeyPress('S')) pTrans->ScaleZ(fChangMinus);
+		if (Input::IsKeyPress('A')) pTrans->ScaleX(fChangMinus);
+		if (Input::IsKeyPress('D')) pTrans->ScaleX(fChangPlus);
+		if (Input::IsKeyPress('E')) pTrans->ScaleY(fChangPlus);
+		if (Input::IsKeyPress('Q')) pTrans->ScaleY(fChangMinus);
+		break;
+	}
 	}
 }
 

@@ -97,7 +97,6 @@ void Window::Clear()
 	}
 	items.clear();
 }
-
 /*
 * @brief アイテムの探索
 */
@@ -107,6 +106,16 @@ Items::iterator Window::FindItem(const char* name)
 		[&name](const Item* obj) {
 		return strcmp(obj->GetName(), name) == 0;
 	});
+}
+
+/* ========================================
+	セッター(有効フラグ)関数
+	-------------------------------------
+	引数：bool enable 有効フラグ
+=========================================== */
+void Window::SetEnable(bool enable)
+{
+	this->enable = enable;
 }
 
 }

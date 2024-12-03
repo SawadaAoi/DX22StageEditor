@@ -63,12 +63,20 @@ public:
 	// ゲッター
 	std::vector<ObjectBase*> GetAllSceneObjects();					// シーン上に存在する全てのオブジェクトを取得 
 	std::vector<ObjectBase*> GetSceneObjectsTag(E_ObjectTag tag);	// タグに対応するオブジェクトを取得
+
+#ifdef _DEBUG
+	void SetTransformEditMode(int nMode); // 変形エディタのモードを設定
+	void ResetTransformEdit();	// 変形エディタのリセット
+#endif // _DEBUG
 private:
 	void UpdateCollision();	// 衝突判定更新関数
 
 #ifdef _DEBUG
 	void InitObjectList();
 	void InitObjectInfo(std::string sName);
+
+	void UpdateTransformEdit();	// 変形エディタの更新
+
 #endif // _DEBUG
 private:
 	std::vector<std::unique_ptr<ObjectBase>>	m_pObjects;			// シーンに所属するオブジェクト一覧
@@ -77,7 +85,9 @@ private:
 
 	bool m_bIsUpdating;	// 更新中かどうか
 #ifdef _DEBUG
+	ObjectBase* m_pSelectObj;	// 一覧で選択中のオブジェクト
 	int m_nObjectListSelectNo;	// オブジェクトリストの番号
+	int m_nTransEditMode;		// 変形エディタのモード(0:なし, 1:移動, 2:回転, 3:拡大)
 #endif // _DEBUG
 };
 

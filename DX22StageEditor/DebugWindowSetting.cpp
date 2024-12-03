@@ -38,6 +38,7 @@ namespace DebugUI
 		"ObjectInfo",
 		"DataInOut",
 		"ObjectTypeList",
+		"TransformEdit",
 	};
 
 	// シーン名、シーン変更関数のマップ
@@ -56,7 +57,7 @@ namespace DebugUI
 		// 各ウィンドウ生成
 		for (int i = 1; i < E_WinType::MAX; ++i)
 		{
-			Menu::Create(WIN_NAME[i]);
+			Menu::Create(WIN_NAME[i]).SetEnable(true);
 		}
 
 		InitBasicSettings();
@@ -64,6 +65,9 @@ namespace DebugUI
 		InitSceneList();
 		InitDataInOut();
 		InitObjectTypeList();
+		InitTransformEdit();
+
+
 	}
 
 	/* ========================================
@@ -152,7 +156,7 @@ namespace DebugUI
 			// 選択したらシーン変更
 			std::string sSceneName = reinterpret_cast<const char*>(arg);	// リスト項目名
 			SCENE_MAP.at(sSceneName)();	// シーン変更
-		}, false);
+		},false, false);
 
 		// シーン名をリストに追加
 		for (auto& scene : SCENE_MAP)
@@ -217,6 +221,38 @@ namespace DebugUI
 		}
 
 		WIN_OBJ_TYPE_LIST.AddItem(pObjectTypeList);
+	}
+
+	/* ========================================
+		ウィンドウ初期化(オブジェクト変形エディタ)関数
+		-------------------------------------
+		内容：オブジェクト変形エディタの初期化を行う
+	=========================================== */
+	void InitTransformEdit()
+	{
+		// 編集モード表示
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("Mode", Item::Kind::Text, false));		
+
+		// 編集モードOffボタン
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("EditOff", Item::Kind::Command,	[](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(0); }));	
+
+		// 編集モード切り替え(移動)
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Position", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(1);}));
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("ValuePos", Item::Kind::Float, false));
+		// 編集モード切り替え(回転)
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Rotation", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(2); }));
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("ValueRot", Item::Kind::Float, false));
+		// 編集モード切り替え(拡縮)
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Scale   ", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(3); }));
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateValue("ValueScale", Item::Kind::Float, false));
+
+		// リセットボタン
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Reset   ", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->ResetTransformEdit(); }));
+
+		// 初期値
+		WIN_TRANSFORM_EDIT["ValuePos"].SetFloat(1.0f);
+		WIN_TRANSFORM_EDIT["ValueRot"].SetFloat(10.0f);
+		WIN_TRANSFORM_EDIT["ValueScale"].SetFloat(1.0f);
 	}
 
 }
