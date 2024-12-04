@@ -179,9 +179,6 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>ソース ファイル\App\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="SceneGameTest.cpp">
-      <Filter>ソース ファイル\App\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="SceneBase.cpp">
       <Filter>ソース ファイル\App\Scene\0_Super</Filter>
     </ClCompile>
@@ -389,9 +386,6 @@
       <Filter>ソース ファイル\System\Shape</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
-      <Filter>ソース ファイル\App\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneGameTest.h">
       <Filter>ソース ファイル\App\Scene</Filter>
     </ClInclude>
     <ClInclude Include="SceneBase.h">

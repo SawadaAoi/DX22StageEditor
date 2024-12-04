@@ -109,6 +109,7 @@ public:
 	const char* GetPath() const;
 	int GetListNo(const char* name) const;
 	std::list<std::string> GetList() const;
+	std::string GetListText(int num) const;
 	std::string GetText() const;
 
 	// セッター

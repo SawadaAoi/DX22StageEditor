@@ -19,7 +19,6 @@
 
 // シーン
 #include <type_traits>
-#include "SceneGameTest.h"
 #include "SceneStageSaves.h"
 
 // =============== 定数定義 =======================
@@ -48,7 +47,6 @@ namespace DebugUI
 	// シーン名、シーン変更関数のマップ
 	const std::map< std::string, std::function<void()>> SCENE_MAP =
 	{
-		{"SceneGameTest", []() { SceneManager::ChangeScene<SceneGameTest>(); } },
 		{"SceneStageSave_1", []() { SceneManager::ChangeScene<SceneStageSave_1>(); } },
 		{"SceneStageSave_2", []() { SceneManager::ChangeScene<SceneStageSave_2>(); } },
 		{"SceneStageSave_3", []() { SceneManager::ChangeScene<SceneStageSave_3>(); } },
@@ -184,12 +182,19 @@ namespace DebugUI
 		// ファイル名
 		WIN_DATA_INOUT.AddItem(Item::CreateValue("FileName", Item::Kind::Path));	
 
+		// 拡張子リスト
+		WIN_DATA_INOUT.AddItem(Item::CreateList("Extension", nullptr, false, true, true));
+		WIN_DATA_INOUT["Extension"].AddListItem("");
+		WIN_DATA_INOUT["Extension"].AddListItem(".stg");
+		WIN_DATA_INOUT["Extension"].AddListItem(".txt");
+
 		// ファイル出力
 		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("OutPut", Item::Kind::Command,[](bool isWrite, void* arg) 
 		{
 			std::string sPath		=  WIN_DATA_INOUT["SavePath"].GetPath();
 			std::string sFileName	= WIN_DATA_INOUT["FileName"].GetPath();
-			FileManager::StageObjectOutput(sPath + "/" + sFileName);
+			std::string sExtension	= WIN_DATA_INOUT["Extension"].GetListText(WIN_DATA_INOUT["Extension"].GetInt());
+			FileManager::StageObjectOutput(sPath + "/" + sFileName + sExtension);
 		}));
 
 		// ファイル入力
@@ -197,7 +202,8 @@ namespace DebugUI
 		{
 			std::string sPath		= WIN_DATA_INOUT["SavePath"].GetPath();
 			std::string sFileName	= WIN_DATA_INOUT["FileName"].GetPath();
-			FileManager::StageObjectInput(sPath + "/" + sFileName);
+			std::string sExtension	= WIN_DATA_INOUT["Extension"].GetListText(WIN_DATA_INOUT["Extension"].GetInt());
+			FileManager::StageObjectInput(sPath + "/" + sFileName + sExtension);
 		}, false, true));
 
 		WIN_DATA_INOUT.AddItem(Item::CreateValue("InputResult ", Item::Kind::Text, false));	// 読込結果表示

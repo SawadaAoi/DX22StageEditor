@@ -18,7 +18,7 @@
 // =============== 定数 =====================
 const std::string sPath = "Assets/Save/Scene/";
 const std::string sFileName = "StageSave";
-const std::string sExtension = ".dat";
+const std::string sExtension = ".stg";
 
 // ファイル入出力マクロ
 #define FILE_OUTPUT(num)    FileManager::StageObjectOutput(sPath + sFileName + std::to_string(num) + sExtension)

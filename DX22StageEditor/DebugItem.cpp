@@ -505,6 +505,30 @@ std::list<std::string> Item::GetList() const
 }
 
 /* ========================================
+	リストテキスト取得関数
+	-------------------------------------
+	内容：リストの指定番目のテキストを取得
+	-------------------------------------
+	引数：int num 番号
+	-------------------------------------
+	戻り値：std::string テキスト
+=========================================== */
+std::string Item::GetListText(int num) const
+{
+	if (m_eKind == List)
+	{
+		const ItemList* pItemList = static_cast<const ItemList*>(this);
+		if (num < pItemList->m_sItemList.size())
+		{
+			auto itr = pItemList->m_sItemList.begin();
+			std::advance(itr, num);	// 指定番目まで進める
+			return *itr;
+		}
+	}
+	return "";
+}
+
+/* ========================================
 	ゲッター(項目(Text))関数
 	-------------------------------------
 	戻値：const char* 項目の値
