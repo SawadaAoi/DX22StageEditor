@@ -556,6 +556,9 @@
     <ClInclude Include="FileManager.h">
       <Filter>ソース ファイル\System\DataInOut</Filter>
     </ClInclude>
+    <ClInclude Include="SceneStageSaves.h">
+      <Filter>ソース ファイル\App\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VS_Shape.hlsl">

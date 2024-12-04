@@ -129,7 +129,7 @@ void ComponentGroundRaycast::CheckGround()
 
 		
 		// ƒŒƒC‚ª’n–Ê‚É“–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ð”»’è
-		if (!CheckHit(pPlaneTran->GetWorldPosition(), pGround->GetNormalDirection().GetNormalize()))
+		if (!CheckHit(pPlaneTran->GetWorldPosition(), pGround->GetWorldNormalDirection().GetNormalize()))
 		{
 			m_bIsHit = false;
 			continue;

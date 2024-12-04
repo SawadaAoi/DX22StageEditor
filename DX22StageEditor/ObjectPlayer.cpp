@@ -59,8 +59,8 @@ void ObjectPlayer::InitLocal()
 	//m_pLine = std::make_unique<ShapeLine>(Vector3<float>(0.0f, 0.0f, 0.0f), m_pTransform->GetForwardVector());
 
 	m_pGroundRaycast = AddComponent<ComponentGroundRaycast>();
-	m_pGroundRaycast->SetStartPosOffset(Vector3<float>(0.0f, -0.5f, 0.0f));
-	m_pGroundRaycast->SetRayLength(0.1f);
+	m_pGroundRaycast->SetStartPosOffset(Vector3<float>(0.0f, -0.4f, 0.0f));
+	m_pGroundRaycast->SetRayLength(0.2f);
 
 	AddComponent<ComponentCollisionOBB>();
 	

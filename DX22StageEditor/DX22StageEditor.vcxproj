@@ -291,6 +291,7 @@
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneGameTest.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SceneStageSaves.h" />
     <ClInclude Include="ShapeBox.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="DebugConsole.h" />
