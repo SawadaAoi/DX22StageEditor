@@ -33,9 +33,12 @@ void FileManager::StageObjectOutput(std::string sPath)
 	// ファイルを開く
 	std::ofstream file(sPath, std::ios::out | std::ios::binary);
 
+	// ファイルが開けなかったら終了
 	if (!file.is_open())
 	{
-		MessageBox(nullptr, "ファイルが開けませんでした", "エラー", MB_OK);
+		// メッセージ表示(失敗)
+		WIN_DATA_INOUT["InputResult "].SetText("< Failed > " + sPath.substr(sPath.find_last_of('/') + 1));
+
 		return;
 	}
 
@@ -74,9 +77,9 @@ void FileManager::StageObjectOutput(std::string sPath)
 		// ファイルに書き込み
 		file.write((char*)&data, sizeof(S_SaveDataObject));
 	}
-	
-	// 成功したメッセージ
-	MessageBox(nullptr, "ファイル出力が完了しました", "成功", MB_OK);
+
+	// メッセージ表示(成功)
+	WIN_DATA_INOUT["InputResult "].SetText("< Success > " + sPath.substr(sPath.find_last_of('/') + 1));
 
 	file.close();
 }
@@ -93,9 +96,11 @@ void FileManager::StageObjectInput(std::string sPath)
 	// ファイルを開く
 	std::ifstream file(sPath, std::ios::in | std::ios::binary);
 
+	// ファイルが開けなかったら終了
 	if (!file.is_open())
 	{
-		MessageBox(nullptr, "ファイルが開けませんでした", "エラー", MB_OK);
+		// メッセージ表示(失敗)
+		WIN_DATA_INOUT["OutputResult"].SetText("< Failed > " + sPath.substr(sPath.find_last_of('/') + 1));
 		return;
 	}
 
@@ -167,8 +172,8 @@ void FileManager::StageObjectInput(std::string sPath)
 		}
 	}
 
-	// 成功したメッセージ
-	MessageBox(nullptr, "ファイル読込が完了しました", "成功", MB_OK);
+	// メッセージ表示(成功)
+	WIN_DATA_INOUT["OutputResult"].SetText("< Success > " + sPath.substr(sPath.find_last_of('/') + 1));
 
 	file.close();
 

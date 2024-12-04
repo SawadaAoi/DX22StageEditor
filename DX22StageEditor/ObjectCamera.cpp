@@ -94,7 +94,7 @@ DirectX::XMFLOAT4X4 ObjectCamera::GetProjectionMatrix()
 {
 #ifdef _DEBUG
 	// デバッグメニューの平行投影フラグがONの場合
-	if (WIN_CAMERA_INFO["IsOrthographic"].GetBool())
+	if (WIN_CAMERA_INFO["Orthographic"].GetBool())
 	{
 		return m_pCameraBase->GetProjectionMatrixOrtho();
 	}

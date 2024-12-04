@@ -33,8 +33,10 @@ ObjectPlayer::ObjectPlayer(SceneBase* pScene)
 	: ObjectBase(pScene)
 	, m_pTransform(nullptr)
 	, m_pGeometry(nullptr)
+	, m_pGroundRaycast(nullptr)
+	, m_pRigidbody(nullptr)
 {
-	
+
 }
 
 /* ========================================
@@ -44,33 +46,22 @@ ObjectPlayer::ObjectPlayer(SceneBase* pScene)
 ========================================= */
 void ObjectPlayer::InitLocal()
 {
-	m_pTransform =GetComponent<ComponentTransform>();
+	m_pTransform = GetComponent<ComponentTransform>();
 
-
-
-	/*m_pGeometry = AddComponent<ComponentGeometry>();
-	m_pGeometry->SetShapeType(ComponentGeometry::TYPE_BOX);*/
-
-	//AddComponent<ComponentModelStatic>();
-	ComponentModelAnime*  a = AddComponent<ComponentModelAnime>();
-	a->SetModel(GET_MODEL_ANIME(ANIME_BASE_KEY::AB_PLAYER));
-	a->PlayAnime(ANIME_KEY_PLAYER::PLYR_IDLE, true, 1.0f);
-
-	//m_pLine = std::make_unique<ShapeLine>(Vector3<float>(0.0f, 0.0f, 0.0f), m_pTransform->GetForwardVector());
 
 	m_pGroundRaycast = AddComponent<ComponentGroundRaycast>();
 	m_pGroundRaycast->SetStartPosOffset(Vector3<float>(0.0f, -0.4f, 0.0f));
 	m_pGroundRaycast->SetRayLength(0.2f);
 
 	AddComponent<ComponentCollisionOBB>();
-	
-	AddComponent<ComponentRigidbody>();
-	GetComponent<ComponentRigidbody>()->SetUseGravity(true);
-	GetComponent<ComponentRigidbody>()->SetGroundDrag(0.9f);
+
+	m_pRigidbody = AddComponent<ComponentRigidbody>();
+	m_pRigidbody->SetUseGravity(true);
+	m_pRigidbody->SetGroundDrag(0.9f);
 
 	AddComponent<ComponentPlayerController>();
 
-
+	AddComponent<ComponentModelAnime>();
 }
 
 /* ========================================
@@ -82,19 +73,14 @@ void ObjectPlayer::UpdateLocal()
 {
 	//m_pLine->UpdateLine(1,m_pTransform->GetWorldPosition(), m_pTransform->GetWorldPosition()+(m_pTransform->GetForwardVector()));
 
-
-	if (m_pGroundRaycast->GetHitFlg())
+	// 地面に設置している場合　かつ　ジャンプ中でない場合
+	if (m_pGroundRaycast->GetHitFlg() && m_pRigidbody->GetVelocity().y <= 0.0f)
 	{
 		Vector3<float> vPos = m_pTransform->GetWorldPosition();
 		vPos.y = m_pGroundRaycast->GetHitPos().y + 0.5f;
 		m_pTransform->SetLocalPosition(vPos);
 	}
 
-
-	if (Input::IsKeyTrigger(VK_SPACE))
-	{
-		m_pTransform->TranslateY(1.0f);
-	}
 }
 
 void ObjectPlayer::DrawLocal()

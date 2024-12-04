@@ -32,6 +32,7 @@ private:
 	class ComponentGeometry* m_pGeometry;
 	std::unique_ptr<class ShapeLine> m_pLine;
 	class ComponentGroundRaycast* m_pGroundRaycast;
+	class ComponentRigidbody* m_pRigidbody;
 
 };
 

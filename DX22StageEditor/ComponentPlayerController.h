@@ -58,5 +58,8 @@ private:
 	 float m_fJumpPower;	// ジャンプ力
 
 	 BYTE m_MoveKey[E_MoveKey::Max];		// 移動キー
+
+	 // 入力有効フラグ
+	 bool m_bIsInputEnable;
 };
 

@@ -200,6 +200,9 @@ namespace DebugUI
 			FileManager::StageObjectInput(sPath + "/" + sFileName);
 		}, false, true));
 
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("InputResult ", Item::Kind::Text, false));	// 読込結果表示
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("OutputResult", Item::Kind::Text, false));	// 出力結果表示
+
 		// 初期値
 		WIN_DATA_INOUT["SavePath"].SetPath(DEFAULT_SAVE_PATH);
 	}
