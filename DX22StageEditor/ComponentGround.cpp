@@ -95,23 +95,31 @@ void ComponentGround::UpdateTriangleVertex()
 	Vector3<float> vScaleHalf = m_pOwnerTransform->GetWorldScale() / 2.0f;
 	Vector3<float> vPos = m_pOwnerTransform->GetWorldPosition();
 
-	// 三角形の頂点を設定(Z軸は奥が正
-	// 1つ目の三角形(左上、右上、左下)
-	m_TriangleVertices[0].pos[0] = vPos + Vector3<float>(-vScaleHalf.x, 0.0f, vScaleHalf.z);	// 左上
-	m_TriangleVertices[0].pos[1] = vPos + Vector3<float>(vScaleHalf.x, 0.0f, vScaleHalf.z);	// 右上
-	m_TriangleVertices[0].pos[2] = vPos + Vector3<float>(-vScaleHalf.x, 0.0f, -vScaleHalf.z);	// 左下
+	// 三角形の頂点を設定 (Z軸は奥が正)
+	// 1つ目の三角形 (左上、右上、左下)
+	m_TriangleVertices[0].pos[0] = Vector3<float>(-vScaleHalf.x, 0.0f, vScaleHalf.z);   // 左上
+	m_TriangleVertices[0].pos[1] = Vector3<float>(vScaleHalf.x, 0.0f, vScaleHalf.z);    // 右上
+	m_TriangleVertices[0].pos[2] = Vector3<float>(-vScaleHalf.x, 0.0f, -vScaleHalf.z);  // 左下
 
-	// 2つ目の三角形(右上、右下、左下)
-	m_TriangleVertices[1].pos[0] = vPos + Vector3<float>(vScaleHalf.x, 0.0f, vScaleHalf.z);	// 右上
-	m_TriangleVertices[1].pos[1] = vPos + Vector3<float>(vScaleHalf.x, 0.0f, -vScaleHalf.z);	// 右下
-	m_TriangleVertices[1].pos[2] = vPos + Vector3<float>(-vScaleHalf.x, 0.0f, -vScaleHalf.z);	// 左下
+	// 2つ目の三角形 (右上、右下、左下)
+	m_TriangleVertices[1].pos[0] = Vector3<float>(vScaleHalf.x, 0.0f, vScaleHalf.z);    // 右上
+	m_TriangleVertices[1].pos[1] = Vector3<float>(vScaleHalf.x, 0.0f, -vScaleHalf.z);   // 右下
+	m_TriangleVertices[1].pos[2] = Vector3<float>(-vScaleHalf.x, 0.0f, -vScaleHalf.z);  // 左下
 
 	// 親オブジェクトの回転に合わせて三角形の頂点を回転
+	Quaternion rotation = m_pOwnerTransform->GetWorldRotation();
 	for (int i = 0; i < TRIANGLE_NUM; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			m_TriangleVertices[i].pos[j] = m_pOwnerTransform->GetWorldRotation().Rotate(m_TriangleVertices[i].pos[j]);
+			// 1. 回転中心を原点に移動 (相対座標に変換)
+			Vector3<float> relativePos = m_TriangleVertices[i].pos[j];
+
+			// 2. 頂点を回転
+			relativePos = rotation.Rotate(relativePos);
+
+			// 3. 元の位置に戻す
+			m_TriangleVertices[i].pos[j] = relativePos + vPos;
 		}
 	}
 
