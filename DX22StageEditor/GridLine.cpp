@@ -41,12 +41,12 @@ void GridLine::Init()
 	m_bIsAxis = true;
 
 #ifdef _DEBUG
-	m_bIsEnable = WIN_BASIC_SETTING["Grid"]["Enable"].GetBool();
+	m_bIsEnable = WIN_BASIC_SETTING["Grid"]["GridEnable"].GetBool();
 	m_fGridSize = WIN_BASIC_SETTING["Grid"]["Size"].GetFloat();
 	m_fGridMargin = WIN_BASIC_SETTING["Grid"]["Margin"].GetFloat();
 	DirectX::XMFLOAT4 color = WIN_BASIC_SETTING["Grid"]["Color"].GetColor();
 	m_fGridColor = { color.x, color.y, color.z };
-	m_bIsAxis = WIN_BASIC_SETTING["Grid"]["Axis"].GetBool();
+	m_bIsAxis = WIN_BASIC_SETTING["Grid"]["AxisEnable"].GetBool();
 #endif
 
 	m_pGridLine = std::make_unique<ShapeLine>(m_fGridSize * m_fGridSize);

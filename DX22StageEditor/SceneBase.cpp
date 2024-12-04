@@ -67,7 +67,7 @@ void SceneBase::Uninit()
 	WIN_CAMERA_INFO["CameraList"].RemoveListItemAll();
 
 #endif // _DEBUG
-
+	UninitLocal();	// 個別終了処理
 
 	// 所持オブジェクト配列の全要素を削除
 	for (auto& pObject : m_pObjects)
@@ -83,7 +83,6 @@ void SceneBase::Uninit()
 	}
 	m_pStandbyObjects.clear();	// クリア
 
-	UninitLocal();	// 個別終了処理
 }
 
 /* ========================================
@@ -405,6 +404,32 @@ void SceneBase::InitObjectList()
 {
 	using namespace DebugUI;
 
+	// オブジェクト削除ボタン
+	WIN_OBJ_LIST.AddItem(Item::CreateCallBack("Remove", Item::Kind::Command, [this](bool isWrite, void* arg)
+	{
+		// 選択されていない場合は処理しない
+		if (m_nObjectListSelectNo == -1) return;					
+		// シーン上のカメラが1つの場合、カメラオブジェクトは削除不可
+		if (dynamic_cast<ObjectCamera*>(m_pSelectObj) != nullptr && CAMERA_MNG_INST.GetCameraNum() == 1) return;
+		// カメラオブジェクトがアクティブの場合、削除不可
+		if (CAMERA_MNG_INST.GetActiveCamera() == m_pSelectObj)	return;
+
+		m_pSelectObj->SetState(ObjectBase::E_State::STATE_DEAD);	// 死亡状態に設定
+
+	}));
+
+	// オブジェクトフォーカスボタン
+	WIN_OBJ_LIST.AddItem(Item::CreateCallBack("Focus", Item::Kind::Command, [this](bool isWrite, void* arg)
+	{
+		// 選択されていない場合は処理しない
+		if (m_nObjectListSelectNo == -1) return;					
+		// アクティブカメラはフォーカス移動不可
+		if (m_pSelectObj == CAMERA_MNG_INST.GetActiveCamera()) return; 
+
+		CAMERA_MNG_INST.FocusMoveCamera(m_pSelectObj);	// カメラを指定オブジェクトにフォーカス移動
+
+	}, false, true));
+
 	Item::ConstCallback  FuncListClick = [this](const void* arg) {
 		// クリックされたオブジェクトの情報を表示
 
@@ -425,32 +450,6 @@ void SceneBase::InitObjectList()
 
 	Item* pList = Item::CreateList(ITEM_OBJ_LIST_NAME.c_str(), FuncListClick, false);
 	WIN_OBJ_LIST.AddItem(pList);
-
-	// オブジェクト削除ボタン
-	WIN_OBJ_LIST.AddItem(Item::CreateCallBack("ObjectRemove", Item::Kind::Command, [this](bool isWrite, void* arg)
-	{
-		// 選択されていない場合は処理しない
-		if (m_nObjectListSelectNo == -1) return;					
-		// シーン上のカメラが1つの場合、カメラオブジェクトは削除不可
-		if (dynamic_cast<ObjectCamera*>(m_pSelectObj) != nullptr && CAMERA_MNG_INST.GetCameraNum() == 1) return;
-		// カメラオブジェクトがアクティブの場合、削除不可
-		if (CAMERA_MNG_INST.GetActiveCamera() == m_pSelectObj)	return;
-
-		m_pSelectObj->SetState(ObjectBase::E_State::STATE_DEAD);	// 死亡状態に設定
-
-	}));
-
-	// オブジェクトフォーカスボタン
-	WIN_OBJ_LIST.AddItem(Item::CreateCallBack("ObjectFocus", Item::Kind::Command, [this](bool isWrite, void* arg)
-	{
-		// 選択されていない場合は処理しない
-		if (m_nObjectListSelectNo == -1) return;					
-		// アクティブカメラはフォーカス移動不可
-		if (m_pSelectObj == CAMERA_MNG_INST.GetActiveCamera()) return; 
-
-		CAMERA_MNG_INST.FocusMoveCamera(m_pSelectObj);	// カメラを指定オブジェクトにフォーカス移動
-
-	}));
 }
 
 /* ========================================

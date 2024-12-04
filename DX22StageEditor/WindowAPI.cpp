@@ -188,9 +188,9 @@ void WindowAPI::Run()
 #ifdef _DEBUG	// デバッグメニューは必ず動かす為にm_AppControllerの外に記述
 				DebugUI::Menu::Update();
 
-				m_bActive		= !WIN_BASIC_SETTING["Pause"].GetBool();			// ポーズフラグを取得
-				m_fRefreshRate	= WIN_BASIC_SETTING["RefreshRate"].GetFloat();	// リフレッシュレートを取得
-				WIN_BASIC_SETTING["FPS"].SetText(std::to_string(1000.0f / diff));	// FPSを取得
+				m_bActive		= !WIN_BASIC_SETTING["Draw"]["Pause"].GetBool();			// ポーズフラグを取得
+				m_fRefreshRate	= WIN_BASIC_SETTING["Draw"]["RefreshRate"].GetFloat();		// リフレッシュレートを取得
+				WIN_BASIC_SETTING["Draw"]["FPS"].SetText(std::to_string(1000.0f / diff));	// FPSを取得
 #endif
 
 				// ポーズ中じゃない＆ウィンドウが移動中じゃない＆ウィンドウがフォーカスされている場合

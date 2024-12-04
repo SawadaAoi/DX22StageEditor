@@ -18,6 +18,8 @@
 #include "ComponentTransform.h"
 #include "ObjectTypeRegistry.h"
 
+#include <Windows.h>	// メッセージボックス用
+
 
 /* ========================================
 	ファイル出力(シーンオブジェクト)関数
@@ -33,7 +35,7 @@ void FileManager::StageObjectOutput(std::string sPath)
 
 	if (!file.is_open())
 	{
-		std::cout << "ファイルが開けませんでした" << std::endl;
+		MessageBox(nullptr, "ファイルが開けませんでした", "エラー", MB_OK);
 		return;
 	}
 
@@ -72,6 +74,9 @@ void FileManager::StageObjectOutput(std::string sPath)
 		// ファイルに書き込み
 		file.write((char*)&data, sizeof(S_SaveDataObject));
 	}
+	
+	// 成功したメッセージ
+	MessageBox(nullptr, "ファイル出力が完了しました", "成功", MB_OK);
 
 	file.close();
 }
@@ -90,7 +95,7 @@ void FileManager::StageObjectInput(std::string sPath)
 
 	if (!file.is_open())
 	{
-		std::cout << "ファイルが開けませんでした" << std::endl;
+		MessageBox(nullptr, "ファイルが開けませんでした", "エラー", MB_OK);
 		return;
 	}
 
@@ -161,6 +166,9 @@ void FileManager::StageObjectInput(std::string sPath)
 			pObject->SetParentObject(pParent);
 		}
 	}
+
+	// 成功したメッセージ
+	MessageBox(nullptr, "ファイル読込が完了しました", "成功", MB_OK);
 
 	file.close();
 

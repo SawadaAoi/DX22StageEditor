@@ -9,8 +9,7 @@
 // =============== インクルード =====================
 #include "SceneManager.h"
 #include "SceneBase.h"
-#include "SceneGameTest.h"
-
+#include "SceneStageSaves.h"
 
 /* ========================================
 	コンストラクタ関数
@@ -19,7 +18,7 @@
 =========================================== */
 void SceneManager::Init()
 {
-	ChangeScene<SceneGameTest>();
+	ChangeScene<SceneStageSave_1>();
 }
 
 /* ========================================

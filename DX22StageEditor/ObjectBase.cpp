@@ -488,15 +488,17 @@ void ObjectBase::Debug()
 	Item* pGroupObjectBase = Item::CreateGroup("ObjectBase");	// オブジェクト基本情報グループ
 
 	// オブジェクト名変更
-	pGroupObjectBase->AddGroupItem(Item::CreateValue("ObjectReName", Item::Path));	// 変更後の名前
 	pGroupObjectBase->AddGroupItem(Item::CreateCallBack("ChangeName", Item::Kind::Command, [this](bool isWrite, void* arg)	// 名前変更ボタン
 	{
 		ChangeName();
 	}));
+	pGroupObjectBase->AddGroupItem(Item::CreateValue("ObjectReName", Item::Path, false, true));	// 変更後の名前
 
 	pGroupObjectBase->AddGroupItem(InitParentList());	// 親オブジェクトリスト
 
 	pObjInfo.AddItem(pGroupObjectBase);		// グループを追加
+
+	pObjInfo["ObjectBase"]["ObjectReName"].SetPath(this->GetName().c_str());	// 変更後の名前を設定
 
 	// 各コンポーネント情報をオブジェクト情報ウィンドウに表示
 	auto it = m_pComponents.begin();

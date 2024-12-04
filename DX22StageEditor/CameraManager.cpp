@@ -100,7 +100,7 @@ void CCameraManager::SwitchCamera(int num)
 
 #ifdef _DEBUG
 	// オブジェクト一覧に追加
-	WIN_CAMERA_INFO["ActiveCamera"].SetText(m_pActiveCamera->GetName().c_str());
+	WIN_CAMERA_INFO["Active"].SetText(m_pActiveCamera->GetName().c_str());
 
 #endif // _DEBUG
 }

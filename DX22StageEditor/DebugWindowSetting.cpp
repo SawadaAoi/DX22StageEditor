@@ -20,7 +20,10 @@
 // シーン
 #include <type_traits>
 #include "SceneGameTest.h"
+#include "SceneStageSaves.h"
 
+// =============== 定数定義 =======================
+const std::string DEFAULT_SAVE_PATH = "Assets/Save/";	// デフォルトの保存先
 
 
 // =============== 名前空間 ===================
@@ -46,6 +49,11 @@ namespace DebugUI
 	const std::map< std::string, std::function<void()>> SCENE_MAP =
 	{
 		{"SceneGameTest", []() { SceneManager::ChangeScene<SceneGameTest>(); } },
+		{"SceneStageSave_1", []() { SceneManager::ChangeScene<SceneStageSave_1>(); } },
+		{"SceneStageSave_2", []() { SceneManager::ChangeScene<SceneStageSave_2>(); } },
+		{"SceneStageSave_3", []() { SceneManager::ChangeScene<SceneStageSave_3>(); } },
+		{"SceneStageSave_4", []() { SceneManager::ChangeScene<SceneStageSave_4>(); } },
+		{"SceneStageSave_5", []() { SceneManager::ChangeScene<SceneStageSave_5>(); } },
 	};
 
 	/* ========================================
@@ -79,7 +87,7 @@ namespace DebugUI
 	void InitBasicSettings()
 	{
 		// 背景色
-		Item* pBackColor = Item::CreateValue("BackColor", Item::Color, true);
+		WIN_BASIC_SETTING.AddItem(Item::CreateValue("BackColor", Item::Color, true));
 
 		// グリッド線
 		// 値を変更したら線の初期化を行う関数
@@ -87,40 +95,30 @@ namespace DebugUI
 			if (isWrite)
 				GridLine::Init();
 		};
-		Item* pGrid = Item::CreateGroup("Grid");
-		pGrid->AddGroupItem(Item::CreateCallBack("Enable", Item::Bool, FuncClickSave, true));	// グリッド線の表示
-		pGrid->AddGroupItem(Item::CreateCallBack("Size", Item::Float, FuncClickSave, true));	// マス数
-		pGrid->AddGroupItem(Item::CreateCallBack("Margin", Item::Float, FuncClickSave, true));	// 線幅
-		pGrid->AddGroupItem(Item::CreateCallBack("Color", Item::Color, FuncClickSave, true));	// 線色
-		pGrid->AddGroupItem(Item::CreateCallBack("Axis", Item::Bool, FuncClickSave, true));	// 軸線の表示
+		Item* pGridGroup = Item::CreateGroup("Grid");
+		pGridGroup->AddGroupItem(Item::CreateCallBack("GridEnable", Item::Bool, FuncClickSave, true));	// グリッド線の表示
+		pGridGroup->AddGroupItem(Item::CreateCallBack("AxisEnable", Item::Bool, FuncClickSave, true, true));	// 軸線の表示
+		pGridGroup->AddGroupItem(Item::CreateCallBack("Size", Item::Float, FuncClickSave, true));	// マス数
+		pGridGroup->AddGroupItem(Item::CreateCallBack("Margin", Item::Float, FuncClickSave, true));	// 線幅
+		pGridGroup->AddGroupItem(Item::CreateCallBack("Color", Item::Color, FuncClickSave, true));	// 線色
 
-		// ポーズ
-		Item* pPause = Item::CreateValue("Pause", Item::Bool, false);
-		pPause->SetBool(false);
+		WIN_BASIC_SETTING.AddItem(pGridGroup);
 
-		// リフレッシュレート
-		Item* pRefreshRate = Item::CreateValue("RefreshRate", Item::Float, false);
-		pRefreshRate->SetFloat(WindowConfig::REFRESH_RATE);
+		Item* pDrawGroup = Item::CreateGroup("Draw");
 		// FPS
-		Item* pFPS = Item::CreateValue("FPS", Item::Text, false);
+		pDrawGroup->AddGroupItem(Item::CreateValue("FPS", Item::Text, false));
+		// ポーズ
+		pDrawGroup->AddGroupItem(Item::CreateValue("Pause", Item::Bool, false, true));
+		// リフレッシュレート
+		pDrawGroup->AddGroupItem(Item::CreateValue("RefreshRate", Item::Float, false));
 
-		// 項目一覧
-		Item* Items[] =
-		{
-			pBackColor,
-			pGrid,
-			pPause,
-			pRefreshRate,
-			pFPS,
-		};
+		WIN_BASIC_SETTING.AddItem(pDrawGroup);
 
-		// ウィンドウに追加
-		for (int i = 0; i < 5; ++i)
-		{
-			WIN_BASIC_SETTING.AddItem(Items[i]);
-		}
+		WIN_BASIC_SETTING["Draw"]["Pause"].SetBool(false);
+		WIN_BASIC_SETTING["Draw"]["RefreshRate"].SetFloat(WindowConfig::REFRESH_RATE);
 
 	}
+
 
 	/* ========================================
 		ウィンドウ初期化(カメラ情報)関数
@@ -129,9 +127,9 @@ namespace DebugUI
 	=========================================== */
 	void InitCameraInfo()
 	{
-		WIN_CAMERA_INFO.AddItem(Item::CreateValue("ActiveCamera", Item::Kind::Text));	// アクティブカメラ名
+		WIN_CAMERA_INFO.AddItem(Item::CreateValue("Active", Item::Kind::Text));	// アクティブカメラ名
 
-		WIN_CAMERA_INFO.AddItem(Item::CreateValue("IsOrthographic", Item::Kind::Bool));	// 平行投影かどうか
+		WIN_CAMERA_INFO.AddItem(Item::CreateValue("Orthographic", Item::Kind::Bool));	// 平行投影かどうか
 
 		WIN_CAMERA_INFO.AddItem(Item::CreateList("CameraList", [](const void* arg)		// カメラリスト
 		{
@@ -175,19 +173,35 @@ namespace DebugUI
 	=========================================== */
 	void InitDataInOut()
 	{
-		WIN_DATA_INOUT.AddItem(Item::CreateValue("DataPath", Item::Kind::Path));	// データパス
-		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("OutPut", Item::Kind::Command,
-			[](bool isWrite, void* arg) {
+		// ファイル場所
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("SavePath", Item::Kind::Path));	
+		// デフォルトファイル場所設定ボタン
+		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("Def", Item::Kind::Command, [](bool isWrite, void* arg)
+		{
+			WIN_DATA_INOUT["SavePath"].SetPath(DEFAULT_SAVE_PATH);
+		}, false, true));
 
-			FileManager::StageObjectOutput(WIN_DATA_INOUT["DataPath"].GetPath());
+		// ファイル名
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("FileName", Item::Kind::Path));	
+
+		// ファイル出力
+		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("OutPut", Item::Kind::Command,[](bool isWrite, void* arg) 
+		{
+			std::string sPath		=  WIN_DATA_INOUT["SavePath"].GetPath();
+			std::string sFileName	= WIN_DATA_INOUT["FileName"].GetPath();
+			FileManager::StageObjectOutput(sPath + "/" + sFileName);
 		}));
 
-		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("InPut", Item::Kind::Command,
-			[](bool isWrite, void* arg) {
+		// ファイル入力
+		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("InPut", Item::Kind::Command, [](bool isWrite, void* arg) 
+		{
+			std::string sPath		= WIN_DATA_INOUT["SavePath"].GetPath();
+			std::string sFileName	= WIN_DATA_INOUT["FileName"].GetPath();
+			FileManager::StageObjectInput(sPath + "/" + sFileName);
+		}, false, true));
 
-			FileManager::StageObjectInput(WIN_DATA_INOUT["DataPath"].GetPath());
-		}));
-
+		// 初期値
+		WIN_DATA_INOUT["SavePath"].SetPath(DEFAULT_SAVE_PATH);
 	}
 
 	/* ========================================
@@ -236,10 +250,10 @@ namespace DebugUI
 
 
 		// 編集モードOffボタン
-		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("EditOff", Item::Kind::Command,	[](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(0); }));	
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("EditOff", Item::Kind::Command,	[](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(0); }, false, true));
 
 		// リセットボタン
-		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Reset   ", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->ResetTransformEdit(); }, false, true));
+		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Reset", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->ResetTransformEdit(); }, false, true));
 
 		// 編集モード切り替え(移動)
 		WIN_TRANSFORM_EDIT.AddItem(Item::CreateCallBack("Position", Item::Kind::Command, [](bool isWrite, void* arg) {SceneManager::GetScene()->SetTransformEditMode(1);}));
