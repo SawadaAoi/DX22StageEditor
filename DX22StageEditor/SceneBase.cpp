@@ -167,11 +167,7 @@ void SceneBase::RemoveDeadObjects()
 			}
 			ITEM_OBJ_LIST.RemoveListItem(pObject->GetListName().c_str());	// オブジェクト一覧から削除
 #endif
-			// 親オブジェクトがある場合
-			if (pObject->GetParentObject())
-			{
-				pObject->GetParentObject()->RemoveChildObject(pObject);	// 親オブジェクトから削除
-			}
+			
 			// 子オブジェクトがある場合
 			if (pObject->GetChildObjects().size() > 0)
 			{
@@ -179,6 +175,11 @@ void SceneBase::RemoveDeadObjects()
 				{
 					this->RemoveSceneObject(pChild);	// 子オブジェクトを削除
 				}
+			}
+			// 親オブジェクトがある場合
+			if (pObject->GetParentObject())
+			{
+				pObject->GetParentObject()->RemoveChildObject(pObject);	// 親オブジェクトから削除
 			}
 
 			pObject->Uninit();			// 終了処理
@@ -252,13 +253,22 @@ ObjectBase* SceneBase::FindSceneObject(std::string sName)
 =========================================== */
 void SceneBase::RemoveSceneObject(ObjectBase* pObject)
 {
+	if (pObject->GetChildObjects().size() > 0)
+	{
+		for (auto& pChild : pObject->GetChildObjects())
+		{
+			this->RemoveSceneObject(pChild);	// 子オブジェクトを削除
+		}
+	}
+
+
 #ifdef _DEBUG
 	WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].RemoveListItem(pObject->GetListName().c_str());
 #endif // _DEBUG
 
-	// シーンのオブジェクト配列から削除
-	m_pObjects.erase(std::remove_if(m_pObjects.begin(), m_pObjects.end(),
-		[pObject](const std::unique_ptr<ObjectBase>& pObj) { return pObj.get() == pObject; }), m_pObjects.end());
+	pObject->RemoveParentObject();						// 親オブジェクトから削除
+	pObject->SetState(ObjectBase::E_State::STATE_DEAD);	// 死亡状態に設定
+
 }
 
 
@@ -340,9 +350,12 @@ std::string SceneBase::CreateUniqueName(std::string sName)
 	if (nDupCnt > 0)
 	{
 		sName += "_" + std::to_string(nDupCnt);
+		return sName = CreateUniqueName(sName);	// オブジェクト名と重複チェック
 	}
-
-	return sName;
+	else
+	{
+		return sName;
+	}
 }
 
 /* ========================================
