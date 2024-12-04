@@ -37,7 +37,7 @@ void FileManager::StageObjectOutput(std::string sPath)
 	if (!file.is_open())
 	{
 		// メッセージ表示(失敗)
-		WIN_DATA_INOUT["InputResult "].SetText("< Failed > " + sPath.substr(sPath.find_last_of('/') + 1));
+		WIN_DATA_INOUT["OutputResult"].SetText("< Failed > " + sPath.substr(sPath.find_last_of('/') + 1));
 
 		return;
 	}
@@ -79,7 +79,7 @@ void FileManager::StageObjectOutput(std::string sPath)
 	}
 
 	// メッセージ表示(成功)
-	WIN_DATA_INOUT["InputResult "].SetText("< Success > " + sPath.substr(sPath.find_last_of('/') + 1));
+	WIN_DATA_INOUT["OutputResult"].SetText("< Success > " + sPath.substr(sPath.find_last_of('/') + 1));
 
 	file.close();
 }
@@ -100,7 +100,7 @@ void FileManager::StageObjectInput(std::string sPath)
 	if (!file.is_open())
 	{
 		// メッセージ表示(失敗)
-		WIN_DATA_INOUT["OutputResult"].SetText("< Failed > " + sPath.substr(sPath.find_last_of('/') + 1));
+		WIN_DATA_INOUT["InputResult "].SetText("< Failed > " + sPath.substr(sPath.find_last_of('/') + 1));
 		return;
 	}
 
@@ -173,7 +173,7 @@ void FileManager::StageObjectInput(std::string sPath)
 	}
 
 	// メッセージ表示(成功)
-	WIN_DATA_INOUT["OutputResult"].SetText("< Success > " + sPath.substr(sPath.find_last_of('/') + 1));
+	WIN_DATA_INOUT["InputResult "].SetText("< Success > " + sPath.substr(sPath.find_last_of('/') + 1));
 
 	file.close();
 
