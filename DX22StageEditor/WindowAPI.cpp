@@ -189,7 +189,7 @@ void WindowAPI::Run()
 				DebugUI::Menu::Update();
 
 				m_bActive		= !WIN_BASIC_SETTING["Draw"]["Pause"].GetBool();			// ポーズフラグを取得
-				m_fRefreshRate	= WIN_BASIC_SETTING["Draw"]["RefreshRate"].GetFloat();		// リフレッシュレートを取得
+				m_fRefreshRate	= WIN_BASIC_SETTING["Draw"]["MaxFPS"].GetFloat();		// リフレッシュレートを取得
 				WIN_BASIC_SETTING["Draw"]["FPS"].SetText(std::to_string(1000.0f / diff));	// FPSを取得
 #endif
 

@@ -86,6 +86,8 @@ namespace DebugUI
 	{
 		// 背景色
 		WIN_BASIC_SETTING.AddItem(Item::CreateValue("BackColor", Item::Color, true));
+		// 当たり判定表示
+		WIN_BASIC_SETTING.AddItem(Item::CreateValue("DispCollision", Item::Bool, true));
 
 		// グリッド線
 		// 値を変更したら線の初期化を行う関数
@@ -108,12 +110,12 @@ namespace DebugUI
 		// ポーズ
 		pDrawGroup->AddGroupItem(Item::CreateValue("Pause", Item::Bool, false, true));
 		// リフレッシュレート
-		pDrawGroup->AddGroupItem(Item::CreateValue("RefreshRate", Item::Float, false));
+		pDrawGroup->AddGroupItem(Item::CreateValue("MaxFPS", Item::Float, false));
 
 		WIN_BASIC_SETTING.AddItem(pDrawGroup);
 
 		WIN_BASIC_SETTING["Draw"]["Pause"].SetBool(false);
-		WIN_BASIC_SETTING["Draw"]["RefreshRate"].SetFloat(WindowConfig::REFRESH_RATE);
+		WIN_BASIC_SETTING["Draw"]["MaxFPS"].SetFloat(WindowConfig::REFRESH_RATE);
 
 	}
 

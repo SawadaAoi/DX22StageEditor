@@ -7,9 +7,9 @@ Bool,DebugWindowList/DataInOut,0
 Bool,DebugWindowList/ObjectTypeList,0
 Bool,DebugWindowList/TransformEdit,0
 Color,BasicSettings/BackColor,0.901961/0.901961/0.901961/0.000000
+Bool,BasicSettings/DispCollision,1
 Bool,BasicSettings/Grid/GridEnable,1
 Bool,BasicSettings/Grid/AxisEnable,1
 Float,BasicSettings/Grid/Size,10.000000
 Float,BasicSettings/Grid/Margin,1.000000
 Color,BasicSettings/Grid/Color,0.000000/0.031373/0.000000/0.000000
-Vector,ObjectInfo/Transform/Position ,01

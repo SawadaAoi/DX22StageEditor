@@ -100,7 +100,9 @@ void ComponentCollisionBase::Update()
 				m_pColObjList->RemoveListItem(colObj.first->GetName().c_str());
 			}
 		}
-	}
+	}	
+	
+	m_bIsDispColAll = WIN_BASIC_SETTING["DispCollision"].GetBool();
 
 #endif // _DEBUG
 }
@@ -112,6 +114,8 @@ void ComponentCollisionBase::Update()
 =========================================== */
 void ComponentCollisionBase::Draw()
 {
+	if (!m_bIsDispColAll) return;	// 全コリジョン表示フラグがtrueの場合は処理しない
+
 	if (!m_bIsDispCol) return;	// コリジョン表示フラグがfalseの場合は処理しない
 
 	// デバッグ用図形をセットしている場合

@@ -105,6 +105,8 @@ protected:
 	// 各オブジェクトとの衝突状態を保持するマップ(キー：オブジェクト、値：衝突状態(true:衝突中、false:非衝突)))
 	std::unordered_map<ObjectBase*, bool> m_bColStatesMap;	
 
+	static  inline bool m_bIsDispColAll = false;	// 全コリジョン表示フラグ
+
 #ifdef _DEBUG
 	DebugUI::Item* m_pColObjList;	// 衝突オブジェクトリスト(デバッグ表示用)
 #endif // _DEBUG
