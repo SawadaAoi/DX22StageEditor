@@ -129,6 +129,21 @@
     <Filter Include="ソース ファイル\System\DataInOut">
       <UniqueIdentifier>{d6143fca-2caa-431e-9976-485a4b63ddb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\StageObject">
+      <UniqueIdentifier>{817d56a1-cc39-4b6c-8dde-90e2b488c53c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\StageObject\Block">
+      <UniqueIdentifier>{e39dba60-c070-422e-859d-ff53db5ccc12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\StageObject\Plane">
+      <UniqueIdentifier>{0a9d5492-ecff-4da8-a671-1a90a431b765}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\Player">
+      <UniqueIdentifier>{01d076ff-229f-4d4b-b270-94c878c187a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\Camera">
+      <UniqueIdentifier>{0b596ab2-9fe6-4658-8eec-78a4f66d2f2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -185,9 +200,6 @@
     <ClCompile Include="ObjectBase.cpp">
       <Filter>ソース ファイル\App\GameObject\0_Super</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectPlayer.cpp">
-      <Filter>ソース ファイル\App\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentBase.cpp">
       <Filter>ソース ファイル\App\Component\0_Super</Filter>
     </ClCompile>
@@ -215,9 +227,6 @@
     <ClCompile Include="ControllerDirectInput.cpp">
       <Filter>ソース ファイル\System\Input</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectCamera.cpp">
-      <Filter>ソース ファイル\App\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentCameraDebug.cpp">
       <Filter>ソース ファイル\App\Component\Camera</Filter>
     </ClCompile>
@@ -241,9 +250,6 @@
     </ClCompile>
     <ClCompile Include="ShapePlane.cpp">
       <Filter>ソース ファイル\System\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectGround.cpp">
-      <Filter>ソース ファイル\App\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="ComponentGroundRaycast.cpp">
       <Filter>ソース ファイル\App\Component\Ground</Filter>
@@ -332,6 +338,21 @@
     <ClCompile Include="FileManager.cpp">
       <Filter>ソース ファイル\System\DataInOut</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectBlock.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectGround.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectGroundGrass.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectPlayer.cpp">
+      <Filter>ソース ファイル\App\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectCamera.cpp">
+      <Filter>ソース ファイル\App\GameObject\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">
@@ -394,9 +415,6 @@
     <ClInclude Include="ObjectBase.h">
       <Filter>ソース ファイル\App\GameObject\0_Super</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectPlayer.h">
-      <Filter>ソース ファイル\App\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentBase.h">
       <Filter>ソース ファイル\App\Component\0_Super</Filter>
     </ClInclude>
@@ -430,9 +448,6 @@
     <ClInclude Include="ControllerDirectInput.h">
       <Filter>ソース ファイル\System\Input</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectCamera.h">
-      <Filter>ソース ファイル\App\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentCameraDebug.h">
       <Filter>ソース ファイル\App\Component\Camera</Filter>
     </ClInclude>
@@ -456,9 +471,6 @@
     </ClInclude>
     <ClInclude Include="ShapePlane.h">
       <Filter>ソース ファイル\System\Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectGround.h">
-      <Filter>ソース ファイル\App\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="ComponentGroundRaycast.h">
       <Filter>ソース ファイル\App\Component\Ground</Filter>
@@ -552,6 +564,21 @@
     </ClInclude>
     <ClInclude Include="SceneStageSaves.h">
       <Filter>ソース ファイル\App\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectBlock.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectGround.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectGroundGrass.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectPlayer.h">
+      <Filter>ソース ファイル\App\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCamera.h">
+      <Filter>ソース ファイル\App\GameObject\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

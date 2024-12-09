@@ -15,9 +15,9 @@
 #include "ComponentBase.h"
 #include <memory>
 #include <vector>
+#include "ShapeLine.h"
 
 // =============== ‘O•ûéŒ¾ =======================
-class ShapeLine;
 class ComponentTransform;
 
 

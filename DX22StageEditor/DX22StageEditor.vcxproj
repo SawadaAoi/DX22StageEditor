@@ -174,6 +174,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="ObjectBlock.cpp" />
+    <ClCompile Include="ObjectGroundGrass.cpp" />
     <ClCompile Include="ObjectTypeRegistry.cpp" />
     <ClCompile Include="ModelAnimeManager.cpp" />
     <ClCompile Include="ComponentBase.cpp" />
@@ -244,6 +246,8 @@
   <ItemGroup>
     <ClInclude Include="ComponentOrder.h" />
     <ClInclude Include="FileManager.h" />
+    <ClInclude Include="ObjectBlock.h" />
+    <ClInclude Include="ObjectGroundGrass.h" />
     <ClInclude Include="ObjectTypeRegistry.h" />
     <ClInclude Include="ModelAnimeManager.h" />
     <ClInclude Include="ColorVec3.h" />

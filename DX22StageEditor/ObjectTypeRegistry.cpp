@@ -12,6 +12,8 @@
 // オブジェクト
 #include "ObjectPlayer.h"
 #include "ObjectGround.h"
+#include "ObjectGroundGrass.h"
+#include "ObjectBlock.h"
 #include "ObjectCamera.h"
 
 /* ========================================
@@ -69,6 +71,8 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectBase);
 	REGISTER_OBJECT_TYPE(ObjectPlayer);
 	REGISTER_OBJECT_TYPE(ObjectGround);
+	REGISTER_OBJECT_TYPE(ObjectGroundGrass);
+	REGISTER_OBJECT_TYPE(ObjectBlock);
 	REGISTER_OBJECT_TYPE(ObjectCamera);
     
 }

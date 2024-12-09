@@ -1,15 +1,14 @@
 /* ========================================
 	DX22Base/
 	------------------------------------
-	地面オブジェクト用cpp
+	地面オブジェクト(草原)用cpp
 	------------------------------------
-	ObjectGround.cpp
+	ObjectGroundGrass.cpp
 ========================================== */
 
 // =============== インクルード =====================
-#include "ObjectGround.h"
+#include "ObjectGroundGrass.h"
 #include "ComponentGeometry.h"
-#include "ComponentGround.h"
 #include "TextureManager.h"
 
 
@@ -20,12 +19,10 @@
 	-------------------------------------
 	引数1：所有シーン
 ========================================== */
-ObjectGround::ObjectGround(SceneBase* pScene)
-	: ObjectBase(pScene)
-	, m_pCompGeometry(nullptr)
-	, m_pCompGround(nullptr)
+ObjectGroundGrass::ObjectGroundGrass(SceneBase* pScene)
+	: ObjectGround(pScene)
 {
-	m_eTag = E_ObjectTag::Ground;
+
 }
 
 /* ========================================
@@ -33,12 +30,11 @@ ObjectGround::ObjectGround(SceneBase* pScene)
 	-------------------------------------
 	内容：初期化処理
 ========================================== */
-void ObjectGround::InitLocal()
+void ObjectGroundGrass::InitLocal()
 {
-	m_pCompGeometry = AddComponent<ComponentGeometry>();
-	m_pCompGround = AddComponent<ComponentGround>();
+	ObjectGround::InitLocal();
 
-	m_pCompGeometry->SetShapeType(ComponentGeometry::TYPE_PLANE);
+	// テクスチャ設定
+	m_pCompGeometry->SetIsTex(true);
+	m_pCompGeometry->SetTexture(GET_TEXTURE_DATA(TextureManager::E_TEX_KEY::GROUND_GRASS));
 }
-
-

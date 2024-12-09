@@ -30,6 +30,8 @@ public:
 		TEST,			// テスト画像
 		TEST2,			// 
 		CAMERA_ICON,	// デバッグ用カメラアイコン
+		BLOCK_SIMPLE,	// シンプルなブロック
+		GROUND_GRASS,	// 草地
 		MAX,
 	};
 
@@ -39,6 +41,8 @@ public:
 		{TEX_KEY::TEST,			"Assets/Texture/Test.png"			},	// テスト画像
 		{TEX_KEY::TEST2,		"Assets/Texture/Star.png"			},
 		{TEX_KEY::CAMERA_ICON,	"Assets/Texture/Debug_Camera_Icon.png"	},
+		{TEX_KEY::BLOCK_SIMPLE,	"Assets/Texture/Block_Simple.png"	},
+		{TEX_KEY::GROUND_GRASS,	"Assets/Texture/Ground_Grass.png"	},
 
 
 	};
