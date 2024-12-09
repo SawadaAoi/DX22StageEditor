@@ -131,7 +131,25 @@ void ComponentGeometry::SetShapeType(E_ShapeType eType)
 	CreateShape();	// 設定した値で図形オブジェクトを生成
 
 }
+/* ========================================
+	セッター(テクスチャ)関数
+	-------------------------------------
+	引数：テクスチャ
+=========================================== */
+void ComponentGeometry::SetTexture(Texture* pTexture)
+{
+	m_pTexture = pTexture;
+}
 
+/* ========================================
+	セッター(テクスチャ使用フラグ)関数
+	-------------------------------------
+	引数：テクスチャ使用フラグ
+=========================================== */
+void ComponentGeometry::SetIsTex(bool bIsTex)
+{
+	m_bIsTex = bIsTex;
+}
 
 
 #ifdef _DEBUG

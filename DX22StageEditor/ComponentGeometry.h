@@ -36,7 +36,11 @@ public:
 	void Draw() override;
 
 	// ゲッター
+
+	// セッター
 	void SetShapeType(E_ShapeType eType);	// 図形の種類を設定	
+	void SetTexture(Texture* pTexture);		// テクスチャを設定
+	void SetIsTex(bool bIsTex);				// テクスチャ使用フラグを設定
 
 	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数
 
