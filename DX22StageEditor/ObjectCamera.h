@@ -13,6 +13,10 @@
 #include "ObjectBase.h"
 #include <DirectXMath.h>
 
+// =============== 前方宣言 =======================
+class ComponentTransform;
+class ComponentCameraBase;
+
 // =============== クラス定義 =====================
 class ObjectCamera :
 	public ObjectBase
@@ -39,8 +43,8 @@ public:
 	void SetActive(bool bActive);
 
 private:
-	class ComponentTransform* m_pTransform;		// 座標、回転、拡大縮小
-	class ComponentCameraBase* m_pCameraBase;	// カメラの基本機能
+	ComponentTransform* m_pTransform;		// 座標、回転、拡大縮小
+	ComponentCameraBase* m_pCameraBase;	// カメラの基本機能
 
 	bool m_bActive;	// アクティブ状態
 };

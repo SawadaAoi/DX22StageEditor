@@ -19,7 +19,7 @@
 // =============== 定数定義 =======================
 #define TEX_KEY				TextureManager::E_TEX_KEY	// キー省略
 #define GET_TEXTURE_DATA	TextureManager::GetInstance().GetTextureData	// 文章省略
-#define TEXTURE_MNG_INST TextureManager::GetInstance()	// インスタンス取得
+#define TEXTURE_MNG_INST	TextureManager::GetInstance()	// インスタンス取得
 
 class TextureManager
 {
@@ -30,6 +30,7 @@ public:
 		TEST,			// テスト画像
 		TEST2,			// 
 		CAMERA_ICON,	// デバッグ用カメラアイコン
+		LIGHT_ICON,		// デバッグ用ライトアイコン
 		BLOCK_SIMPLE,	// シンプルなブロック
 		GROUND_GRASS,	// 草地
 		MAX,
@@ -38,11 +39,12 @@ public:
 	// 画像データ保存先パス
 	const std::unordered_map < TextureManager::E_TEX_KEY, std::string > MODEL_TEX_PATH
 	{
-		{TEX_KEY::TEST,			"Assets/Texture/Test.png"			},	// テスト画像
-		{TEX_KEY::TEST2,		"Assets/Texture/Star.png"			},
+		{TEX_KEY::TEST,			"Assets/Texture/Test.png"				},	// テスト画像
+		{TEX_KEY::TEST2,		"Assets/Texture/Star.png"				},
 		{TEX_KEY::CAMERA_ICON,	"Assets/Texture/Debug_Camera_Icon.png"	},
-		{TEX_KEY::BLOCK_SIMPLE,	"Assets/Texture/Block_Simple.png"	},
-		{TEX_KEY::GROUND_GRASS,	"Assets/Texture/Ground_Grass.png"	},
+		{TEX_KEY::LIGHT_ICON,	"Assets/Texture/Debug_Light_Icon.png"	},
+		{TEX_KEY::BLOCK_SIMPLE,	"Assets/Texture/Block_Simple.png"		},
+		{TEX_KEY::GROUND_GRASS,	"Assets/Texture/Ground_Grass.png"		},
 
 
 	};

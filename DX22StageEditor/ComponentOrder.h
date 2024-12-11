@@ -26,5 +26,6 @@ enum E_UpdateOrder
 	OrderBillboard,			// ビルボード
 	OrderGeometry,			// ジオメトリ
 	OrderCameraBase,		// カメラ基底
-	OrderCameraDebug,		// カメラ(デバッグ)
+	OrderCameraDebug,		// カメラ(デバッグ)	
+	OrderLightBase,			// ライト基底
 };

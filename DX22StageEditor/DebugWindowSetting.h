@@ -32,7 +32,7 @@ const std::string ITEM_OBJ_LIST_NAME = "Objects";
 // =============== 名前空間 ===================
 namespace DebugUI
 {
-	const std::string CHILD_HEAD_TEXT = "L";	// 子要素の先頭に表示する文字
+	const std::string CHILD_HEAD_TEXT = "L ";	// 子要素の先頭に表示する文字
 	const std::string CHILD_HEAD_SPACE = " ";	// 子要素の先頭に表示するスペース
 
 

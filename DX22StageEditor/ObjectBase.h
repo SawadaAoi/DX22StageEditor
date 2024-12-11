@@ -27,7 +27,7 @@ class SceneBase;	// シーン基底クラス
 // 使い方：クラス定義内でDEFINE_OBJECT_TYPE(クラス名)を記述する
 // 例：DEFINE_OBJECT_TYPE(ObjectPlayer);
 // 関数のポインタをIDとして扱うため、コンポーネントの種類によって異なるIDを取得できる
-#define DEFINE_OBJECT_TYPE(name)												\
+#define DEFINE_OBJECT_TYPE(name)										\
     static size_t GetStaticTypeID() {									\
 		static const size_t typeID = reinterpret_cast<size_t>(&typeID); \
 		return typeID;													\
@@ -38,6 +38,7 @@ class SceneBase;	// シーン基底クラス
 	std::string GetObjClassName() const override {						\
 		return #name;													\
 	} 
+
 
 // =============== クラス定義 =====================
 class ObjectBase
@@ -52,6 +53,14 @@ public:
 		STATE_DEAD,		// 死亡
 
 		STATE_MAX,		// 状態の最大数
+	};
+
+	// ライトパラメータ
+	struct T_LightParam
+	{
+		float fDiffuse;		// 拡散反射値
+		float fSpecular;	// 鏡面反射値
+		float fAmbient;		// 環境光値
 	};
 
 public:
@@ -93,11 +102,14 @@ public:
 	std::vector<ObjectBase*> GetChildObjects() const;	// 子オブジェクトの取得
 	E_ObjectTag GetTag() const;							// タグの取得
 	std::string GetName() const;						// オブジェクト名の取得
+	T_LightParam GetLightMaterial() const;				// ライトパラメータの取得
+
 
 	// セッター
 	void SetState(E_State eState);		// 状態の設定
 	void SetTag(E_ObjectTag eTag);		// タグの設定
 	void SetName(std::string sName);	// オブジェクト名の設定
+	void SetLightMaterial(float fDiffuse = 1.0f, float fSpecular = 0.0f, float fAmbient = 0.3f);	// ライトパラメータの設定
 
 #ifdef _DEBUG
 	void Debug();					// デバッグ用の処理(オブジェクト情報ウィンドウに表示)
@@ -105,7 +117,7 @@ public:
 
 	DebugUI::Item* InitParentList();	// 親リストの初期化
 
-	void ChangeName();								// 名前変更
+	void ChangeName();			// 名前変更
 	void ChangeParentList(std::string sParentName);		// 親変更
 
 	std::string GetListName();	// リスト表示用の名前取得
@@ -137,6 +149,7 @@ protected:
 	ObjectBase*					m_pParentObj;	// 親オブジェクト
 	std::vector<ObjectBase*>	m_pChildObjs;	// 子オブジェクト
 
+	T_LightParam m_tLightParam;	// ライトパラメータ
 };
 
 #include "ObjectBase.inl"

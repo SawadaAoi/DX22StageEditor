@@ -173,9 +173,15 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComponentLightBase.cpp" />
     <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="ObjectBlock.cpp" />
     <ClCompile Include="ObjectGroundGrass.cpp" />
+    <ClCompile Include="ObjectLight.cpp" />
+    <ClCompile Include="ObjectLightDirectional.cpp" />
+    <ClCompile Include="ObjectLightPoint.cpp" />
+    <ClCompile Include="ObjectLightSpot.cpp" />
     <ClCompile Include="ObjectTypeRegistry.cpp" />
     <ClCompile Include="ModelAnimeManager.cpp" />
     <ClCompile Include="ComponentBase.cpp" />
@@ -244,10 +250,16 @@
     <ClCompile Include="ModelStaticMake.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ComponentLightBase.h" />
     <ClInclude Include="ComponentOrder.h" />
     <ClInclude Include="FileManager.h" />
+    <ClInclude Include="LightManager.h" />
     <ClInclude Include="ObjectBlock.h" />
     <ClInclude Include="ObjectGroundGrass.h" />
+    <ClInclude Include="ObjectLight.h" />
+    <ClInclude Include="ObjectLightDirectional.h" />
+    <ClInclude Include="ObjectLightPoint.h" />
+    <ClInclude Include="ObjectLightSpot.h" />
     <ClInclude Include="ObjectTypeRegistry.h" />
     <ClInclude Include="ModelAnimeManager.h" />
     <ClInclude Include="ColorVec3.h" />

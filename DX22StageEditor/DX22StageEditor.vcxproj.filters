@@ -78,9 +78,6 @@
     <Filter Include="ソース ファイル\App\Component\Camera">
       <UniqueIdentifier>{b539b08a-deaf-4c1f-b2c3-e304e05c8852}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Manager">
-      <UniqueIdentifier>{2c798582-218b-4ea5-913f-0967b772ab9c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\App\Component\Collision">
       <UniqueIdentifier>{951b9a7d-6b7a-45f8-8e3f-0715f1268108}</UniqueIdentifier>
     </Filter>
@@ -143,6 +140,24 @@
     </Filter>
     <Filter Include="ソース ファイル\App\GameObject\Camera">
       <UniqueIdentifier>{0b596ab2-9fe6-4658-8eec-78a4f66d2f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Light">
+      <UniqueIdentifier>{e76e3e54-b99e-477c-9fa2-592bcf5ed375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Light\0_Super">
+      <UniqueIdentifier>{79003a24-32e6-4b80-9ba5-046b30b3b83e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\Light">
+      <UniqueIdentifier>{9124e751-572c-4fb4-9d09-84f9d8ca0535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\Light\0_Super">
+      <UniqueIdentifier>{3ecab42e-7bad-4e81-9855-86328b0c3265}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\DataManager">
+      <UniqueIdentifier>{2c798582-218b-4ea5-913f-0967b772ab9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Light">
+      <UniqueIdentifier>{084ca29b-d33d-4ebb-8b7c-8e495ee5d921}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -291,10 +306,10 @@
       <Filter>ソース ファイル\System\Debug\DebugImGui</Filter>
     </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
-      <Filter>ソース ファイル\Manager</Filter>
+      <Filter>ソース ファイル\System\DataManager</Filter>
     </ClCompile>
     <ClCompile Include="TextureManager.cpp">
-      <Filter>ソース ファイル\Manager</Filter>
+      <Filter>ソース ファイル\System\DataManager</Filter>
     </ClCompile>
     <ClCompile Include="ComponentGround.cpp">
       <Filter>ソース ファイル\App\Component\Ground</Filter>
@@ -309,7 +324,7 @@
       <Filter>ソース ファイル\App\Component\Model</Filter>
     </ClCompile>
     <ClCompile Include="ModelStaticManager.cpp">
-      <Filter>ソース ファイル\Manager</Filter>
+      <Filter>ソース ファイル\System\DataManager</Filter>
     </ClCompile>
     <ClCompile Include="ModelStatic.cpp">
       <Filter>ソース ファイル\System\Model\Static</Filter>
@@ -330,7 +345,7 @@
       <Filter>ソース ファイル\App\Component\Model</Filter>
     </ClCompile>
     <ClCompile Include="ModelAnimeManager.cpp">
-      <Filter>ソース ファイル\Manager</Filter>
+      <Filter>ソース ファイル\System\DataManager</Filter>
     </ClCompile>
     <ClCompile Include="ObjectTypeRegistry.cpp">
       <Filter>ソース ファイル\System\DataInOut</Filter>
@@ -352,6 +367,24 @@
     </ClCompile>
     <ClCompile Include="ObjectCamera.cpp">
       <Filter>ソース ファイル\App\GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentLightBase.cpp">
+      <Filter>ソース ファイル\App\Component\Light\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectLight.cpp">
+      <Filter>ソース ファイル\App\GameObject\Light\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectLightDirectional.cpp">
+      <Filter>ソース ファイル\App\GameObject\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectLightPoint.cpp">
+      <Filter>ソース ファイル\App\GameObject\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectLightSpot.cpp">
+      <Filter>ソース ファイル\App\GameObject\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>ソース ファイル\System\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -521,10 +554,10 @@
       <Filter>ソース ファイル\App\GameObject\0_Super</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
-      <Filter>ソース ファイル\Manager</Filter>
+      <Filter>ソース ファイル\System\DataManager</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">
-      <Filter>ソース ファイル\Manager</Filter>
+      <Filter>ソース ファイル\System\DataManager</Filter>
     </ClInclude>
     <ClInclude Include="ComponentGround.h">
       <Filter>ソース ファイル\App\Component\Ground</Filter>
@@ -539,7 +572,7 @@
       <Filter>ソース ファイル\App\Component\Model</Filter>
     </ClInclude>
     <ClInclude Include="ModelStaticManager.h">
-      <Filter>ソース ファイル\Manager</Filter>
+      <Filter>ソース ファイル\System\DataManager</Filter>
     </ClInclude>
     <ClInclude Include="ModelStatic.h">
       <Filter>ソース ファイル\System\Model\Static</Filter>
@@ -551,7 +584,7 @@
       <Filter>ソース ファイル\App\Component\Model</Filter>
     </ClInclude>
     <ClInclude Include="ModelAnimeManager.h">
-      <Filter>ソース ファイル\Manager</Filter>
+      <Filter>ソース ファイル\System\DataManager</Filter>
     </ClInclude>
     <ClInclude Include="ComponentOrder.h">
       <Filter>ソース ファイル\App\Component\0_Super</Filter>
@@ -579,6 +612,24 @@
     </ClInclude>
     <ClInclude Include="ObjectCamera.h">
       <Filter>ソース ファイル\App\GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentLightBase.h">
+      <Filter>ソース ファイル\App\Component\Light\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectLight.h">
+      <Filter>ソース ファイル\App\GameObject\Light\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectLightDirectional.h">
+      <Filter>ソース ファイル\App\GameObject\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectLightPoint.h">
+      <Filter>ソース ファイル\App\GameObject\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectLightSpot.h">
+      <Filter>ソース ファイル\App\GameObject\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>ソース ファイル\System\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

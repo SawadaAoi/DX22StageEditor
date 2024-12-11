@@ -16,4 +16,6 @@ enum E_ObjectTag
 	Player,	// プレイヤー
 	Enemy,	// 敵
 	Ground,	// 地面
+	Camera,	// カメラ
+	Light,	// ライト
 };

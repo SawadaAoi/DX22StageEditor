@@ -29,7 +29,7 @@ ObjectCamera::ObjectCamera(SceneBase* pScene)
 	, m_pTransform(nullptr)
 	, m_bActive(false)
 {
-
+	SetTag(E_ObjectTag::Camera);	// É^ÉOÇÃê›íË
 }
 
 /* ========================================

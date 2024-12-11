@@ -14,6 +14,11 @@
 #include "DebugMenu.h"
 #include "SceneManager.h"
 
+// =============== 定数定義 =======================
+const float DEFAULT_LIGHT_DIFFUSE = 1.0f;	// デフォルト拡散光
+const float DEFAULT_LIGHT_SPECULAR = 0.0f;	// デフォルト鏡面光
+const float DEFAULT_LIGHT_AMBIENT = 0.3f;	// デフォルト環境光
+
 /* ========================================
 	コンストラクタ関数
 	-------------------------------------
@@ -29,6 +34,7 @@ ObjectBase::ObjectBase(SceneBase* pScene)
 	, m_pComponents()					// コンポーネント配列を初期化
 	, m_eTag(E_ObjectTag::None)			// タグをNoneに設定
 	, m_sName("NoName")					// オブジェクト名をNoNameに設定
+	, m_tLightParam{ DEFAULT_LIGHT_DIFFUSE, DEFAULT_LIGHT_SPECULAR, DEFAULT_LIGHT_AMBIENT }	// ライトパラメータ初期化
 {
 	// 所有者オブジェクトがnullptrの場合はエラーを出力
 	if (pScene == nullptr)
@@ -193,7 +199,7 @@ void ObjectBase::SetParentObject(ObjectBase* pParentObj)
 	for (auto& pChild : m_pChildObjs)
 	{
 		// 子オブジェクトの親を更新(リストの表示を更新するため)
-		pChild->SetParentObject(this);	
+		pChild->SetParentObject(this);
 	}
 #else
 	m_pParentObj = pParentObj;	// 自オブジェクトの更新
@@ -235,7 +241,7 @@ void ObjectBase::AddChildObject(ObjectBase* pChildObj)
 
 	// 既に子オブジェクトが更新済みかチェック
 	// ※親オブジェクト設定関数から呼び出された場合
-	if (pChildObj->GetParentObject() != this)	
+	if (pChildObj->GetParentObject() != this)
 	{
 		pChildObj->SetParentObject(this);	// 子オブジェクトの更新
 	}
@@ -278,7 +284,7 @@ void ObjectBase::RemoveChildObject(ObjectBase* pChildObj)
 	m_pChildObjs.erase(
 		std::remove(m_pChildObjs.begin(), m_pChildObjs.end(), pChildObj), m_pChildObjs.end());
 
-	
+
 	pChildObj->m_pParentObj = nullptr;								// 親オブジェクトを空に設定
 	pChildObj->GetComponent<ComponentTransform>()->ClearParent();	// Transformコンポーネントの親解除処理
 
@@ -382,7 +388,6 @@ size_t ObjectBase::GetStaticTypeID()
 	return reinterpret_cast<size_t>(&GetStaticTypeID);
 }
 
-
 /* ========================================
 	ゲッター(オブジェクトクラス名)関数
 	-------------------------------------
@@ -392,7 +397,6 @@ std::string ObjectBase::GetObjClassName() const
 {
 	return "ObjectBase";
 }
-
 
 /* ========================================
 	ゲッター(親オブジェクト)関数
@@ -436,6 +440,16 @@ std::string ObjectBase::GetName() const
 }
 
 /* ========================================
+	ゲッター(ライトパラメータ)関数
+	-------------------------------------
+	戻値：ライトパラメータ
+=========================================== */
+ObjectBase::T_LightParam ObjectBase::GetLightMaterial() const
+{
+	return  m_tLightParam;
+}
+
+/* ========================================
 	セッター(状態)関数
 	-------------------------------------
 	引数1：状態
@@ -463,6 +477,20 @@ void ObjectBase::SetTag(E_ObjectTag eTag)
 void ObjectBase::SetName(std::string sName)
 {
 	m_sName = sName;
+}
+
+/* ========================================
+	セッター(ライトパラメータ)関数
+	-------------------------------------
+	引数1：拡散光
+	引数2：鏡面光
+	引数3：環境光
+=========================================== */
+void ObjectBase::SetLightMaterial(float fDiffuse, float fSpecular, float fAmbient)
+{
+	m_tLightParam.fDiffuse = fDiffuse;
+	m_tLightParam.fSpecular = fSpecular;
+	m_tLightParam.fAmbient = fAmbient;
 }
 
 
@@ -574,6 +602,7 @@ void ObjectBase::ChangeName()
 	WIN_OBJ_INFO["ObjectName"].SetText(this->GetName().c_str());		// オブジェクト詳細の名前を変更
 }
 
+
 /* ========================================
 	親オブジェクトリスト変更関数
 	-------------------------------------
@@ -609,7 +638,7 @@ std::string ObjectBase::GetListName()
 {
 	std::string sName;							// リスト表示名
 	int nGeneCnt = this->GetGenerationCount();	// 世代数取得
-	
+
 	// 親オブジェクトがある場合
 	if (nGeneCnt > 0)
 	{
@@ -628,6 +657,7 @@ std::string ObjectBase::GetListName()
 
 	return sName;
 }
+
 
 #endif // _DEBUG
 
