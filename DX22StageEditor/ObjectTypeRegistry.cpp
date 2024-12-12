@@ -15,6 +15,10 @@
 #include "ObjectGroundGrass.h"
 #include "ObjectBlock.h"
 #include "ObjectCamera.h"
+#include "ObjectLight.h"
+#include "ObjectLightDirectional.h"
+#include "ObjectLightPoint.h"
+#include "ObjectLightSpot.h"
 
 /* ========================================
 	インスタンス取得関数
@@ -74,6 +78,10 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectGroundGrass);
 	REGISTER_OBJECT_TYPE(ObjectBlock);
 	REGISTER_OBJECT_TYPE(ObjectCamera);
+	REGISTER_OBJECT_TYPE(ObjectLight);
+	REGISTER_OBJECT_TYPE(ObjectLightDirectional);
+	REGISTER_OBJECT_TYPE(ObjectLightPoint);
+	REGISTER_OBJECT_TYPE(ObjectLightSpot);
     
 }
 

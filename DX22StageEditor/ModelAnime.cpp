@@ -10,6 +10,7 @@
 // =============== インクルード ===================
 #include "ModelAnime.h"
 #include "ShaderManager.h"
+#include "LightManager.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -532,3 +533,67 @@ void ModelAnime::SetWVPMatrix(const DirectX::XMFLOAT4X4* matWVP)
 }
 
 
+
+
+/* ========================================
+	セッター(ライト設定(マテリアル))関数
+	-------------------------------------
+	引数1：float	拡散光
+	引数2：float	鏡面反射光
+	引数3：float	環境光
+	引数4：bool		ライト使用フラグ
+=========================================== */
+void ModelAnime::SetLightMaterial(float fDiffuse, float fSpecular, float fAmbient, bool bUseLight)
+{
+	DirectX::XMFLOAT4 param[] =
+	{
+		{fDiffuse, fSpecular, fAmbient, bUseLight ? 1.0f : 0.0f}
+	};
+
+	m_pPS->WriteBuffer(0, param);
+}
+
+/* ========================================
+	セッター(カメラ座標)関数
+	-------------------------------------
+	引数1：Vector3<float>	カメラ座標
+=========================================== */
+void ModelAnime::SetCameraPos(Vector3<float> fCameraPos)
+{
+	m_pPS->WriteBuffer(1, &fCameraPos);
+}
+
+/* ========================================
+	セッター(ライト情報)関数
+	-------------------------------------
+	引数：std::vector<ObjectLight*>	シーン上のライトリスト
+=========================================== */
+void ModelAnime::SetLights(std::vector<ObjectLight*> lights)
+{
+	DirectX::XMFLOAT4 param[MAX_LIGHT_NUM][4];
+
+	// 初期化
+	for (int i = 0; i < MAX_LIGHT_NUM; i++)
+	{
+		param[i][0] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		param[i][1] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		param[i][2] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		param[i][3] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	}
+
+	// ライト情報をセット
+	for (int i = 0; i < lights.size(); ++i)
+	{
+		float			lightType = static_cast<float>(lights[i]->GetLightType());
+		Vector3<float>	lightPos = lights[i]->GetPosition();
+		Vector3<float>	lightColor = lights[i]->GetColor();
+		Vector3<float>	lightDir = lights[i]->GetDirection();
+
+		param[i][0] = { lightType, lightPos.x, lightPos.y, lightPos.z };			// ライトタイプ、ライト位置
+		param[i][1] = { lightColor.x, lightColor.y, lightColor.z, 1.0f };			// ライトカラー
+		param[i][2] = { lightDir.x, lightDir.y, lightDir.z, lights[i]->GetRange() };// ライト方向、ライト有効範囲
+		param[i][3] = { lights[i]->GetAngle(), 0.0f, 0.0f, 0.0f };					// スポットライト角度
+	}
+
+	m_pPS->WriteBuffer(2, param);
+}

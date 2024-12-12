@@ -13,6 +13,7 @@
 #include "ModelStatic.h"
 #include "ModelStaticManager.h"
 #include "CameraManager.h"
+#include "LightManager.h"
 
 /* ========================================
 	コンストラクタ関数
@@ -48,7 +49,7 @@ void ComponentModelStatic::Init()
 =========================================== */
 void ComponentModelStatic::Draw()
 {
-	if (m_pModel == nullptr) return;
+	if (!m_pModel) return;
 	if (!m_bIsVisible) return;
 
 	// ワールド行列作成
@@ -57,8 +58,14 @@ void ComponentModelStatic::Draw()
 	matWVP[1] = CAMERA_MNG_INST.GetActiveCamera()->GetViewMatrix();
 	matWVP[2] = CAMERA_MNG_INST.GetActiveCamera()->GetProjectionMatrix();
 
-	m_pModel->Draw();
 	m_pModel->SetWVPMatrix(matWVP);	// ワールド行列をセット
+
+	ObjectBase::T_LightParam lightParam = m_pOwnerObj->GetLightMaterial();
+	m_pModel->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, true);					// ライトパラメータ設定
+	m_pModel->SetLights(LIGHT_MNG_INST.GetLightList());																	// ライト設定
+	m_pModel->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetWorldPosition());	// カメラ位置設定
+
+	m_pModel->Draw();
 
 }
 

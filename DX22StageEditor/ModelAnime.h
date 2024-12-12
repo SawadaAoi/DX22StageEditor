@@ -21,6 +21,7 @@
 #include "ShapeLine.h"
 #include <memory>
 #include "ColorVec3.h"
+#include "ObjectLight.h"
 
 #include <assimp/Importer.hpp>
 
@@ -172,6 +173,9 @@ public:
 	void SetVertexShader(VertexShader* vs);
 	void SetPixelShader(PixelShader* ps);
 	void SetWVPMatrix(const DirectX::XMFLOAT4X4* matWVP);	// ワールド行列の設定(頂点シェーダー用)
+	void SetLightMaterial(float fDiffuse, float fSpecular, float fAmbient, bool bUseLight);		// ライトパラメータ設定(ピクセルシェーダー用)
+	void SetCameraPos(Vector3<float> fCameraPos);												// カメラ位置設定(ピクセルシェーダー用)
+	void SetLights(std::vector<ObjectLight*> lights);											// ライト設定(ピクセルシェーダー用)
 
 
 public:

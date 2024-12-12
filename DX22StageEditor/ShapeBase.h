@@ -17,6 +17,7 @@
 #include "Vector3.h"
 #include "Vector2.h"
 #include "Quaternion.h"
+#include "ObjectLight.h"
 
 // =============== クラスの定義 ===================
 class ShapeBase
@@ -65,6 +66,9 @@ public:
 	void SetTexture(Texture* pTexture);
 	void SetUseTexture(int bIsTex);
 
+	void SetLightMaterial(float fDiffuse, float fSpecular, float fAmbient, bool bUseLight);		// ライトパラメータ設定(ピクセルシェーダー用)
+	void SetCameraPos(Vector3<float> fCameraPos);												// カメラ位置設定(ピクセルシェーダー用)
+	void SetLights(std::vector<ObjectLight*> lights);											// ライト設定(ピクセルシェーダー用)
 
 private:
 	void SetWVPMatrix();

@@ -56,7 +56,7 @@ void ModelStaticManager::Init()
 		std::string sNowPath = PathMap.second;	// 現在の保存位置パス
 
 		ModelStatic* pModel = new ModelStatic();
-		if (!pModel->Load(sNowPath.c_str(), MODEL_FBX_SCALE.at(eNowKey), ModelStatic::E_Flip::ZFlip))	// 3Dモデル読み込み
+		if (!pModel->Load(sNowPath.c_str(), MODEL_FBX_SCALE.at(eNowKey), ModelStatic::E_Flip::XFlip))	// 3Dモデル読み込み
 		{
 			MessageBox(NULL, sNowPath.c_str(), "Error", MB_OK);	//エラーメッセージの表示
 		}

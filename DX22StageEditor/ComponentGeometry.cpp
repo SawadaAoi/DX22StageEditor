@@ -14,6 +14,8 @@
 #include "ShapeSphere.h"	// 球
 #include "ShapePlane.h"		// 平面
 #include "TextureManager.h"
+#include "LightManager.h"
+#include "CameraManager.h"
 
 // =============== 定数定義 =======================
 
@@ -81,6 +83,11 @@ void ComponentGeometry::Draw()
 	// 図形オブジェクトが生成されている場合は描画
 	if (m_pShape)
 	{
+		ObjectBase::T_LightParam lightParam = m_pOwnerObj->GetLightMaterial();
+		m_pShape->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, true);					// ライトパラメー
+		m_pShape->SetLights(LIGHT_MNG_INST.GetLightList());																	// ライト設定
+		m_pShape->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetWorldPosition());	// カメラ位置設定
+
 		m_pShape->Draw();
 	}
 }

@@ -17,6 +17,8 @@
 #include "MeshBuffer.h"
 #include "Vector3.h"
 #include "Quaternion.h"
+#include "ObjectLight.h"
+
 
 // =============== クラス定義 =====================
 class ModelStatic
@@ -78,6 +80,9 @@ public:
 	void SetPixelShader(PixelShader* ps);
 
 	void SetWVPMatrix(const DirectX::XMFLOAT4X4* matWVP);	// ワールド行列の設定(頂点シェーダー用)
+	void SetLightMaterial(float fDiffuse, float fSpecular, float fAmbient, bool bUseLight);		// ライトパラメータ設定(ピクセルシェーダー用)
+	void SetCameraPos(Vector3<float> fCameraPos);												// カメラ位置設定(ピクセルシェーダー用)
+	void SetLights(std::vector<ObjectLight*> lights);											// ライト設定(ピクセルシェーダー用)
 
 #ifdef _DEBUG
 	static std::string GetError();

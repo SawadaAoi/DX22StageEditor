@@ -13,6 +13,7 @@
 #include "ObjectBase.h"
 #include "CameraManager.h"
 #include "ModelAnimeManager.h"
+#include "LightManager.h"
 
 /* ========================================
 	コンストラクタ関数
@@ -101,6 +102,11 @@ void ComponentModelAnime::Draw()
 	matWVP[2] = CAMERA_MNG_INST.GetActiveCamera()->GetProjectionMatrix();
 
 	m_pModel->SetWVPMatrix(matWVP);	// ワールド行列をセット
+
+	ObjectBase::T_LightParam lightParam = m_pOwnerObj->GetLightMaterial();
+	m_pModel->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, true);					// ライトパラメータ設定
+	m_pModel->SetLights(LIGHT_MNG_INST.GetLightList());																	// ライト設定
+	m_pModel->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetWorldPosition());	// カメラ位置設定
 
 #ifdef _DEBUG
 	if (m_bDispBone)	// ボーン表示
