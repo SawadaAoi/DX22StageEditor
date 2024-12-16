@@ -34,7 +34,7 @@ ObjectBase::ObjectBase(SceneBase* pScene)
 	, m_pComponents()					// コンポーネント配列を初期化
 	, m_eTag(E_ObjectTag::None)			// タグをNoneに設定
 	, m_sName("NoName")					// オブジェクト名をNoNameに設定
-	, m_tLightParam{ DEFAULT_LIGHT_DIFFUSE, DEFAULT_LIGHT_SPECULAR, DEFAULT_LIGHT_AMBIENT }	// ライトパラメータ初期化
+	, m_tLightParam{ DEFAULT_LIGHT_DIFFUSE, DEFAULT_LIGHT_SPECULAR, DEFAULT_LIGHT_AMBIENT, true }	// ライトパラメータ初期化
 {
 	// 所有者オブジェクトがnullptrの場合はエラーを出力
 	if (pScene == nullptr)
@@ -493,6 +493,15 @@ void ObjectBase::SetLightMaterial(float fDiffuse, float fSpecular, float fAmbien
 	m_tLightParam.fAmbient = fAmbient;
 }
 
+/* ========================================
+	セッター(ライト使用)関数
+	-------------------------------------
+	引数1：ライト使用フラグ
+=========================================== */
+void ObjectBase::SetLightUse(bool bUse)
+{
+	m_tLightParam.bLightUse = bUse;
+}
 
 
 

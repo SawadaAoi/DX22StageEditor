@@ -61,6 +61,7 @@ public:
 		float fDiffuse;		// 拡散反射値
 		float fSpecular;	// 鏡面反射値
 		float fAmbient;		// 環境光値
+		bool  bLightUse;	// ライト使用フラグ
 	};
 
 public:
@@ -110,6 +111,7 @@ public:
 	void SetTag(E_ObjectTag eTag);		// タグの設定
 	void SetName(std::string sName);	// オブジェクト名の設定
 	void SetLightMaterial(float fDiffuse = 1.0f, float fSpecular = 0.0f, float fAmbient = 0.3f);	// ライトパラメータの設定
+	void SetLightUse(bool bUse);		// ライト使用の設定
 
 #ifdef _DEBUG
 	void Debug();					// デバッグ用の処理(オブジェクト情報ウィンドウに表示)
