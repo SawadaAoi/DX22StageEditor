@@ -84,7 +84,7 @@ void ComponentGeometry::Draw()
 	if (m_pShape)
 	{
 		ObjectBase::T_LightParam lightParam = m_pOwnerObj->GetLightMaterial();
-		m_pShape->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, true);					// ライトパラメー
+		m_pShape->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, lightParam.bLightUse);	// ライトパラメータ
 		m_pShape->SetLights(LIGHT_MNG_INST.GetLightList());																	// ライト設定
 		m_pShape->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetWorldPosition());	// カメラ位置設定
 
