@@ -28,6 +28,8 @@
 const std::string ITEM_OBJ_LIST_NAME = "Objects";
 #define ITEM_OBJ_LIST	WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()]
 
+// UTF-8•¶š—ñ•ÏŠ·ƒ}ƒNƒ
+#define UTF8(str) reinterpret_cast<const char*>(u8##str)
 
 // =============== –¼‘O‹óŠÔ ===================
 namespace DebugUI

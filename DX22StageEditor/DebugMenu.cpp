@@ -67,6 +67,8 @@ void Menu::Init()
 	ImGui_ImplWin32_Init(GetActiveWindow());
 	ImGui_ImplDX11_Init(DirectXManager::GetDevice(), DirectXManager::GetContext());
 
+	io.Fonts->AddFontFromFileTTF("Assets/Font/SmartFontUI.otf ", 12.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+
 	// Dummyƒf[ƒ^‰Šú‰»
 	Item::dummy = Item::CreateValue("None", Item::Label);
 	

@@ -42,7 +42,7 @@ ComponentTransform::ComponentTransform(ObjectBase* pOwner)
 =========================================== */
 void ComponentTransform::Init()
 {
-	
+
 }
 
 /* ========================================
@@ -67,7 +67,7 @@ void ComponentTransform::Update()
 	内容：ワールド座標を更新する
 =========================================== */
 void ComponentTransform::UpdateWorldTransform()
-{	
+{
 	// 親オブジェクトがある場合
 	if (m_pOwnerObj->GetParentObject())
 	{
@@ -83,10 +83,10 @@ void ComponentTransform::UpdateWorldTransform()
 		DirectX::XMMATRIX parentMat =
 			pParentTran->GetWorldRotation().ToDirectXMatrix() *		// 回転
 			DirectX::XMMatrixTranslation(							// 座標		
-				pParentTran->GetWorldPosition().x, 
-				pParentTran->GetWorldPosition().y, 
+				pParentTran->GetWorldPosition().x,
+				pParentTran->GetWorldPosition().y,
 				pParentTran->GetWorldPosition().z);
-		
+
 		// ローカルと親の行列を掛け合わせてワールド行列(回転、座標)を生成
 		DirectX::XMMATRIX matrix = localMat * parentMat;
 
@@ -100,9 +100,9 @@ void ComponentTransform::UpdateWorldTransform()
 	else
 	{
 		// 親オブジェクトがない場合はローカル座標をワールド座標とする
-		m_vWorldPosition	= m_vLocalPosition;
-		m_qWorldRotation	= m_qLocalRotation;
-		m_vWorldScale		= m_vLocalScale;
+		m_vWorldPosition = m_vLocalPosition;
+		m_qWorldRotation = m_qLocalRotation;
+		m_vWorldScale = m_vLocalScale;
 	}
 }
 
@@ -114,9 +114,9 @@ void ComponentTransform::UpdateWorldTransform()
 void ComponentTransform::ClearParent()
 {
 	// ワールド座標をローカル座標に設定(現在の状態を保持するため)
-	m_vLocalPosition	= m_vWorldPosition;
-	m_qLocalRotation	= m_qWorldRotation;
-	m_vLocalScale		= m_vWorldScale;
+	m_vLocalPosition = m_vWorldPosition;
+	m_qLocalRotation = m_qWorldRotation;
+	m_vLocalScale = m_vWorldScale;
 }
 
 /* ========================================
@@ -371,8 +371,8 @@ void ComponentTransform::LookAt(const Vector3<float>& target, const Vector3<floa
 
 	// 回転行列を生成(行方向)
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixSet(
-		right.x, right.y, right.z, 0.0f,		
-		newUp.x, newUp.y, newUp.z, 0.0f,	
+		right.x, right.y, right.z, 0.0f,
+		newUp.x, newUp.y, newUp.z, 0.0f,
 		forward.x, forward.y, forward.z, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
@@ -392,11 +392,11 @@ void ComponentTransform::LookAt(const Vector3<float>& target, const Vector3<floa
 =========================================== */
 void ComponentTransform::MoveTo(const Vector3<float>& target, float fTime)
 {
-	m_bMoveTo			= true;			// 移動中フラグを立てる
-	m_vMoveStartPos		= m_vLocalPosition;	// 移動開始座標を現在座標に
-	m_vMoveEndPos		= target;		// 移動終了座標を目標座標に
-	m_fMoveTime			= fTime;		// 移動時間を設定
-	m_fMoveCurrentTime	= 0.0f;			// 現在の移動時間を初期化
+	m_bMoveTo = true;			// 移動中フラグを立てる
+	m_vMoveStartPos = m_vLocalPosition;	// 移動開始座標を現在座標に
+	m_vMoveEndPos = target;		// 移動終了座標を目標座標に
+	m_fMoveTime = fTime;		// 移動時間を設定
+	m_fMoveCurrentTime = 0.0f;			// 現在の移動時間を初期化
 }
 
 
@@ -409,10 +409,10 @@ void ComponentTransform::MoveTo(const Vector3<float>& target, float fTime)
 	引数2：限界距離	float
 	引数3：移動速度	float
 =========================================== */
-void ComponentTransform::MoveToward(const Vector3<float>& target,  float fSpeed, float fDistance)
+void ComponentTransform::MoveToward(const Vector3<float>& target, float fSpeed, float fDistance)
 {
-	Vector3<float> fDirVec	= target - m_vLocalPosition;	// 目標までのベクトル
-	float fLength			= fDirVec.Length();				// ベクトルの長さ
+	Vector3<float> fDirVec = target - m_vLocalPosition;	// 目標までのベクトル
+	float fLength = fDirVec.Length();				// ベクトルの長さ
 
 	// 到達していない場合
 	if (fLength > fDistance)
@@ -482,7 +482,7 @@ void ComponentTransform::UpdateMoveTo()
 	if (m_fMoveCurrentTime >= m_fMoveTime)
 	{
 		m_vLocalPosition = m_vMoveEndPos;	// 目標座標に合わせる
-		m_bMoveTo	= false;			// 移動中フラグを下げる
+		m_bMoveTo = false;			// 移動中フラグを下げる
 	}
 }
 
@@ -657,7 +657,14 @@ void ComponentTransform::SetLocalRotation(const Vector3<float> axis, float degAn
 =========================================== */
 void ComponentTransform::SetLocalRotationEuler(const Vector3<float>& angles)
 {
-	m_qLocalRotation = Quaternion::FromEulerAngle(angles);
+	// デグリー→ラジアンに変換
+	Vector3<float> anglesRad = Vector3<float>(
+		MathUtils::ToRadian(angles.x),
+		MathUtils::ToRadian(angles.y),
+		MathUtils::ToRadian(angles.z)
+	);
+
+	m_qLocalRotation = Quaternion::FromEulerAngle(anglesRad);
 	UpdateWorldTransform();	// ワールド座標の更新
 }
 
@@ -696,7 +703,7 @@ void ComponentTransform::Debug(DebugUI::Window& window)
 		// 回転
 		// 表示だけオイラー角に変換(クォータニオンは直接入力できないため)
 		pGroupTran->AddGroupItem(Item::CreateCallBack("Rotation", Item::Kind::Vector,
-		[this](bool isWrite, void* arg)	// isWrite:入力があるかどうか arg:入力値
+			[this](bool isWrite, void* arg)	// isWrite:入力があるかどうか arg:入力値
 		{
 			CallbackRotation(isWrite, arg, m_qWorldRotation);
 		}));
