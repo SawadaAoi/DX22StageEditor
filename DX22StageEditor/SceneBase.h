@@ -37,6 +37,7 @@ public:
 	virtual void UpdateLocal() {};	// 個別更新処理
 	virtual void DrawLocal() {};	// 個別描画処理
 
+	void UpdateObject();
 	void RemoveDeadObjects();	// 死亡状態オブジェクトを削除
 
 	// オブジェクト関連

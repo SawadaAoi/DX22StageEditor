@@ -190,10 +190,6 @@ void ObjectBase::SetParentObject(ObjectBase* pParentObj)
 
 	m_pParentObj->AddChildObject(this);	// 親オブジェクトの更新
 
-#ifdef _DEBUG
-	// オブジェクト一覧の再読み込み
-	m_pOwnerScene->ReloadDebugObjectList();
-#endif // _DEBUG
 }
 
 /* ========================================
@@ -218,10 +214,6 @@ void ObjectBase::AddChildObject(ObjectBase* pChildObj)
 
 	pChildObj->SetParentObject(this);	// 子オブジェクトの更新
 
-#ifdef _DEBUG
-	// オブジェクト一覧の再読み込み
-	m_pOwnerScene->ReloadDebugObjectList();
-#endif // _DEBUG
 }
 
 /* ========================================
@@ -256,12 +248,6 @@ void ObjectBase::RemoveChildObject(ObjectBase* pChildObj)
 	pChildObj->m_pParentObj = nullptr;								// 親オブジェクトを空に設定
 	pChildObj->GetComponent<ComponentTransform>()->ClearParent();	// Transformコンポーネントの親解除処理
 
-#ifdef _DEBUG
-	// オブジェクト一覧の再読み込み
-	m_pOwnerScene->ReloadDebugObjectList();
-#endif // _DEBUG
-
-
 }
 
 /* ========================================
@@ -280,10 +266,6 @@ void ObjectBase::RemoveAllChildObjects()
 	}
 	m_pChildObjs.clear();
 
-#ifdef _DEBUG
-	// オブジェクト一覧の再読み込み
-	m_pOwnerScene->ReloadDebugObjectList();
-#endif // _DEBUG
 }
 
 /* ========================================
@@ -601,6 +583,9 @@ void ObjectBase::ChangeParentList(std::string sParentName)
 		this->RemoveParentObject();			// 親オブジェクトがない場合(Noneを選択)は解除
 	}
 
+	// オブジェクト一覧の選択位置を変更
+	int nListNo = ITEM_OBJ_LIST.GetListNo(pParentNew->GetListName().c_str());	// オブジェクト一覧の表示位置取得
+	ITEM_OBJ_LIST.SetListNo(nListNo + 1);
 }
 
 /* ========================================

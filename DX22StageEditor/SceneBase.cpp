@@ -92,35 +92,16 @@ void SceneBase::Uninit()
 =========================================== */
 void SceneBase::Update()
 {
-	m_bIsUpdating = true;	// 更新中フラグを立てる
-
-	// 所持オブジェクト配列の全要素を更新
-	for (auto& pObject : m_pObjects)
-	{
-		pObject->Update();
-	}
-
-	m_bIsUpdating = false;	// 更新中フラグを解除
-
-	// 一時保存オブジェクト配列
-	for (auto& pObject : m_pStandbyObjects)
-	{
-		pObject->Update();
-		m_pObjects.emplace_back(std::move(pObject));	// シーンに追加
-	}
-	m_pStandbyObjects.clear();	// クリア
-
-	// 各当たり判定更新(死亡したオブジェクトをm_bColStatesMapから削除するためにこの位置に記述)
-	UpdateCollision();	
-	// 死亡状態のオブジェクトを削除
-	RemoveDeadObjects();	
-	// 個別更新処理
-	UpdateLocal();				
+	UpdateObject();	// オブジェクト更新
+	UpdateLocal();	// 個別更新処理
 
 #ifdef _DEBUG
-	UpdateTransformEdit();	// 変形エディタ更新
+	// 変形エディタ更新
+	UpdateTransformEdit();	
 	// リスト未選択時は選択オブジェクトをクリア
 	if (m_nObjectListSelectNo == -1) m_pSelectObj = nullptr;	
+	// オブジェクトリスト再読み込み
+	ReloadDebugObjectList();	
 #endif // _DEBUG
 
 }
@@ -141,6 +122,35 @@ void SceneBase::Draw()
 	DrawLocal();	// 個別描画処理
 }
 
+/* ========================================
+	オブジェクト更新関数
+	-------------------------------------
+	内容：更新処理
+=========================================== */
+void SceneBase::UpdateObject()
+{
+	m_bIsUpdating = true;	// 更新中フラグを立てる
+
+	// 所持オブジェクト配列の全要素を更新
+	for (auto& pObject : m_pObjects)
+	{
+		pObject->Update();
+	}
+
+	m_bIsUpdating = false;	// 更新中フラグを解除
+
+	// 一時保存オブジェクト配列
+	for (auto& pObject : m_pStandbyObjects)
+	{
+		pObject->Update();
+		m_pObjects.emplace_back(std::move(pObject));	// オブジェクト配列に移動
+	}
+	m_pStandbyObjects.clear();	// クリア
+
+
+	UpdateCollision();	// 各当たり判定更新(死亡したオブジェクトをm_bColStatesMapから削除するためにこの位置に記述)
+	RemoveDeadObjects();// 死亡状態のオブジェクトを削除
+}
 
 /* ========================================
 	オブジェクト削除関数
@@ -149,8 +159,6 @@ void SceneBase::Draw()
 =========================================== */
 void SceneBase::RemoveDeadObjects()
 {
-	bool bDel = false;	// オブジェクトが1つでも削除されたかどうか
-
 	// ↓のループ内でオブジェクトの状態が変わるので、一時保存用にコピー
 	std::map<ObjectBase*, ObjectBase::E_State> pObjectStateMap;
 	for (auto& pObject : m_pObjects)
@@ -166,14 +174,13 @@ void SceneBase::RemoveDeadObjects()
 		{
 #ifdef _DEBUG
 			// 削除対象オブジェクトが一覧で選択中の場合
-			if (m_nObjectListSelectNo == WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].GetListNo(pObject->GetListName().c_str()))
+			if (m_nObjectListSelectNo == ITEM_OBJ_LIST.GetListNo(pObject->GetListName().c_str()))
 			{
 				WIN_OBJ_INFO.Clear();	// オブジェクト情報ウィンドウクリア
 
 				m_nObjectListSelectNo = -1;								// 選択番号をリセット
-				WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].SetListNo(-1);	// 選択番号をリセット
+				ITEM_OBJ_LIST.SetListNo(-1);	// 選択番号をリセット
 			}
-			ITEM_OBJ_LIST.RemoveListItem(pObject->GetListName().c_str());	// オブジェクト一覧から削除
 #endif
 
 			// 子オブジェクトがある場合
@@ -193,18 +200,12 @@ void SceneBase::RemoveDeadObjects()
 			pObject->Uninit();			// 終了処理
 			it = m_pObjects.erase(it);	// 削除
 
-			bDel = true;
-
 		}
 		else
 		{
 			++it;	// 次の要素へ
 		}
 	}
-#ifdef _DEBUG
-	// 削除があった場合
-	if (bDel) ReloadDebugObjectList();
-#endif // DEBUG
 
 }
 
@@ -229,11 +230,6 @@ void SceneBase::AddSceneObjectBase(ObjectBase* pObject)
 		// シーンのオブジェクト配列にユニークポインタを移動します
 		m_pObjects.push_back(std::unique_ptr<ObjectBase>(pObject));
 	}
-
-#ifdef _DEBUG
-	// オブジェクト一覧に追加
-	ITEM_OBJ_LIST.AddListItem(pObject->GetName().c_str());
-#endif
 }
 
 /* ========================================
@@ -276,11 +272,6 @@ void SceneBase::RemoveSceneObject(ObjectBase* pObject)
 			this->RemoveSceneObject(pChild);	// 子オブジェクトを削除
 		}
 	}
-
-
-#ifdef _DEBUG
-	WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].RemoveListItem(pObject->GetListName().c_str());
-#endif // _DEBUG
 
 	pObject->RemoveParentObject();						// 親オブジェクトから削除
 	pObject->SetState(ObjectBase::E_State::STATE_DEAD);	// 死亡状態に設定
@@ -463,7 +454,7 @@ void SceneBase::InitObjectList()
 		// クリックされたオブジェクトの情報を表示
 
 		std::string sObjName = reinterpret_cast<const char*>(arg);
-		m_nObjectListSelectNo = WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].GetListNo(sObjName.c_str());	// 選択番号を取得
+		m_nObjectListSelectNo = ITEM_OBJ_LIST.GetListNo(sObjName.c_str());	// 選択番号を取得
 
 		// 名前に"L"が含まれている場合(子オブジェクトの場合)
 		if (sObjName.find(CHILD_HEAD_TEXT) != std::string::npos)
@@ -632,7 +623,7 @@ void SceneBase::UpdateTransformEdit()
 void SceneBase::ReloadDebugObjectList()
 {
 	// オブジェクト一覧をクリア
-	WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].RemoveListItemAll();
+	ITEM_OBJ_LIST.RemoveListItemAll();
 
 	// シーンに所属する全てのオブジェクトを取得
 	for (const auto& pObject : m_pObjects)
@@ -661,7 +652,7 @@ void SceneBase::AddObjectListChild(ObjectBase* pObject)
 		for (auto& pChild : pObject->GetChildObjects())
 		{
 			// 挿入位置
-			int nInsertNo = WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].GetListNo(pObject->GetListName().c_str());
+			int nInsertNo = ITEM_OBJ_LIST.GetListNo(pObject->GetListName().c_str());
 			// オブジェクト一覧に追加
 			ITEM_OBJ_LIST.InsertListItem(pChild->GetListName().c_str(), nInsertNo + 1);
 			// 子オブジェクトを追加
