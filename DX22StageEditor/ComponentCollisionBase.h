@@ -48,8 +48,8 @@ public:
 
 public:
 	ComponentCollisionBase(ObjectBase* pOwner);
-	~ComponentCollisionBase(); \
-		void Update() override;
+	~ComponentCollisionBase();
+	void Update() override;
 	void Draw() override;
 
 	void UpdateCollision(ComponentCollisionBase* otherCol);			// 衝突判定更新関数
@@ -79,7 +79,7 @@ public:
 	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数
 
 #ifdef _DEBUG
-		void DebugColBase(DebugUI::Item* pGroupItem);
+	void DebugColBase(DebugUI::Item* pGroupItem, std::string sCompName);
 #endif // _DEBUG
 protected:
 	virtual bool CheckCollision(ComponentCollisionBase* otherCol) = 0;		// 衝突判定
@@ -108,7 +108,8 @@ protected:
 	static  inline bool m_bIsDispColAll = false;	// 全コリジョン表示フラグ
 
 #ifdef _DEBUG
-	DebugUI::Item* m_pColObjList;	// 衝突オブジェクトリスト(デバッグ表示用)
+	DebugUI::Item*	m_pColObjList;	// 衝突オブジェクトリスト(デバッグ表示用)
+	std::string		m_sColCompName;	// コンポーネント名(デバッグメニュー表示確認用)
 #endif // _DEBUG
 };
 

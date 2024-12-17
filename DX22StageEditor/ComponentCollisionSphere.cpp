@@ -166,7 +166,7 @@ void ComponentCollisionSphere::Debug(DebugUI::Window& window)
 
 	Item* pGroupColSphere = Item::CreateGroup("CollisionSphere");
 
-	ComponentCollisionBase::DebugColBase(pGroupColSphere);
+	ComponentCollisionBase::DebugColBase(pGroupColSphere, "CollisionSphere");
 
 	pGroupColSphere->AddGroupItem(Item::CreateBind("Radius", Item::Kind::Float, &m_fRadius));
 

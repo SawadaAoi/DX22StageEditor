@@ -81,30 +81,26 @@ void ComponentCollisionBase::Update()
 	{
 		// 回転、スケールを親オブジェクトから取得
 		m_qRotation = m_pOwnerTransform->GetWorldRotation();
-		m_vScale	= m_pOwnerTransform->GetWorldScale();
+		m_vScale = m_pOwnerTransform->GetWorldScale();
 	}
 #ifdef _DEBUG
-	using namespace DebugUI;
-
-	if (m_pColObjList != nullptr)
+	if (CHECK_DISP_COMP(m_sColCompName.c_str()))
 	{
-
-		for (auto& colObj : m_bColStatesMap)
+		// 衝突オブジェクトリストの追加、削除
+		if (m_pColObjList != nullptr)
 		{
-			if (colObj.second == true)
+			for (auto& colObj : m_bColStatesMap)
 			{
-				m_pColObjList->AddListItem(colObj.first->GetName().c_str());
-			}
-			else
-			{
-				m_pColObjList->RemoveListItem(colObj.first->GetName().c_str());
+				if (colObj.second == true)
+					m_pColObjList->AddListItem(colObj.first->GetName().c_str());
+				else
+					m_pColObjList->RemoveListItem(colObj.first->GetName().c_str());
 			}
 		}
 	}
 
+	// 全オブジェクト当たり判定線表示フラグ更新
 	m_bIsDispColAll = WIN_BASIC_SETTING["DispCollision"].GetBool();
-
-
 #endif // _DEBUG
 }
 
@@ -142,8 +138,12 @@ void ComponentCollisionBase::UpdateCollision(ComponentCollisionBase* otherCol)
 		m_bColStatesMap.erase(otherCol->GetOwnerObject());
 
 #ifdef _DEBUG
-		if (!m_pColObjList)
-			WIN_OBJ_INFO["CollObjectList"].RemoveListItem(pOtherObj->GetName().c_str());
+		// デバッグ衝突オブジェクトリストから削除
+		if (CHECK_DISP_COMP(m_sColCompName.c_str()))
+		{
+			if (!m_pColObjList)
+				WIN_OBJ_INFO["CollObjectList"].RemoveListItem(pOtherObj->GetName().c_str());
+		}
 #endif // _DEBUG
 
 		return;
@@ -511,11 +511,14 @@ void ComponentCollisionBase::SetTrigger(bool bTrigger)
 	-------------------------------------
 	内容：デバッグ用の処理
 	-------------------------------------
-	引数：グループ項目
+	引数1：グループ項目
+	引数2：コンポーネント名(デバッグメニュー表示確認用)
 =========================================== */
-void ComponentCollisionBase::DebugColBase(DebugUI::Item* pGroupItem)
+void ComponentCollisionBase::DebugColBase(DebugUI::Item* pGroupItem, std::string sCompName)
 {
 	using namespace DebugUI;
+
+	m_sColCompName = sCompName;
 
 	// トランスフォーム------------------------
 	// 所持オブジェクトトランスフォーム参照

@@ -184,7 +184,7 @@ void ComponentCollisionAABB::Debug(DebugUI::Window& window)
 
 	Item* pGroupColAABB = Item::CreateGroup("CollisionAABB");
 
-	ComponentCollisionBase::DebugColBase(pGroupColAABB);
+	ComponentCollisionBase::DebugColBase(pGroupColAABB, "CollisionAABB");
 
 	pGroupColAABB->AddGroupItem(Item::CreateBind("MinPos", Item::Kind::Vector, &m_vMin));
 	pGroupColAABB->AddGroupItem(Item::CreateBind("MaxPos", Item::Kind::Vector, &m_vMax));

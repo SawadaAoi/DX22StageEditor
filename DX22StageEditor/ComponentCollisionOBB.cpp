@@ -53,7 +53,8 @@ void ComponentCollisionOBB::Update()
 {
 #ifdef _DEBUG
 
-	if (&WIN_OBJ_INFO["CollisionOBB"] != DebugUI::Item::dummy && WIN_OBJ_INFO["ObjectName"].GetText() == m_pOwnerObj->GetName())
+	// オブジェクト詳細が自身かつ、OBBコンポーネントが表示されている場合
+	if (CHECK_DISP_COMP("CollisionOBB"))
 	{
 
 		// 現在選択中の最小移動ベクトルを取得
@@ -63,7 +64,6 @@ void ComponentCollisionOBB::Update()
 			WIN_OBJ_INFO["CollisionOBB"]["MTV_Axis"].SetVector(m_tMtvs.at(m_nSelectMTV).vAxis.ToXMFLOAT3());
 			WIN_OBJ_INFO["CollisionOBB"]["MTV_Overlap"].SetFloat(m_tMtvs.at(m_nSelectMTV).fOverlap);
 			WIN_OBJ_INFO["CollisionOBB"]["MTV_IsCol"].SetBool(m_tMtvs.at(m_nSelectMTV).bIsCol);
-
 		}
 		else
 		{
@@ -72,7 +72,6 @@ void ComponentCollisionOBB::Update()
 			WIN_OBJ_INFO["CollisionOBB"]["MTV_Overlap"].SetFloat(0);
 			WIN_OBJ_INFO["CollisionOBB"]["MTV_IsCol"].SetBool(false);
 		}
-
 
 		WIN_OBJ_INFO["CollisionOBB"]["MTVs"].RemoveListItemAll();	// MTV構造体リストをクリア
 	}
@@ -99,7 +98,8 @@ void ComponentCollisionOBB::Update()
 		m_tMtvs.push_back(mtv);
 
 #ifdef _DEBUG
-		if (&WIN_OBJ_INFO["CollisionOBB"] != DebugUI::Item::dummy && WIN_OBJ_INFO["ObjectName"].GetText() == m_pOwnerObj->GetName())
+		// オブジェクト詳細が自身かつ、OBBコンポーネントが表示されている場合
+		if (CHECK_DISP_COMP("CollisionOBB"))
 		{
 			DebugUI::Item* list = &WIN_OBJ_INFO["CollisionOBB"]["MTVs"];	// MTVリスト取得
 			list->AddListItem(("MTV_" + mtv.sName).c_str());				// MTVリストに追加
@@ -441,7 +441,7 @@ void ComponentCollisionOBB::Debug(DebugUI::Window& window)
 
 	Item* pGroupColOBB = Item::CreateGroup("CollisionOBB");
 
-	ComponentCollisionBase::DebugColBase(pGroupColOBB);
+	ComponentCollisionBase::DebugColBase(pGroupColOBB, "CollisionOBB");
 
 	pGroupColOBB->AddGroupItem(Item::CreateValue("MTV_Name", Item::Kind::Text));	// 衝突相手オブジェクト名
 	pGroupColOBB->AddGroupItem(Item::CreateValue("MTV_Axis", Item::Kind::Vector));	// 最小移動ベクトルの軸
