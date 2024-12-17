@@ -48,10 +48,6 @@ inline T* SceneBase::AddSceneObject(std::string sName)
 		m_pObjects.push_back(std::move(pObject));
 	}
 
-#ifdef _DEBUG
-	// オブジェクト一覧に追加
-	ITEM_OBJ_LIST.AddListItem(sName.c_str());
-#endif
 
 	// 追加したオブジェクトのポインタを返します(更新中の場合は一時保存用配列から取得)
 	return static_cast<T*>((m_bIsUpdating ? m_pStandbyObjects : m_pObjects).back().get());
