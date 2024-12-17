@@ -149,15 +149,23 @@ void SceneBase::Draw()
 =========================================== */
 void SceneBase::RemoveDeadObjects()
 {
+	bool bDel = false;	// オブジェクトが1つでも削除されたかどうか
+
+	// ↓のループ内でオブジェクトの状態が変わるので、一時保存用にコピー
+	std::map<ObjectBase*, ObjectBase::E_State> pObjectStateMap;
+	for (auto& pObject : m_pObjects)
+		pObjectStateMap.insert(std::make_pair(pObject.get(), pObject->GetState()));
+
+
 	// 死亡状態のオブジェクトを削除
 	for (auto it = m_pObjects.begin(); it != m_pObjects.end();)
 	{
 		ObjectBase* pObject = it->get();
 		// 死亡状態かどうか
-		if (pObject->GetState() == ObjectBase::E_State::STATE_DEAD)
+		if (pObjectStateMap.at(pObject) == ObjectBase::E_State::STATE_DEAD)
 		{
 #ifdef _DEBUG
-			// オブジェクト一覧リストから削除
+			// 削除対象オブジェクトが一覧で選択中の場合
 			if (m_nObjectListSelectNo == WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].GetListNo(pObject->GetListName().c_str()))
 			{
 				WIN_OBJ_INFO.Clear();	// オブジェクト情報ウィンドウクリア
@@ -167,7 +175,7 @@ void SceneBase::RemoveDeadObjects()
 			}
 			ITEM_OBJ_LIST.RemoveListItem(pObject->GetListName().c_str());	// オブジェクト一覧から削除
 #endif
-			
+
 			// 子オブジェクトがある場合
 			if (pObject->GetChildObjects().size() > 0)
 			{
@@ -184,12 +192,20 @@ void SceneBase::RemoveDeadObjects()
 
 			pObject->Uninit();			// 終了処理
 			it = m_pObjects.erase(it);	// 削除
+
+			bDel = true;
+
 		}
 		else
 		{
 			++it;	// 次の要素へ
 		}
 	}
+#ifdef _DEBUG
+	// 削除があった場合
+	if (bDel) ReloadDebugObjectList();
+#endif // DEBUG
+
 }
 
 /* ========================================
@@ -608,6 +624,55 @@ void SceneBase::UpdateTransformEdit()
 	}
 }
 
+/* ========================================
+	デバッグ用オブジェクト一覧再読込関数
+	-------------------------------------
+	内容：オブジェクト一覧を再読み込みする
+=========================================== */
+void SceneBase::ReloadDebugObjectList()
+{
+	// オブジェクト一覧をクリア
+	WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].RemoveListItemAll();
+
+	// シーンに所属する全てのオブジェクトを取得
+	for (const auto& pObject : m_pObjects)
+	{
+		if (pObject->GetParentObject()) continue;	// 親オブジェクトがある場合は飛ばす
+		// オブジェクト一覧に追加
+		ITEM_OBJ_LIST.AddListItem(pObject->GetName().c_str());
+		AddObjectListChild(pObject.get());
+	}
+}
+
+
+/* ========================================
+	デバッグ用オブジェクト一覧子オブジェクト追加関数
+	-------------------------------------
+	内容：オブジェクト一覧に子オブジェクトを追加
+		　※子がある限り再帰的に呼び出される
+	-------------------------------------
+	引数：ObjectBase* 親オブジェクト
+=========================================== */
+void SceneBase::AddObjectListChild(ObjectBase* pObject)
+{
+	// 子オブジェクトがある場合
+	if (pObject->GetChildObjects().size() > 0)
+	{
+		for (auto& pChild : pObject->GetChildObjects())
+		{
+			// 挿入位置
+			int nInsertNo = WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].GetListNo(pObject->GetListName().c_str());
+			// オブジェクト一覧に追加
+			ITEM_OBJ_LIST.InsertListItem(pChild->GetListName().c_str(), nInsertNo + 1);
+			// 子オブジェクトを追加
+			AddObjectListChild(pChild);
+		}
+	}
+	else
+	{
+		return;
+	}
+}
 
 
 #endif

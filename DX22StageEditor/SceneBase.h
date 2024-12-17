@@ -65,8 +65,9 @@ public:
 	std::vector<ObjectBase*> GetSceneObjectsTag(E_ObjectTag tag);	// タグに対応するオブジェクトを取得
 
 #ifdef _DEBUG
-	void SetTransformEditMode(int nMode); // 変形エディタのモードを設定
-	void ResetTransformEdit();	// 変形エディタのリセット
+	void SetTransformEditMode(int nMode);	// 変形エディタのモードを設定
+	void ResetTransformEdit();				// 変形エディタのリセット
+	void ReloadDebugObjectList();			// オブジェクトリスト再読み込み
 #endif // _DEBUG
 private:
 	void UpdateCollision();	// 衝突判定更新関数
@@ -76,6 +77,7 @@ private:
 	void InitObjectInfo(std::string sName);
 
 	void UpdateTransformEdit();	// 変形エディタの更新
+	void AddObjectListChild(ObjectBase* pObject);
 
 #endif // _DEBUG
 private:

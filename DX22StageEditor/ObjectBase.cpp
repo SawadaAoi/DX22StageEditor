@@ -175,49 +175,25 @@ void ObjectBase::OnCollisionExit(ObjectBase* pHit)
 =========================================== */
 void ObjectBase::SetParentObject(ObjectBase* pParentObj)
 {
-	// 既に親オブジェクトが設定されている場合
-	if (m_pParentObj != nullptr)
-	{
-		// 親オブジェクトから自身を削除
+	// 既に設定されている親オブジェクトから自身を削除
+	if (m_pParentObj)
 		m_pParentObj->RemoveChildObject(this);
-	}
-
-#ifdef _DEBUG
-
-	// 削除するオブジェクト名をリストから削除
-	ITEM_OBJ_LIST.RemoveListItem(this->GetName().c_str(), DebugUI::CHILD_HEAD_TEXT);
 
 	m_pParentObj = pParentObj;	// 自オブジェクトの更新
-
-	// 親オブジェクトのリスト番号取得
-	int nParentNum = ITEM_OBJ_LIST.GetListNo(m_pParentObj->GetListName().c_str()) + 1;
-
-	// オブジェクト一覧リストで親オブジェクトの下に追加
-	ITEM_OBJ_LIST.InsertListItem(this->GetListName().c_str(), nParentNum);
-
-	// 子オブジェクトを持っている場合
-	for (auto& pChild : m_pChildObjs)
-	{
-		// 子オブジェクトの親を更新(リストの表示を更新するため)
-		pChild->SetParentObject(this);
-	}
-#else
-	m_pParentObj = pParentObj;	// 自オブジェクトの更新
-
-#endif // _DEBUG
 
 	// 既に親オブジェクトが更新済みかチェック
 	// ※子オブジェクト追加関数から呼び出された場合
 	for (auto& pChild : m_pParentObj->m_pChildObjs)
 	{
-		if (pChild == this)
-		{
-			return;
-		}
+		if (pChild == this)	return;
 	}
 
-
 	m_pParentObj->AddChildObject(this);	// 親オブジェクトの更新
+
+#ifdef _DEBUG
+	// オブジェクト一覧の再読み込み
+	m_pOwnerScene->ReloadDebugObjectList();
+#endif // _DEBUG
 }
 
 /* ========================================
@@ -232,19 +208,20 @@ void ObjectBase::AddChildObject(ObjectBase* pChildObj)
 	// 既に子オブジェクトに登録されている場合は追加しない
 	for (auto& pChild : m_pChildObjs)
 	{
-		if (pChild == pChildObj)
-		{
-			return;
-		}
+		if (pChild == pChildObj)	return;
 	}
 	m_pChildObjs.push_back(pChildObj);	// 自オブジェクトの更新
 
 	// 既に子オブジェクトが更新済みかチェック
 	// ※親オブジェクト設定関数から呼び出された場合
-	if (pChildObj->GetParentObject() != this)
-	{
-		pChildObj->SetParentObject(this);	// 子オブジェクトの更新
-	}
+	if (pChildObj->GetParentObject() == this) return;
+
+	pChildObj->SetParentObject(this);	// 子オブジェクトの更新
+
+#ifdef _DEBUG
+	// オブジェクト一覧の再読み込み
+	m_pOwnerScene->ReloadDebugObjectList();
+#endif // _DEBUG
 }
 
 /* ========================================
@@ -261,14 +238,6 @@ void ObjectBase::RemoveParentObject()
 	m_pParentObj = nullptr;					// 親オブジェクトを空に設定
 	GetComponent<ComponentTransform>()->ClearParent();	// Transformコンポーネントの親解除処理
 
-#ifdef _DEBUG
-
-	ITEM_OBJ_LIST.RemoveListItem(this->GetName().c_str(), DebugUI::CHILD_HEAD_TEXT);
-
-	// オブジェクト一覧の一番下に追加
-	ITEM_OBJ_LIST.AddListItem(this->GetListName().c_str());
-
-#endif
 }
 
 /* ========================================
@@ -284,22 +253,15 @@ void ObjectBase::RemoveChildObject(ObjectBase* pChildObj)
 	m_pChildObjs.erase(
 		std::remove(m_pChildObjs.begin(), m_pChildObjs.end(), pChildObj), m_pChildObjs.end());
 
-
 	pChildObj->m_pParentObj = nullptr;								// 親オブジェクトを空に設定
 	pChildObj->GetComponent<ComponentTransform>()->ClearParent();	// Transformコンポーネントの親解除処理
 
 #ifdef _DEBUG
+	// オブジェクト一覧の再読み込み
+	m_pOwnerScene->ReloadDebugObjectList();
+#endif // _DEBUG
 
-	ITEM_OBJ_LIST.RemoveListItem(pChildObj->GetName().c_str(), DebugUI::CHILD_HEAD_TEXT);
 
-	// 子オブジェクトが削除対象でない場合
-	if (pChildObj->GetState() != E_State::STATE_DEAD)
-	{
-		// オブジェクト一覧の一番下に追加
-		ITEM_OBJ_LIST.AddListItem(pChildObj->GetListName().c_str());
-	}
-
-#endif
 }
 
 /* ========================================
@@ -315,16 +277,13 @@ void ObjectBase::RemoveAllChildObjects()
 		pChild->m_pParentObj = nullptr;								// 親オブジェクトを空に設定
 		pChild->GetComponent<ComponentTransform>()->ClearParent();	// Transformコンポーネントの親解除処理
 
-#ifdef _DEBUG
-
-		ITEM_OBJ_LIST.RemoveListItem(pChild->GetName().c_str(), DebugUI::CHILD_HEAD_TEXT);
-
-		// オブジェクト一覧の一番下に追加
-		ITEM_OBJ_LIST.AddListItem(pChild->GetListName().c_str());
-
-#endif
 	}
 	m_pChildObjs.clear();
+
+#ifdef _DEBUG
+	// オブジェクト一覧の再読み込み
+	m_pOwnerScene->ReloadDebugObjectList();
+#endif // _DEBUG
 }
 
 /* ========================================
@@ -505,6 +464,7 @@ void ObjectBase::SetLightUse(bool bUse)
 
 
 
+
 #ifdef _DEBUG
 /* ========================================
 	デバッグ用関数
@@ -532,6 +492,8 @@ void ObjectBase::Debug()
 	pGroupObjectBase->AddGroupItem(Item::CreateValue("ObjectReName", Item::Path, false, true));	// 変更後の名前
 
 	pGroupObjectBase->AddGroupItem(InitParentList());	// 親オブジェクトリスト
+
+	pGroupObjectBase->AddGroupItem(Item::CreateBind("UseLight", Item::Bool, &m_tLightParam.bLightUse, false));	// ライト使用
 
 	pObjInfo.AddItem(pGroupObjectBase);		// グループを追加
 
@@ -572,7 +534,8 @@ DebugUI::Item* ObjectBase::InitParentList()
 	// シーン上のオブジェクトをリストに追加
 	for (const auto pObj : SceneManager::GetScene()->GetAllSceneObjects())
 	{
-		if (pObj == this) continue;	// 自身は追加しない
+		if (pObj->GetName() == this->GetName()) continue;	// 自身は追加しない
+
 		pParentList->AddListItem(pObj->GetName().c_str());	// シーン上のオブジェクト名を追加
 	}
 	// 親オブジェクトがある場合
@@ -582,6 +545,9 @@ DebugUI::Item* ObjectBase::InitParentList()
 	}
 
 	pParentList->SetListNo(nParentNo);	// 選択中のオブジェクトを設定
+
+	pParentList->RemoveListItem(this->GetName().c_str());
+
 
 	return pParentList;
 }
@@ -634,6 +600,7 @@ void ObjectBase::ChangeParentList(std::string sParentName)
 	{
 		this->RemoveParentObject();			// 親オブジェクトがない場合(Noneを選択)は解除
 	}
+
 }
 
 /* ========================================
