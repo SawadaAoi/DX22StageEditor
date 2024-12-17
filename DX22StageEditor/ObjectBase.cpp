@@ -577,15 +577,17 @@ void ObjectBase::ChangeParentList(std::string sParentName)
 	if (pParentNew)
 	{
 		this->SetParentObject(pParentNew);	// 新しい親オブジェクトに設定
+		// オブジェクト一覧の選択位置を変更
+		int nListNo = ITEM_OBJ_LIST.GetListNo(pParentNew->GetListName().c_str());	// オブジェクト一覧の表示位置取得
+		ITEM_OBJ_LIST.SetListNo(nListNo + 1);
 	}
 	else
 	{
 		this->RemoveParentObject();			// 親オブジェクトがない場合(Noneを選択)は解除
+		ITEM_OBJ_LIST.SetListNo(-1);
 	}
 
-	// オブジェクト一覧の選択位置を変更
-	int nListNo = ITEM_OBJ_LIST.GetListNo(pParentNew->GetListName().c_str());	// オブジェクト一覧の表示位置取得
-	ITEM_OBJ_LIST.SetListNo(nListNo + 1);
+	
 }
 
 /* ========================================
