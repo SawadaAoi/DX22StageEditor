@@ -55,6 +55,7 @@ public:
 
 	// ƒQƒbƒ^[
 	Texture* GetTextureData(E_TEX_KEY e_GetKey);
+	E_TEX_KEY GetTextureKey(Texture* pTex);
 
 	std::unordered_map <E_TEX_KEY, std::shared_ptr<Texture>> GetTextureDatas();
 	std::unordered_map <E_TEX_KEY, std::string> GetTexturePaths();

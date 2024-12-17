@@ -359,9 +359,6 @@
     <ClCompile Include="ObjectGround.cpp">
       <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectGroundGrass.cpp">
-      <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectPlayer.cpp">
       <Filter>ソース ファイル\App\GameObject\Player</Filter>
     </ClCompile>
@@ -602,9 +599,6 @@
       <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
     </ClInclude>
     <ClInclude Include="ObjectGround.h">
-      <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectGroundGrass.h">
       <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
     </ClInclude>
     <ClInclude Include="ObjectPlayer.h">

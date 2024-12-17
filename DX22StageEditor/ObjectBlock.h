@@ -21,9 +21,18 @@ class ObjectBlock
 	: public ObjectBase
 {
 public:
+	struct S_SaveData
+	{
+		int nTextureID;	// テクスチャID
+		bool bUseTex;	// テクスチャ使用フラグ
+	};
+public:
 	ObjectBlock(SceneBase* pScene);
 
 	void InitLocal() override;
+
+	void OutPutLocalData(std::ofstream& file) override;
+	void InputLocalData(std::ifstream& file) override;
 
 	DEFINE_OBJECT_TYPE(ObjectBlock)	// オブジェクトの種類ID取得関数
 	

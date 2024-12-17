@@ -14,6 +14,8 @@
 
 #include "SceneManager.h"
 #include "SceneBase.h"
+#include "ObjectBase.h"
+
 
 #include "ComponentTransform.h"
 #include "ObjectTypeRegistry.h"
@@ -76,6 +78,8 @@ void FileManager::StageObjectOutput(std::string sPath)
 
 		// ファイルに書き込み
 		file.write((char*)&data, sizeof(S_SaveDataObject));
+		// オブジェクト個別のデータ出力
+		object->OutPutLocalData(file);
 	}
 
 	// メッセージ表示(成功)
@@ -133,6 +137,8 @@ void FileManager::StageObjectInput(std::string sPath)
 
 			// シーンに追加
 			pScene->AddSceneObjectBase(pObject);
+			// オブジェクト個別のデータ入力
+			pObject->InputLocalData(file);
 		}
  	}
 

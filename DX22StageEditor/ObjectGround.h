@@ -22,8 +22,17 @@ class ObjectGround :
 	public ObjectBase
 {
 public:
+	struct S_SaveData
+	{
+		int nTextureID;	// テクスチャID
+		bool bUseTex;	// テクスチャ使用フラグ
+	};
+public:
 	ObjectGround(SceneBase* pScene);
 	void InitLocal() override;
+
+	void OutPutLocalData(std::ofstream& file) override;
+	void InputLocalData(std::ifstream& file) override;
 
 	DEFINE_OBJECT_TYPE(ObjectGround)	// オブジェクトの種類ID取得関数
 

@@ -41,4 +41,42 @@ void ObjectGround::InitLocal()
 	m_pCompGeometry->SetShapeType(ComponentGeometry::TYPE_PLANE);
 }
 
+/* ========================================
+	ローカルデータ出力関数
+	-------------------------------------
+	内容：オブジェクトのローカルデータをファイルに書き込む
+	-------------------------------------
+	引数1：ファイル
+========================================== */
+void ObjectGround::OutPutLocalData(std::ofstream& file)
+{
+	S_SaveData data;
+
+	// テクスチャID
+	data.nTextureID = TEXTURE_MNG_INST.GetTextureKey(m_pCompGeometry->GetTexture());
+	// テクスチャ使用フラグ
+	data.bUseTex = m_pCompGeometry->GetIsTex();
+
+	// ファイルに書き込む
+	file.write((char*)&data, sizeof(S_SaveData));
+}
+
+/* ========================================
+	ローカルデータ入力関数
+	-------------------------------------
+	内容：ファイルからローカルデータを読み込む
+	-------------------------------------
+	引数1：ファイル
+========================================== */
+void ObjectGround::InputLocalData(std::ifstream& file)
+{
+	S_SaveData data;
+	file.read((char*)&data, sizeof(S_SaveData));
+
+	// テクスチャ設定
+	m_pCompGeometry->SetTexture(GET_TEXTURE_DATA((TextureManager::E_TEX_KEY)data.nTextureID));
+	// テクスチャ使用フラグ
+	m_pCompGeometry->SetIsTex(data.bUseTex);
+}
+
 

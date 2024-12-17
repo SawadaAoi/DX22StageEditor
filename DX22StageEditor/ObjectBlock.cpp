@@ -42,3 +42,43 @@ void ObjectBlock::InitLocal()
 	m_pCompColObb = AddComponent<ComponentCollisionOBB>();
 
 }
+
+/* ========================================
+	ローカルデータ出力関数
+	-------------------------------------
+	内容：オブジェクトのローカルデータをファイルに書き込む
+	-------------------------------------
+	引数1：ファイル
+=========================================== */
+void ObjectBlock::OutPutLocalData(std::ofstream& file)
+{
+	S_SaveData data;
+
+	// テクスチャID
+	data.nTextureID = TEXTURE_MNG_INST.GetTextureKey(m_pCompGeometry->GetTexture());
+	// テクスチャ使用フラグ
+	data.bUseTex = m_pCompGeometry->GetIsTex();
+
+	// ファイルに書き込む
+	file.write((char*)&data, sizeof(S_SaveData));
+}
+
+/* ========================================
+	ローカルデータ入力関数
+	-------------------------------------
+	内容：ファイルからオブジェクトのローカルデータを読み込む
+	-------------------------------------
+	引数1：ファイル
+=========================================== */
+void ObjectBlock::InputLocalData(std::ifstream& file)
+{
+	S_SaveData data;
+
+	// ファイルから読み込む
+	file.read((char*)&data, sizeof(S_SaveData));
+
+	// テクスチャ設定
+	m_pCompGeometry->SetTexture(GET_TEXTURE_DATA((TextureManager::E_TEX_KEY)data.nTextureID));
+	// テクスチャ使用フラグ
+	m_pCompGeometry->SetIsTex(data.bUseTex);
+}

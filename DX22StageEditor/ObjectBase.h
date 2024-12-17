@@ -16,6 +16,7 @@
 #include "DebugConsole.h"	// デバッグコンソール出力用
 #include <memory>			// std::unique_ptr用
 #include "ObjectTag.h"
+#include <fstream>			// ファイル入出力用
 
 // =============== 前方宣言 =====================
 class SceneBase;	// シーン基底クラス
@@ -92,6 +93,10 @@ public:
 	void RemoveChildObject(ObjectBase* pChildObj);	// 子オブジェクト解除
 	void RemoveAllChildObjects();					// 全子オブジェクト解除
 	int GetGenerationCount();						// 世代数の取得
+
+
+	virtual void OutPutLocalData(std::ofstream& file);	// オブジェクトのデータ出力
+	virtual void InputLocalData(std::ifstream& file);	// オブジェクトのデータ入力
 
 	// ゲッター
 	SceneBase* GetOwnerScene() const;					// 所有シーンの取得

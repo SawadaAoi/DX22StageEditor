@@ -36,6 +36,9 @@ public:
 	void Draw() override;
 
 	// ゲッター
+	E_ShapeType GetShapeType() const;	// 図形の種類を取得
+	Texture* GetTexture() const;		// テクスチャを取得
+	bool GetIsTex() const;				// テクスチャ使用フラグを取得
 
 	// セッター
 	void SetShapeType(E_ShapeType eType);	// 図形の種類を設定	

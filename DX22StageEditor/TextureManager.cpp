@@ -81,7 +81,26 @@ Texture* TextureManager::GetTextureData(E_TEX_KEY e_GetKey)
 	return m_apTextureDatas[e_GetKey].get();
 }
 
-
+/* ========================================
+	画像データキー取得関数
+	-------------------------------------
+	内容：指定された画像データのキーを取得
+	-------------------------------------
+	引数1：Texture* pTex
+	-------------------------------------
+	戻値：E_TEX_KEY 画像データキー
+=========================================== */
+TextureManager::E_TEX_KEY TextureManager::GetTextureKey(Texture* pTex)
+{
+	for (auto& tex : m_apTextureDatas)
+	{
+		if (tex.second.get() == pTex)
+		{
+			return tex.first;
+		}
+	}
+	return E_TEX_KEY::MAX;
+}
 
 /* ========================================
 	ゲッター(画像データ配列)関数

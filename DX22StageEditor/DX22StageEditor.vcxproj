@@ -177,7 +177,6 @@
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="ObjectBlock.cpp" />
-    <ClCompile Include="ObjectGroundGrass.cpp" />
     <ClCompile Include="ObjectLight.cpp" />
     <ClCompile Include="ObjectLightDirectional.cpp" />
     <ClCompile Include="ObjectLightPoint.cpp" />
@@ -255,7 +254,6 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="ObjectBlock.h" />
-    <ClInclude Include="ObjectGroundGrass.h" />
     <ClInclude Include="ObjectLight.h" />
     <ClInclude Include="ObjectLightDirectional.h" />
     <ClInclude Include="ObjectLightPoint.h" />
