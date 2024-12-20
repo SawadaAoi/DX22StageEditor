@@ -208,6 +208,9 @@ namespace DebugUI
 			FileManager::StageObjectInput(sPath + "/" + sFileName + sExtension);
 		}, false, true));
 
+		// データ入出力
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("OutputCamera", Item::Kind::Bool, true, true));
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("OutputLight", Item::Kind::Bool, true, true));
 
 		WIN_DATA_INOUT.AddItem(Item::CreateValue("InputResult ", Item::Kind::Text, false));	// 読込結果表示
 		WIN_DATA_INOUT.AddItem(Item::CreateValue("OutputResult", Item::Kind::Text, false));	// 出力結果表示

@@ -10,6 +10,7 @@
 #include "CameraManager.h"	
 #include "SceneBase.h"		// シーン基底クラス
 #include "DebugMenu.h"
+#include "ObjectCameraDebug.h"
 
 // オブジェクトフォーカスに使用
 #include "ObjectBase.h"
@@ -61,7 +62,10 @@ void CCameraManager::Init(SceneBase* pScene)
 	m_pCameraList.clear();
 
 	// シーンからカメラリストを取得
-	m_pCameraList = m_pScene->GetSceneObjects<ObjectCamera>();
+	for (auto pObject : m_pScene->GetSceneObjectsTag(E_ObjectTag::Camera))
+	{
+		AddCamera(dynamic_cast<ObjectCamera*>(pObject));
+	}
 
 	// カメラが存在する場合
 	if (m_pCameraList.size() > 0)
@@ -71,7 +75,7 @@ void CCameraManager::Init(SceneBase* pScene)
 	// カメラが存在しない場合
 	else
 	{
-		m_pScene->AddSceneObject<ObjectCamera>(DEFAULT_CAMERA_NAME);	// カメラ追加
+		m_pScene->AddSceneObject<ObjectCameraDebug>(DEFAULT_CAMERA_NAME);	// カメラ追加
 		SwitchCamera(0);												// アクティブにする
 	}
 }

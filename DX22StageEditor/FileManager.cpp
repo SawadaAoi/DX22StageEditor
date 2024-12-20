@@ -16,7 +16,6 @@
 #include "SceneBase.h"
 #include "ObjectBase.h"
 
-
 #include "ComponentTransform.h"
 #include "ObjectTypeRegistry.h"
 
@@ -44,9 +43,18 @@ void FileManager::StageObjectOutput(std::string sPath)
 		return;
 	}
 
+	// カメラ、ライトの出力設定
+	bool bOutputCamera = WIN_DATA_INOUT["OutputCamera"].GetBool();
+	bool bOutputLight = WIN_DATA_INOUT["OutputLight"].GetBool();
+
 	// シーンに存在するオブジェクトを取得
 	for (auto& object : SceneManager::GetScene()->GetAllSceneObjects())
 	{
+		// カメラ、ライトの除外チェック
+		if (object->GetTag() == E_ObjectTag::Camera && !bOutputCamera) continue;
+		if (object->GetTag() == E_ObjectTag::Light && !bOutputLight) continue;
+
+		// オブジェクトの情報を格納する構造体
 		S_SaveDataObject data;
 
 		// オブジェクトの情報を取得 ---------------------------------
