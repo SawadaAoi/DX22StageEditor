@@ -401,6 +401,9 @@
     <ClCompile Include="ObjectBulletPlayer.cpp">
       <Filter>ソース ファイル\App\GameObject\Bullet</Filter>
     </ClCompile>
+    <ClCompile Include="RegisterObjectTypeMap.cpp">
+      <Filter>ソース ファイル\System\DataInOut</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">

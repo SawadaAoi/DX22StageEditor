@@ -225,6 +225,7 @@
     <ClCompile Include="ObjectGround.cpp" />
     <ClCompile Include="ObjectPlayer.cpp" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="RegisterObjectTypeMap.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ShapeBox.cpp" />
