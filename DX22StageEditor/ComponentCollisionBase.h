@@ -48,11 +48,12 @@ public:
 
 public:
 	ComponentCollisionBase(ObjectBase* pOwner);
-	~ComponentCollisionBase();
+	~ComponentCollisionBase(); 
 	void Update() override;
 	void Draw() override;
 
 	void UpdateCollision(ComponentCollisionBase* otherCol);			// 衝突判定更新関数
+	void UpdateCollisionMap(ComponentCollisionBase* otherCol);										// 衝突状態マップ更新関数
 
 	// ゲッター
 	Vector3<float> GetPosition();

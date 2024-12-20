@@ -79,7 +79,7 @@ public:
 	// セッター
 	void SetLocalPosition(const Vector3<float>& position);
 	void SetLocalRotation(const Quaternion& rotation);
-	void SetLocalRotation(const Vector3<float> axis, float degAngle);
+	void SetLocalRotation(const Vector3<float> axis, float angle);
 	void SetLocalRotationEuler(const Vector3<float>& angles);
 	void SetLocalScale(const Vector3<float>& scale);
 

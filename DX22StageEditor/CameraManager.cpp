@@ -71,7 +71,7 @@ void CCameraManager::Init(SceneBase* pScene)
 	// カメラが存在しない場合
 	else
 	{
-		m_pScene->AddSceneObject<ObjectCamera>(DEFAULT_CAMERA_NAME);				// カメラ追加
+		m_pScene->AddSceneObject<ObjectCamera>(DEFAULT_CAMERA_NAME);	// カメラ追加
 		SwitchCamera(0);												// アクティブにする
 	}
 }

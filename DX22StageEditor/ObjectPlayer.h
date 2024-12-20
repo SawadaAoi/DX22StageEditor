@@ -1,9 +1,9 @@
 /* ========================================
 	DX22Base/
 	------------------------------------
-	プレイヤーオブジェクト用ヘッダ
+	オブジェクト(プレイヤー)用ヘッダ
 	------------------------------------
-	説明：プレイヤーオブジェクトの処理を管理する
+	説明：プレイヤー用
 	------------------------------------
 	ObjectPlayer.h
 ========================================== */
@@ -11,8 +11,14 @@
 
 // =============== インクルード =====================
 #include "ObjectBase.h"
-#include "ComponentTransform.h"
 #include <memory>
+
+// =============== 前方宣言 =====================
+class ComponentTransform;
+class ComponentGroundRaycast;
+class ComponentRigidbody;
+class ComponentModelAnime;
+class ComponentPlayerController;
 
 // =============== クラス定義 =====================
 class ObjectPlayer :
@@ -22,17 +28,39 @@ public:
 	ObjectPlayer(SceneBase* pScene);
 	void InitLocal();
 	void UpdateLocal();
-	void DrawLocal();
+
+	void OnCollisionEnter(ObjectBase* pHit) override;
 
 	// ゲッター
+	int GetHp();
+	int GetMaxHp();
+	bool GetInvincible();
+
+	// セッター
+	void SetHp(int hp);
+	void SetMaxHp(int maxHp);
+	void SetInvincible(bool bInvincible);
+
 	DEFINE_OBJECT_TYPE(ObjectPlayer)	// オブジェクトの種類ID取得関数
 
 private:
-	ComponentTransform* m_pTransform;
-	class ComponentGeometry* m_pGeometry;
-	std::unique_ptr<class ShapeLine> m_pLine;
-	class ComponentGroundRaycast* m_pGroundRaycast;
-	class ComponentRigidbody* m_pRigidbody;
+	void CheckGround();
+	void Damage();
+	void InvincibleUpdate();
+private:
+	ComponentGroundRaycast*		m_pCompGroundRaycast;
+	ComponentRigidbody*			m_pCompRigidbody;
+	ComponentModelAnime*		m_pCompModelAnime;
+	ComponentPlayerController*	m_pCompPlayerController;
 
+	// HP
+	int m_nHp;
+	int m_nMaxHp;
+
+	bool	m_bInvincible;	// 無敵時間フラグ
+	float	m_fInvCnt;		// 無敵時間カウント
+	float	m_fInvFlashCnt;	// 無敵時間点滅カウント
+
+	
 };
 

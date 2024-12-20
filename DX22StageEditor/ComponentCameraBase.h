@@ -1,5 +1,5 @@
 /* ========================================
-	DX22Base/
+	CatRobotGame/
 	------------------------------------
 	カメラ基本コンポーネント用ヘッダ
 	------------------------------------
@@ -18,7 +18,7 @@
 
 // =============== クラス定義 =====================
 class ComponentCameraBase :
-	public ComponentBase
+    public ComponentBase
 {
 public:
 	ComponentCameraBase(ObjectBase* pOwner);
@@ -46,6 +46,24 @@ public:
 	Vector3<float> GetForward();	// カメラの前方向取得関数
 	Vector3<float> GetRight();		// カメラの右方向取得関数
 	Vector3<float> GetUp();			// カメラの上方向取得関数
+	Vector3<float> GetLook();		// カメラの注視点取得関数
+	float GetFovY();				// 縦方向の画角取得関数
+	float GetAspect();				// アスペクト比取得関数
+	float GetNear();				// ニアクリップ面取得関数
+	float GetFar();					// ファークリップ面取得関数
+	float GetOrthoWidth();			// 平行投影の幅取得関数
+	float GetPitch();				// X軸回転角度取得関数
+
+
+	// セッター
+	void SetLook(Vector3<float> vLook);	// 注視点設定関数
+	void SetUp(Vector3<float> vUp);		// 上方向設定関数
+	void SetFovY(float fFovY);			// 縦方向の画角設定関数
+	void SetAspect(float fAspect);		// アスペクト比設定関数
+	void SetNear(float fNear);			// ニアクリップ面設定関数
+	void SetFar(float fFar);			// ファークリップ面設定関数
+	void SetOrthoWidth(float fOrthoWidth);	// 平行投影の幅設定関数
+	void SetPitch(float fPitch);		// X軸回転角度設定関数
 
 
 	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数

@@ -24,7 +24,6 @@
 ========================================== */
 ObjectLight::ObjectLight(SceneBase* pScene)
 	: ObjectBase(pScene)
-	, m_pCompTransform(nullptr)
 	, m_pCompLightBase(nullptr)
 {
 	SetTag(E_ObjectTag::Light);

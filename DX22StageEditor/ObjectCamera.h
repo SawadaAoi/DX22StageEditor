@@ -1,9 +1,9 @@
 /* ========================================
-	DX22Base/
+	CatRobotGame/
 	------------------------------------
-	カメラオブジェクト用ヘッダ
+	カメラオブジェクト(基礎)用ヘッダ
 	------------------------------------
-	説明：カメラオブジェクトの処理を管理する
+	説明：カメラオブジェクトの基礎処理を管理する
 	------------------------------------
 	ObjectCamera.h
 ========================================== */
@@ -37,14 +37,15 @@ public:
 
 	bool GetActive();
 
+	ComponentCameraBase* GetCameraBase();
+
 	DEFINE_OBJECT_TYPE(ObjectCamera)	// オブジェクトの種類ID取得関数
 
-	// セッター
-	void SetActive(bool bActive);
+		// セッター
+		void SetActive(bool bActive);
 
-private:
-	ComponentTransform* m_pTransform;		// 座標、回転、拡大縮小
-	ComponentCameraBase* m_pCameraBase;	// カメラの基本機能
+protected:
+	ComponentCameraBase* m_pCompCameraBase;	// カメラの基本機能
 
 	bool m_bActive;	// アクティブ状態
 };

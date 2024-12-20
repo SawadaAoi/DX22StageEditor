@@ -49,6 +49,8 @@ public:
 	Quaternion Conjugate() const;	// 共役
 	Quaternion Inverse() const;		// 逆クォータニオン
 
+	float Dot(const Quaternion& other) const;	// 内積
+
 	Vector3<float> GetForwardVector() const;	// 前方ベクトル取得
 	Vector3<float> GetRightVector() const;		// 右方ベクトル取得
 	Vector3<float> GetUpVector() const;			// 上方ベクトル取得
@@ -71,6 +73,9 @@ public:
 	bool operator==(const Quaternion& other) const;			// 等価
 	bool operator!=(const Quaternion& other) const;			// 非等価
 
+	// 演算子オーバーロード(単項演算子) =====================
+	Quaternion operator+() const;	// 単項プラス
+	Quaternion operator-() const;	// 単項マイナス
 
 	// 指定した軸方向の角度を取得
 	Vector3<float> GetAngleWorldXYZ() const;	// ワールド座標系での角度取得

@@ -31,9 +31,15 @@ ComponentGroundRaycast::ComponentGroundRaycast(ObjectBase* pOwner)
 	, m_pOwnerTransform(nullptr)
 	, m_pRayLine(nullptr)
 	, m_vHitPos(0.0f, 0.0f, 0.0f)
+#ifdef _DEBUG
 	, m_bIsHit(false)
-	, m_bIsDispRayLine(true)
-	, m_bIsDispTriPointToHitPos(true)
+	, m_bIsDispRayLine(false)
+	, m_bIsDispTriPointToHitPos(false)
+#elif
+	, m_bIsHit(false)
+	, m_bIsDispRayLine(false)
+	, m_bIsDispTriPointToHitPos(false)
+#endif // _DEBUG
 {
 
 }

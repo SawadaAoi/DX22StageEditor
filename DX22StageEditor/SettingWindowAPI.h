@@ -24,8 +24,8 @@ namespace WindowConfig
 	const int REFRESH_RATE = 120;
 
 	// ウィンドウタイトル
-	const std::string APP_TITLE = "DX22Base";
-	const LPCSTR	WINDOW_NAME = "DX22Base";
+	const std::string APP_TITLE = "ステージエディター";
+	const LPCSTR	WINDOW_NAME = "ステージエディター";
 
 	// アスペクト比
 	const float ASPECT_RATIO = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;

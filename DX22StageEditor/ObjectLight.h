@@ -42,7 +42,6 @@ public:
 
 	DEFINE_OBJECT_TYPE(ObjectLight)
 protected:
-	ComponentTransform* m_pCompTransform;
     ComponentLightBase* m_pCompLightBase;
 
 };

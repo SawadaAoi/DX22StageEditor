@@ -329,6 +329,19 @@ void SceneBase::UpdateCollision()
 			collisionB->UpdateCollision(collisionA); 
 		}
 	}
+
+	// 衝突状態マップ更新(上記の処理で衝突状態が変わったため)
+	for (size_t i = 0; i < m_pObjectCollision.size(); ++i) {
+		for (size_t j = i + 1; j < m_pObjectCollision.size(); ++j) {
+
+			// 衝突判定を行うコンポーネントを取得
+			ComponentCollisionBase* collisionA = m_pObjectCollision.at(i);
+			ComponentCollisionBase* collisionB = m_pObjectCollision.at(j);
+
+			collisionA->UpdateCollisionMap(collisionB);
+			collisionB->UpdateCollisionMap(collisionA);
+		}
+	}
 }
 
 /* ========================================

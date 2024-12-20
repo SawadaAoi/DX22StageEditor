@@ -1,5 +1,5 @@
 ﻿/* ========================================
-	DX22Base/
+	CatRobotGame/
 	------------------------------------
 	カメラ基本コンポーネント用cpp
 	------------------------------------
@@ -24,10 +24,10 @@ const float CAMERA_DEFAULT_FAR = 100.0f;	// 最大距離
 const float CAMERA_DEFAULT_ORTHO_WIDTH = 20.0f;	// 平行投影の幅
 
 // UI用の定数
-const float SCREEN_LEFT_EDGE = WindowConfig::SCREEN_WIDTH / 2.0f * -1.0;	// 画面左端
-const float SCREEN_RIGHT_EDGE = WindowConfig::SCREEN_WIDTH / 2.0f;			// 画面右端
-const float SCREEN_TOP_EDGE = WindowConfig::SCREEN_HEIGHT / 2.0f;			// 画面上端
-const float SCREEN_BOTTOM_EDGE = WindowConfig::SCREEN_HEIGHT / 2.0f * -1.0;	// 画面下端
+const float SCREEN_LEFT_EDGE	= WindowConfig::SCREEN_WIDTH  / 2.0f * -1.0;	// 画面左端
+const float SCREEN_RIGHT_EDGE	= WindowConfig::SCREEN_WIDTH  / 2.0f;			// 画面右端
+const float SCREEN_TOP_EDGE		= WindowConfig::SCREEN_HEIGHT / 2.0f;			// 画面上端
+const float SCREEN_BOTTOM_EDGE	= WindowConfig::SCREEN_HEIGHT / 2.0f * -1.0;	// 画面下端
 
 // 視錐台の線の色
 const int LINE_NUM = 12;
@@ -69,8 +69,8 @@ ComponentCameraBase::ComponentCameraBase(ObjectBase* pOwner)
 void ComponentCameraBase::Init()
 {
 	// 所有者オブジェクトのTransformコンポーネントを取得
-	m_pTransform = m_pOwnerObj->GetComponent<ComponentTransform>();
-	m_pFrustumLine = std::make_unique<ShapeLine>(LINE_NUM);
+	m_pTransform	= m_pOwnerObj->GetComponent<ComponentTransform>();
+	m_pFrustumLine	= std::make_unique<ShapeLine>(LINE_NUM);
 
 	SetNearFarClipPos();	// ニアクリップ面とファークリップ面の座標をセット
 	InitNearFarClipLine();	// ニアクリップ面とファークリップ面のライン座標を初期化
@@ -97,6 +97,10 @@ void ComponentCameraBase::Update()
 		SetNearFarClipPos();		// ニアクリップ面とファークリップ面の座標をセット
 		UpdateNearFarClipLine();	// ニアクリップ面とファークリップ面のライン座標を更新
 	}
+
+	// 自身の座標、回転から注視点と上方向を更新
+	m_vLook = m_pTransform->GetWorldPosition() + m_pTransform->GetForwardVector();
+	m_vUp = m_pTransform->GetUpVector();
 }
 
 /* ========================================
@@ -203,8 +207,8 @@ void ComponentCameraBase::RotateLimit(float pitch, float yaw, float LimitPitch)
 	}
 
 	// カメラ回転作成
-	Quaternion qYaw = Quaternion::FromAxisAngle(Vector3<float>::Up(), MathUtils::ToRadian(yaw));				// ワールド座標系で回転
-	Quaternion qPitch = Quaternion::FromAxisAngle(m_pTransform->GetRightVector(), MathUtils::ToRadian(pitch));	// ローカル座標系で回転
+	Quaternion qYaw		= Quaternion::FromAxisAngle(Vector3<float>::Up(), MathUtils::ToRadian(yaw));				// ワールド座標系で回転
+	Quaternion qPitch	= Quaternion::FromAxisAngle(m_pTransform->GetRightVector(), MathUtils::ToRadian(pitch));	// ローカル座標系で回転
 
 	m_pTransform->Rotate(qYaw * qPitch);	// 回転
 }
@@ -277,15 +281,15 @@ void ComponentCameraBase::RotateY(float fAngle, bool world)
 DirectX::XMFLOAT4X4 ComponentCameraBase::GetViewMatrix()
 {
 	// ビュー行列を更新
-	m_vLook = m_pTransform->GetWorldPosition() + m_pTransform->GetForwardVector();
-	m_vUp = m_pTransform->GetUpVector();
+	//m_vLook = m_pTransform->GetWorldPosition() + m_pTransform->GetForwardVector();
+	//m_vUp = m_pTransform->GetUpVector();
 
-	DirectX::XMVECTOR pos = m_pTransform->GetWorldPosition().ToXMVECTOR();				// 自オブジェクトの位置を取得
-	DirectX::XMVECTOR look = m_vLook.ToXMVECTOR();	//(自オブジェクトの位置 + 自オブジェクトの正面ベクトル)
-	DirectX::XMVECTOR up = m_vUp.ToXMVECTOR();						// 自オブジェクトの上方向ベクトルを取得
+	DirectX::XMVECTOR pos	= m_pTransform->GetWorldPosition().ToXMVECTOR();				// 自オブジェクトの位置を取得
+	DirectX::XMVECTOR look	= m_vLook.ToXMVECTOR();	//(自オブジェクトの位置 + 自オブジェクトの正面ベクトル)
+	DirectX::XMVECTOR up	= m_vUp.ToXMVECTOR();						// 自オブジェクトの上方向ベクトルを取得
 
 	// ビュー行列を作成(カメラの位置、カメラの注視点、カメラの上方向を指定)
-	DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(pos, look, up);
+	DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(pos, look, up);	
 
 	// ビュー行列を作成(シェーダーに渡す為にXMFLOAT4X4型に変換)
 	DirectX::XMFLOAT4X4 mat;
@@ -307,8 +311,8 @@ DirectX::XMFLOAT4X4 ComponentCameraBase::GetViewMatrix()
 DirectX::XMFLOAT4X4 ComponentCameraBase::GetViewMatrixNotTransposed()
 {
 	// ビュー行列を更新
-	m_vLook = m_pTransform->GetWorldPosition() + m_pTransform->GetForwardVector();
-	m_vUp = m_pTransform->GetUpVector();
+	/*m_vLook = m_pTransform->GetWorldPosition() + m_pTransform->GetForwardVector();
+	m_vUp = m_pTransform->GetUpVector();*/
 
 	DirectX::XMVECTOR pos = m_pTransform->GetWorldPosition().ToXMVECTOR();				// 自オブジェクトの位置を取得
 	DirectX::XMVECTOR look = m_vLook.ToXMVECTOR();	//(自オブジェクトの位置 + 自オブジェクトの正面ベクトル)
@@ -360,7 +364,7 @@ DirectX::XMMATRIX ComponentCameraBase::GetInvViewMatrix()
 DirectX::XMFLOAT4X4 ComponentCameraBase::GetProjectionMatrix()
 {
 	// プロジェクション行列を作成
-	DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(m_fFovY, m_fAspect, m_fNear, m_fFar);
+	DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(m_fFovY, m_fAspect, m_fNear, m_fFar);	
 
 	// プロジェクション行列を作成(シェーダーに渡す為にXMFLOAT4X4型に変換)
 	DirectX::XMFLOAT4X4 mat;
@@ -454,7 +458,7 @@ void ComponentCameraBase::SetNearFarClipPos()
 		m_CornersNear[i] = Vector3<float>::FromXMVECTOR(DirectX::XMVector3Transform(m_CornersNear[i].ToXMVECTOR(), invViewMat));
 		m_CornersFar[i] = Vector3<float>::FromXMVECTOR(DirectX::XMVector3Transform(m_CornersFar[i].ToXMVECTOR(), invViewMat));
 	}
-
+	
 }
 
 /* ========================================
@@ -472,10 +476,10 @@ void ComponentCameraBase::InitNearFarClipLine()
 	m_pFrustumLine->AddLine(m_CornersNear[2], m_CornersNear[0], LINE_COLOR);
 
 	// ファークリップ面四角形のライン
-	m_pFrustumLine->AddLine(m_CornersFar[0], m_CornersFar[1], LINE_COLOR);
-	m_pFrustumLine->AddLine(m_CornersFar[1], m_CornersFar[3], LINE_COLOR);
-	m_pFrustumLine->AddLine(m_CornersFar[3], m_CornersFar[2], LINE_COLOR);
-	m_pFrustumLine->AddLine(m_CornersFar[2], m_CornersFar[0], LINE_COLOR);
+	m_pFrustumLine->AddLine(m_CornersFar[0], m_CornersFar[1],LINE_COLOR);
+	m_pFrustumLine->AddLine(m_CornersFar[1], m_CornersFar[3],LINE_COLOR);
+	m_pFrustumLine->AddLine(m_CornersFar[3], m_CornersFar[2],LINE_COLOR);
+	m_pFrustumLine->AddLine(m_CornersFar[2], m_CornersFar[0],LINE_COLOR);
 
 	// ニアクリップ面とファークリップ面を繋ぐライン(視錐台の線)
 	m_pFrustumLine->AddLine(m_CornersNear[0], m_CornersFar[0], LINE_COLOR);
@@ -502,10 +506,10 @@ void ComponentCameraBase::UpdateNearFarClipLine()
 	m_pFrustumLine->UpdateLine(7, m_CornersFar[3], m_CornersFar[2], LINE_COLOR);
 	m_pFrustumLine->UpdateLine(8, m_CornersFar[2], m_CornersFar[0], LINE_COLOR);
 
-	m_pFrustumLine->UpdateLine(9, m_CornersNear[0], m_CornersFar[0], LINE_COLOR);
-	m_pFrustumLine->UpdateLine(10, m_CornersNear[1], m_CornersFar[1], LINE_COLOR);
-	m_pFrustumLine->UpdateLine(11, m_CornersNear[2], m_CornersFar[2], LINE_COLOR);
-	m_pFrustumLine->UpdateLine(12, m_CornersNear[3], m_CornersFar[3], LINE_COLOR);
+	m_pFrustumLine->UpdateLine(9,	m_CornersNear[0], m_CornersFar[0], LINE_COLOR);
+	m_pFrustumLine->UpdateLine(10,	m_CornersNear[1], m_CornersFar[1], LINE_COLOR);
+	m_pFrustumLine->UpdateLine(11,	m_CornersNear[2], m_CornersFar[2], LINE_COLOR);
+	m_pFrustumLine->UpdateLine(12,	m_CornersNear[3], m_CornersFar[3], LINE_COLOR);
 }
 
 
@@ -540,7 +544,155 @@ Vector3<float> ComponentCameraBase::GetUp()
 	return m_pTransform->GetUpVector();
 }
 
+/* ========================================
+	ゲッター(カメラ注視点)関数
+	-------------------------------------
+	戻値：Vector3<float> カメラの注視点
+=========================================== */
+Vector3<float> ComponentCameraBase::GetLook()
+{
+	return m_vLook;
+}
 
+/* ========================================
+	ゲッター(FOV)関数
+	-------------------------------------
+	戻値：float 垂直方向の視野角(FOV)
+=========================================== */
+float ComponentCameraBase::GetFovY()
+{
+	return m_fFovY;
+}
+
+/* ========================================
+	ゲッター(アスペクト比)関数
+	-------------------------------------
+	戻値：float カメラのアスペクト比
+=========================================== */
+float ComponentCameraBase::GetAspect()
+{
+	return m_fAspect;
+}
+
+/* ========================================
+	ゲッター(近クリップ距離)関数
+	-------------------------------------
+	戻値：float カメラの近クリップ距離
+=========================================== */
+float ComponentCameraBase::GetNear()
+{
+	return m_fNear;
+}
+
+/* ========================================
+	ゲッター(遠クリップ距離)関数
+	-------------------------------------
+	戻値：float カメラの遠クリップ距離
+=========================================== */
+float ComponentCameraBase::GetFar()
+{
+	return m_fFar;
+}
+
+/* ========================================
+	ゲッター(オルト幅)関数
+	-------------------------------------
+	戻値：float カメラの正投影幅
+=========================================== */
+float ComponentCameraBase::GetOrthoWidth()
+{
+	return m_fOrthoWidth;
+}
+
+/* ========================================
+	ゲッター(ピッチ角)関数
+	-------------------------------------
+	戻値：float カメラのピッチ角
+=========================================== */
+float ComponentCameraBase::GetPitch()
+{
+	return m_fPitch;
+}
+
+/* ========================================
+	セッター(カメラ注視点)関数
+	-------------------------------------
+	引数：Vector3<float> vLook - 設定する注視点
+=========================================== */
+void ComponentCameraBase::SetLook(Vector3<float> vLook)
+{
+	m_vLook = vLook;
+}
+
+/* ========================================
+	セッター(カメラ上方向)関数
+	-------------------------------------
+	引数：Vector3<float> vUp - 設定する上方向ベクトル
+=========================================== */
+void ComponentCameraBase::SetUp(Vector3<float> vUp)
+{
+	m_vUp = vUp;
+}
+
+/* ========================================
+	セッター(FOV)関数
+	-------------------------------------
+	引数：float fFovY - 設定する垂直方向の視野角(FOV)
+=========================================== */
+void ComponentCameraBase::SetFovY(float fFovY)
+{
+	m_fFovY = fFovY;
+}
+
+/* ========================================
+	セッター(アスペクト比)関数
+	-------------------------------------
+	引数1：カメラのアスペクト比
+=========================================== */
+void ComponentCameraBase::SetAspect(float fAspect)
+{
+	m_fAspect = fAspect;
+}
+
+/* ========================================
+	セッター(近クリップ距離)関数
+	-------------------------------------
+	引数1：カメラの近クリップ距離
+=========================================== */
+void ComponentCameraBase::SetNear(float fNear)
+{
+	m_fNear = fNear;
+}
+
+/* ========================================
+	セッター(遠クリップ距離)関数
+	-------------------------------------
+	引数1：カメラの遠クリップ距離
+=========================================== */
+void ComponentCameraBase::SetFar(float fFar)
+{
+	m_fFar = fFar;
+}
+
+/* ========================================
+	セッター(オルト幅)関数
+	-------------------------------------
+	引数1：カメラの正投影幅
+=========================================== */
+void ComponentCameraBase::SetOrthoWidth(float fOrthoWidth)
+{
+	m_fOrthoWidth = fOrthoWidth;
+}
+
+/* ========================================
+	セッター(ピッチ角)関数
+	-------------------------------------
+	引数1：カメラのピッチ角
+=========================================== */
+void ComponentCameraBase::SetPitch(float fPitch)
+{
+	m_fPitch = fPitch;
+}
 
 #ifdef _DEBUG
 /* ========================================

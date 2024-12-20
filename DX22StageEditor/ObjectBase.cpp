@@ -28,6 +28,7 @@ const float DEFAULT_LIGHT_AMBIENT = 0.3f;	// デフォルト環境光
 =========================================== */
 ObjectBase::ObjectBase(SceneBase* pScene)
 	: m_pOwnerScene(pScene)				// 所有シーンを設定
+	, m_pCompTransform(nullptr)			// Transformコンポーネントをnullptrに設定
 	, m_eState(E_State::STATE_ACTIVE)	// 状態をアクティブに設定
 	, m_pParentObj(nullptr)				// 親オブジェクトをnullptrに設定
 	, m_pChildObjs()					// 子オブジェクト配列を初期化
@@ -126,7 +127,7 @@ void ObjectBase::Draw()
 =========================================== */
 void ObjectBase::InitDefaultComponent()
 {
-	AddComponent<ComponentTransform>();	// Transformコンポーネントを追加	
+	m_pCompTransform = AddComponent<ComponentTransform>();	// Transformコンポーネントを追加	
 }
 
 /* ========================================
@@ -312,6 +313,15 @@ void ObjectBase::InputLocalData(std::ifstream& file)
 	// 継承して各オブジェクトで処理を記述
 }
 
+/* ========================================
+	ゲッター(トランスフォーム)関数
+	-------------------------------------
+	戻値：ComponentTransform* トランスフォームコンポーネントのポインタ
+=========================================== */
+ComponentTransform* ObjectBase::GetTransform() const
+{
+	return m_pCompTransform;
+}
 
 /* ========================================
 	ゲッター(所持シーン)関数

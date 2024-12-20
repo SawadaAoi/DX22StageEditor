@@ -25,12 +25,12 @@ const int TRIANGLE_NUM = 2;	// 三角形の数
 	引数1：所有オブジェクト
 =========================================== */
 ComponentGround::ComponentGround(ObjectBase* pOwner)
-	: ComponentBase(pOwner, OrderGround)
+	: ComponentBase(pOwner,OrderGround)
 	, m_vNormalDirection(NORMAL_DIRERCTION)
 	, m_vWorldNormalDirection(NORMAL_DIRERCTION)
 	, m_bIsDispNormal(false)
 	, m_pNormalLine(nullptr)
-	, m_pOwnerTransform(nullptr)
+	, m_pCompTransform(nullptr)
 {
 	m_TriangleVertices.resize(TRIANGLE_NUM);
 
@@ -44,7 +44,7 @@ ComponentGround::ComponentGround(ObjectBase* pOwner)
 void ComponentGround::Init()
 {
 	// 所有オブジェクトの座標、回転、スケールを取得
-	m_pOwnerTransform = m_pOwnerObj->GetComponent<ComponentTransform>();
+	m_pCompTransform = m_pOwnerObj->GetComponent<ComponentTransform>();	
 
 	// 法線を表示するための線を初期化
 	m_pNormalLine = std::make_unique<ShapeLine>(Vector3<float>::Zero(), NORMAL_DIRERCTION, ColorVec3::RED);
@@ -59,13 +59,13 @@ void ComponentGround::Update()
 {
 	UpdateTriangleVertex();		// 三角形の頂点情報更新
 
-	m_vWorldNormalDirection = m_pOwnerTransform->GetWorldRotation().Rotate(m_vNormalDirection);
+	m_vWorldNormalDirection = m_pCompTransform->GetWorldRotation().Rotate(m_vNormalDirection);
 
 	if (m_bIsDispNormal)
 	{
 		// 法線の位置、向き、スケールを更新
-		m_pNormalLine->SetPos(m_pOwnerTransform->GetWorldPosition());
-		m_pNormalLine->SetRotation(m_pOwnerTransform->GetWorldRotation());
+		m_pNormalLine->SetPos(m_pCompTransform->GetWorldPosition());
+		m_pNormalLine->SetRotation(m_pCompTransform->GetWorldRotation());
 	}
 }
 
@@ -92,8 +92,8 @@ void ComponentGround::Draw()
 =========================================== */
 void ComponentGround::UpdateTriangleVertex()
 {
-	Vector3<float> vScaleHalf = m_pOwnerTransform->GetWorldScale() / 2.0f;
-	Vector3<float> vPos = m_pOwnerTransform->GetWorldPosition();
+	Vector3<float> vScaleHalf	= m_pCompTransform->GetWorldScale() / 2.0f;
+	Vector3<float> vPos			= m_pCompTransform->GetWorldPosition();
 
 	// 三角形の頂点を設定 (Z軸は奥が正)
 	// 1つ目の三角形 (左上、右上、左下)
@@ -107,7 +107,7 @@ void ComponentGround::UpdateTriangleVertex()
 	m_TriangleVertices[1].pos[2] = Vector3<float>(-vScaleHalf.x, 0.0f, -vScaleHalf.z);  // 左下
 
 	// 親オブジェクトの回転に合わせて三角形の頂点を回転
-	Quaternion rotation = m_pOwnerTransform->GetWorldRotation();
+	Quaternion rotation = m_pCompTransform->GetWorldRotation();
 	for (int i = 0; i < TRIANGLE_NUM; i++)
 	{
 		for (int j = 0; j < 3; j++)
@@ -155,6 +155,7 @@ std::vector<ComponentGround::T_TriangleVertex> ComponentGround::GetTriangleVerte
 	return m_TriangleVertices;
 }
 
+
 /* ========================================
 	セッター(法線ベクトル)関数
 	-------------------------------------
@@ -189,9 +190,9 @@ void ComponentGround::Debug(DebugUI::Window& window)
 
 	Item* pGroupGround = Item::CreateGroup("Ground");
 
-	pGroupGround->AddGroupItem(Item::CreateBind("NormalDirection", Item::Kind::Vector, &m_vNormalDirection));			// 法線方向
+	pGroupGround->AddGroupItem(Item::CreateBind("NormalDirection",	Item::Kind::Vector, &m_vNormalDirection));			// 法線方向
 	pGroupGround->AddGroupItem(Item::CreateBind("WorldNormalDirection", Item::Kind::Vector, &m_vWorldNormalDirection));	// 法線方向(ワールド座標)
-	pGroupGround->AddGroupItem(Item::CreateBind("IsDispNormal", Item::Kind::Bool, &m_bIsDispNormal));				// 法線表示フラグ
+	pGroupGround->AddGroupItem(Item::CreateBind("IsDispNormal",		Item::Kind::Bool, &m_bIsDispNormal));				// 法線表示フラグ
 
 	// 三角形の頂点
 	for (int i = 0; i < TRIANGLE_NUM; i++)

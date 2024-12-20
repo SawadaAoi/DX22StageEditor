@@ -40,6 +40,10 @@ public:
 
     T operator[](int index) const;    // 添え字演算子
 
+	// 単項演算子 ==============================
+	Vector2<T> operator+() const;    // 単項プラス
+	Vector2<T> operator-() const;    // 単項マイナス
+
     // 比較演算子 ==============================
     bool operator==(const Vector2<T>& other) const;    // 等価比較
     bool operator!=(const Vector2<T>& other) const;    // 非等価比較

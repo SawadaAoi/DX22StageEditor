@@ -159,6 +159,12 @@
     <Filter Include="ソース ファイル\System\Light">
       <UniqueIdentifier>{084ca29b-d33d-4ebb-8b7c-8e495ee5d921}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\Camera\0_Super">
+      <UniqueIdentifier>{ba982101-34a6-4aa8-81ae-9da7c2a11bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\Bullet">
+      <UniqueIdentifier>{25816d71-b736-401a-bc46-f902c8136b39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -362,9 +368,6 @@
     <ClCompile Include="ObjectPlayer.cpp">
       <Filter>ソース ファイル\App\GameObject\Player</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectCamera.cpp">
-      <Filter>ソース ファイル\App\GameObject\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentLightBase.cpp">
       <Filter>ソース ファイル\App\Component\Light\0_Super</Filter>
     </ClCompile>
@@ -382,6 +385,21 @@
     </ClCompile>
     <ClCompile Include="LightManager.cpp">
       <Filter>ソース ファイル\System\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectCamera.cpp">
+      <Filter>ソース ファイル\App\GameObject\Camera\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectCameraDebug.cpp">
+      <Filter>ソース ファイル\App\GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectCameraPlayer.cpp">
+      <Filter>ソース ファイル\App\GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectBullet.cpp">
+      <Filter>ソース ファイル\App\GameObject\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectBulletPlayer.cpp">
+      <Filter>ソース ファイル\App\GameObject\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -604,9 +622,6 @@
     <ClInclude Include="ObjectPlayer.h">
       <Filter>ソース ファイル\App\GameObject\Player</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectCamera.h">
-      <Filter>ソース ファイル\App\GameObject\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentLightBase.h">
       <Filter>ソース ファイル\App\Component\Light\0_Super</Filter>
     </ClInclude>
@@ -624,6 +639,21 @@
     </ClInclude>
     <ClInclude Include="LightManager.h">
       <Filter>ソース ファイル\System\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCamera.h">
+      <Filter>ソース ファイル\App\GameObject\Camera\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCameraDebug.h">
+      <Filter>ソース ファイル\App\GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCameraPlayer.h">
+      <Filter>ソース ファイル\App\GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectBulletPlayer.h">
+      <Filter>ソース ファイル\App\GameObject\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectBullet.h">
+      <Filter>ソース ファイル\App\GameObject\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

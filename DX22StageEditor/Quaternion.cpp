@@ -94,7 +94,7 @@ Quaternion Quaternion::FromAxisAngleNormalized(Vector3<float> fAxis, float fAngl
 =========================================== */
 void Quaternion::SetFromAxisAngle(Vector3<float> fAxis, float fAngle)
 {
-	*this = FromAxisAngle(fAxis, fAngle);
+	*this =  FromAxisAngle(fAxis, fAngle);
 }
 
 /* ========================================
@@ -172,7 +172,7 @@ Vector3<float> Quaternion::Rotate(Vector3<float> fVec)
 	Quaternion qConjugate = this->Conjugate();   // 共役を取得
 
 	// 回転方向を反時計周りにするために、共役*ベクトル*元のクォータニオンの順で掛ける
-	Quaternion qResult = qConjugate * qVec * (*this);
+	Quaternion qResult = qConjugate * qVec * (*this);  
 	//qResult.Normalize();  // 正規化
 
 	return qResult.m_fAxis;  // 回転後のベクトルを返す
@@ -200,7 +200,7 @@ Quaternion Quaternion::Slerp(const Quaternion& q1, const Quaternion& q2, float t
 	const float THRESHOLD = 0.9995f;	// しきい値(線形補完へ切り替える)
 
 	// ほぼ同じ向きの場合は線形補間
-	if (dot > THRESHOLD)
+	if (dot > THRESHOLD) 
 	{
 		Quaternion result = q1 + ((q2 - q1) * t);	// 線形補間
 		return result.GetNormalized();
@@ -293,6 +293,20 @@ Quaternion Quaternion::Inverse() const
 
 	// 共役 / 長さの2乗
 	return Quaternion(qConjugate.m_fAxis / fLengthSq, qConjugate.m_fAngle / fLengthSq);
+}
+
+/* ========================================
+	内積関数
+	--------------------------------
+	内容：クォータニオン同士の内積を取得する
+	--------------------------------
+	引数1：const Quaternion& other	内積を取るクォータニオン
+	--------------------------------
+	戻り値：float	内積
+=========================================== */
+float Quaternion::Dot(const Quaternion& other) const
+{
+	return m_fAngle * other.m_fAngle + m_fAxis.Dot(other.m_fAxis);
 }
 
 /* ========================================
@@ -441,7 +455,7 @@ Vector3<float> Quaternion::ToEulerAngle() const
 Quaternion Quaternion::FromDirectXMatrix(DirectX::XMMATRIX matrix)
 {
 	// 行列からクォータニオン(DirectX上)に変換
-	DirectX::XMVECTOR directXQuat = DirectX::XMQuaternionRotationMatrix(matrix);
+	DirectX::XMVECTOR directXQuat = DirectX::XMQuaternionRotationMatrix(matrix);	
 
 	return Quaternion(
 		Vector3<float>(
@@ -464,9 +478,9 @@ Quaternion Quaternion::FromDirectXMatrix(DirectX::XMMATRIX matrix)
 =========================================== */
 Quaternion Quaternion::FromEulerAngle(Vector3<float> fEulerAngle)
 {
-	Quaternion qRoll = Quaternion::FromAxisAngleNormalized(Vector3<float>::Forward(), fEulerAngle.z);	// ロール回転
-	Quaternion qPitch = Quaternion::FromAxisAngleNormalized(Vector3<float>::Right(), fEulerAngle.x);		// ピッチ回転
-	Quaternion qYaw = Quaternion::FromAxisAngleNormalized(Vector3<float>::Up(), fEulerAngle.y);			// ヨー回転
+	Quaternion qRoll	= Quaternion::FromAxisAngleNormalized(Vector3<float>::Forward(), fEulerAngle.z);	// ロール回転
+	Quaternion qPitch	= Quaternion::FromAxisAngleNormalized(Vector3<float>::Right(), fEulerAngle.x);		// ピッチ回転
+	Quaternion qYaw		= Quaternion::FromAxisAngleNormalized(Vector3<float>::Up(), fEulerAngle.y);			// ヨー回転
 
 	Quaternion reQ = qYaw * qPitch * qRoll;// ヨー、ピッチ、ロールの順で掛ける
 
@@ -537,9 +551,9 @@ Quaternion Quaternion::operator-(const Quaternion& other) const
 Quaternion Quaternion::operator*(const Quaternion& other) const
 {
 	// 実数部の計算(w) = θ1θ2 - x1x2 - y1y2 - z1z2
-	float realPart = (m_fAngle * other.m_fAngle) - (this->m_fAxis.x * other.m_fAxis.x) -
+	float realPart = (m_fAngle * other.m_fAngle) - (this->m_fAxis.x * other.m_fAxis.x) - 
 		(this->m_fAxis.y * other.m_fAxis.y) - (this->m_fAxis.z * other.m_fAxis.z);
-
+	
 	// 虚数部の計算
 	// x = θ1x2 + x1θ2 + y1z2 - z1y2
 	float xComponent = (other.m_fAngle * this->m_fAxis.x) + (other.m_fAxis.x * this->m_fAngle) +
@@ -566,7 +580,7 @@ Quaternion Quaternion::operator*(const Quaternion& other) const
 Quaternion Quaternion::operator*(float scalar) const
 {
 	return Quaternion(
-		m_fAxis * scalar,
+		m_fAxis * scalar, 
 		m_fAngle * scalar
 
 	);
@@ -581,7 +595,7 @@ Quaternion Quaternion::operator*(float scalar) const
 	-------------------------------------
 	戻り値：Quaternion&	乗算結果のクォータニオン
 =========================================== */
-Quaternion& Quaternion::operator*=(const Quaternion& other)
+Quaternion& Quaternion::operator*=(const Quaternion& other) 
 {
 	*this = (*this) * other;
 	return *this;
@@ -613,6 +627,30 @@ bool Quaternion::operator==(const Quaternion& other) const
 bool Quaternion::operator!=(const Quaternion& other) const
 {
 	return !(*this == other);
+}
+
+/* ========================================
+	単項プラス演算子オーバーロード
+	-------------------------------------
+	内容：クォータニオンの符号をそのまま返す
+	-------------------------------------
+	戻り値：Quaternion	そのままのクォータニオン
+=========================================== */
+Quaternion Quaternion::operator+() const
+{
+	return *this;
+}
+
+/* ========================================
+	単項マイナス演算子オーバーロード
+	-------------------------------------
+	内容：クォータニオンの符号を反転
+	-------------------------------------
+	戻り値：Quaternion	符号を反転したクォータニオン
+=========================================== */
+Quaternion Quaternion::operator-() const
+{
+	return Quaternion(-m_fAxis, -m_fAngle);
 }
 
 /* ========================================

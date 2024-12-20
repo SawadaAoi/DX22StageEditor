@@ -39,6 +39,10 @@ public:
 
 	T operator[](int index) const;	// 添え字演算子
 
+	// 演算子オーバーロード(単項演算子) =====================
+	Vector3<T> operator+() const;	// 単項プラス
+	Vector3<T> operator-() const;	// 単項マイナス
+
 	// 比較演算子 ==============================
 	bool operator==(const Vector3<T>& other) const;
 	bool operator!=(const Vector3<T>& other) const;

@@ -208,6 +208,7 @@ namespace DebugUI
 			FileManager::StageObjectInput(sPath + "/" + sFileName + sExtension);
 		}, false, true));
 
+
 		WIN_DATA_INOUT.AddItem(Item::CreateValue("InputResult ", Item::Kind::Text, false));	// “ÇŒ‹‰Ê•\¦
 		WIN_DATA_INOUT.AddItem(Item::CreateValue("OutputResult", Item::Kind::Text, false));	// o—ÍŒ‹‰Ê•\¦
 

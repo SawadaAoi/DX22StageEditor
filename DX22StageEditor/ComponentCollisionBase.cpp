@@ -98,7 +98,6 @@ void ComponentCollisionBase::Update()
 			}
 		}
 	}
-
 	// 全オブジェクト当たり判定線表示フラグ更新
 	m_bIsDispColAll = WIN_BASIC_SETTING["DispCollision"].GetBool();
 #endif // _DEBUG
@@ -133,26 +132,10 @@ void ComponentCollisionBase::UpdateCollision(ComponentCollisionBase* otherCol)
 {
 	ObjectBase* pOtherObj = otherCol->GetOwnerObject();	// 相手のオブジェクトを取得
 
-	if (pOtherObj->GetState() == ObjectBase::STATE_DEAD)
-	{
-		m_bColStatesMap.erase(otherCol->GetOwnerObject());
-
-#ifdef _DEBUG
-		// デバッグ衝突オブジェクトリストから削除
-		if (CHECK_DISP_COMP(m_sColCompName.c_str()))
-		{
-			if (!m_pColObjList)
-				WIN_OBJ_INFO["CollObjectList"].RemoveListItem(pOtherObj->GetName().c_str());
-		}
-#endif // _DEBUG
-
-		return;
-	}
-
-	if (!m_bIsEnabled) return;								// このコリジョンが無効なら処理しない
-	if (!otherCol->GetEnable()) return;					// 相手のコリジョンが無効なら処理しない
-	if (!m_bIsDynamic && !otherCol->GetDynamic()) return;	// 両方のコリジョンが静的なら処理しない
-
+	if (pOtherObj->GetState() == ObjectBase::STATE_DEAD) return;	// 相手のオブジェクトが死亡状態なら処理しない
+	if (!m_bIsEnabled) return;										// このコリジョンが無効なら処理しない
+	if (!otherCol->GetEnable()) return;								// 相手のコリジョンが無効なら処理しない
+	if (!m_bIsDynamic && !otherCol->GetDynamic()) return;			// 両方のコリジョンが静的なら処理しない
 
 	// 衝突オブジェクトが一覧にない場合、追加
 	if (m_bColStatesMap.find(pOtherObj) == m_bColStatesMap.end())
@@ -162,7 +145,7 @@ void ComponentCollisionBase::UpdateCollision(ComponentCollisionBase* otherCol)
 
 	bool bColPrev = m_bColStatesMap.at(pOtherObj);	// 衝突状態(前フレーム)
 	bool bColCurrent = CheckCollision(otherCol);	// 衝突判定(現在のフレーム)
-
+	
 	// 衝突開始
 	// 前フレームが衝突していなく、現在のフレームが衝突している場合
 	if (!bColPrev && bColCurrent)
@@ -188,6 +171,37 @@ void ComponentCollisionBase::UpdateCollision(ComponentCollisionBase* otherCol)
 }
 
 /* ========================================
+	衝突状態マップ更新関数
+	-------------------------------------
+	内容：衝突状態マップの更新処理
+		　衝突判定の結果、相手のオブジェクトが変わる事があるので、
+		  衝突判定更新後に呼び出して、マップを更新する
+	-------------------------------------
+	引数1：衝突相手の当たり判定コンポーネント
+=========================================== */
+void ComponentCollisionBase::UpdateCollisionMap(ComponentCollisionBase* otherCol)
+{
+	ObjectBase* pOtherObj = otherCol->GetOwnerObject();	// 相手のオブジェクトを取得
+
+	// 死亡状態の場合はマップから削除
+	if (pOtherObj->GetState() == ObjectBase::STATE_DEAD)
+	{
+		m_bColStatesMap.erase(otherCol->GetOwnerObject());
+
+#ifdef _DEBUG
+		// デバッグ衝突オブジェクトリストから削除
+		if (CHECK_DISP_COMP(m_sColCompName.c_str()))
+		{
+			if (!m_pColObjList)
+				WIN_OBJ_INFO["CollObjectList"].RemoveListItem(pOtherObj->GetName().c_str());
+		}
+#endif // _DEBUG
+
+		return;
+	}
+}
+
+/* ========================================
 	AABB・球衝突判定関数
 	-------------------------------------
 	内容：AABBと球が衝突しているかを確認する
@@ -202,9 +216,9 @@ bool ComponentCollisionBase::CheckCollisionAABBToSphere(ComponentCollisionAABB* 
 	Vector3<float> vClosestPoint;	// AABB上で球に最も近い点
 
 	// 各軸での最も近い点を求める
-	vClosestPoint.x = std::clamp(colSphere->GetPosition().x, colAABB->GetMin().x, colAABB->GetMax().x);
-	vClosestPoint.y = std::clamp(colSphere->GetPosition().y, colAABB->GetMin().y, colAABB->GetMax().y);
-	vClosestPoint.z = std::clamp(colSphere->GetPosition().z, colAABB->GetMin().z, colAABB->GetMax().z);
+	vClosestPoint.x = std::clamp(colSphere->GetPosition().x, colAABB->GetMin().x,colAABB->GetMax().x);
+	vClosestPoint.y = std::clamp(colSphere->GetPosition().y, colAABB->GetMin().y,colAABB->GetMax().y);
+	vClosestPoint.z = std::clamp(colSphere->GetPosition().z, colAABB->GetMin().z,colAABB->GetMax().z);
 
 	// 最も近い点と球の中心との距離を求める(計算量を減らすために2乗距離で比較)
 	float fDistance = (vClosestPoint - colSphere->GetPosition()).LengthSq();
@@ -232,7 +246,7 @@ bool ComponentCollisionBase::CheckCollisionAABBToOBB(ComponentCollisionAABB* col
 	m_pAABBAsOBB->SetPosition(colAABB->GetPosition());				// 座標はAABBの座標
 	m_pAABBAsOBB->SetScale(colAABB->GetMax() - colAABB->GetMin());	// 大きさはAABBの最大座標と最小座標の差
 	m_pAABBAsOBB->SetRotation(Quaternion());						// 回転はなし
-
+	
 	return colOBB->CheckCollisionOBB(m_pAABBAsOBB);
 }
 
@@ -250,17 +264,17 @@ bool ComponentCollisionBase::CheckCollisionAABBToOBB(ComponentCollisionAABB* col
 =========================================== */
 bool ComponentCollisionBase::CheckCollisionOBBToSphere(ComponentCollisionOBB* colOBB, ComponentCollisionSphere* colSphere, bool bSetMtv)
 {
-	using T_MTV = ComponentCollisionOBB::T_MTV;				// 名称省略
-	T_MTV tMtv = T_MTV();									// MTV構造体
+	using T_MTV		= ComponentCollisionOBB::T_MTV;				// 名称省略
+	T_MTV tMtv		= T_MTV();									// MTV構造体
 
-	bool bResult = false;	// 衝突結果
+	bool bResult	= false;	// 衝突結果
 
 	// OBBの構造体作成
-	ComponentCollisionOBB::T_OBB tObb = colOBB->CreateOBB(colOBB);
+	ComponentCollisionOBB::T_OBB tObb	= colOBB->CreateOBB(colOBB);						
 	// 球の中心からOBBの中心までのベクトルを計算
-	Vector3<float> vDis = colSphere->GetPosition() - colOBB->GetPosition();
+	Vector3<float> vDis					= colSphere->GetPosition() - colOBB->GetPosition();	
 	// OBB上の最も近い点を求める
-	Vector3<float> vClosestOBB = colOBB->GetPosition();	// OBBの中心を初期値とする
+	Vector3<float> vClosestOBB			= colOBB->GetPosition();	// OBBの中心を初期値とする
 
 
 	// OBBの各ローカル軸に対して、球の中心からOBBの中心までのベクトルを射影
@@ -285,19 +299,19 @@ bool ComponentCollisionBase::CheckCollisionOBBToSphere(ComponentCollisionOBB* co
 	float fRadiusSq = colSphere->GetRadius() * colSphere->GetRadius();	// 球の半径の2乗
 
 	// 球の半径よりも距離が近い場合は衝突している
-	if (fDistanceSq < fRadiusSq)
+	if(fDistanceSq < fRadiusSq)
 	{
 		// 衝突している場合、最小移動ベクトルを設定
-		tMtv.vAxis = vSphCenToCloOBB.GetNormalize();					// 衝突軸(球の中心からOBB上の最も近い点へのベクトル)の反対方向
-		tMtv.fOverlap = colSphere->GetRadius() - std::sqrt(fDistanceSq);	// 重なり量
-		tMtv.bIsCol = true;												// 衝突結果
+		tMtv.vAxis		= vSphCenToCloOBB.GetNormalize();					// 衝突軸(球の中心からOBB上の最も近い点へのベクトル)の反対方向
+		tMtv.fOverlap	= colSphere->GetRadius() - std::sqrt(fDistanceSq);	// 重なり量
+		tMtv.bIsCol		= true;												// 衝突結果
 
-		bResult = true;
+		bResult			= true;
 	}
 	else
 	{
-		tMtv.bIsCol = false;
-		bResult = false;
+		tMtv.bIsCol		= false;
+		bResult			= false;
 	}
 
 	// 最小移動ベクトルを設定する場合
@@ -309,9 +323,9 @@ bool ComponentCollisionBase::CheckCollisionOBBToSphere(ComponentCollisionOBB* co
 		{
 			if (mtv.sName == colSphere->GetOwnerObject()->GetName())
 			{
-				mtv.bIsCol = tMtv.bIsCol;
-				mtv.vAxis = tMtv.vAxis;
-				mtv.fOverlap = tMtv.fOverlap;
+				mtv.bIsCol		= tMtv.bIsCol;
+				mtv.vAxis		= tMtv.vAxis;
+				mtv.fOverlap	= tMtv.fOverlap;
 				mtv.bIsTrigger = colSphere->GetTrigger();
 				break;
 			}
@@ -320,7 +334,7 @@ bool ComponentCollisionBase::CheckCollisionOBBToSphere(ComponentCollisionOBB* co
 	}
 
 	return bResult;
-
+	
 }
 
 
@@ -559,10 +573,10 @@ void ComponentCollisionBase::DebugColBase(DebugUI::Item* pGroupItem, std::string
 
 	// --------------------------------------
 
-	pGroupItem->AddGroupItem(Item::CreateBind("IsDispCollision", Item::Kind::Bool, &m_bIsDispCol));	// コリジョン表示フラグ
-	pGroupItem->AddGroupItem(Item::CreateBind("IsDynamic", Item::Kind::Bool, &m_bIsDynamic));	// 動的コリジョンフラグ
-	pGroupItem->AddGroupItem(Item::CreateBind("IsEnabled", Item::Kind::Bool, &m_bIsEnabled));	// 有効フラグ
-	pGroupItem->AddGroupItem(Item::CreateBind("IsTrigger", Item::Kind::Bool, &m_bIsTrigger));	// トリガーフラグ
+	pGroupItem->AddGroupItem(Item::CreateBind("IsDispCollision",Item::Kind::Bool, &m_bIsDispCol));	// コリジョン表示フラグ
+	pGroupItem->AddGroupItem(Item::CreateBind("IsDynamic",		Item::Kind::Bool, &m_bIsDynamic));	// 動的コリジョンフラグ
+	pGroupItem->AddGroupItem(Item::CreateBind("IsEnabled",		Item::Kind::Bool, &m_bIsEnabled));	// 有効フラグ
+	pGroupItem->AddGroupItem(Item::CreateBind("IsTrigger",		Item::Kind::Bool, &m_bIsTrigger));	// トリガーフラグ
 
 	m_pColObjList = Item::CreateList("CollObjectList", nullptr);	// 衝突オブジェクトリスト
 	m_pColObjList->AddListItem("None");	// デフォルトでNoneを追加(空の場合表示されないため

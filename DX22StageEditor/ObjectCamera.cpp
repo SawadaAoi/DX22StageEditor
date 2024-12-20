@@ -1,7 +1,7 @@
 /* ========================================
-	DX22Base/
+	CatRobotGame/
 	------------------------------------
-	カメラオブジェクト用cpp
+	カメラオブジェクト(基礎)用cpp
 	------------------------------------
 	ObjectCamera.cpp
 ========================================== */
@@ -25,8 +25,7 @@
 =========================================== */
 ObjectCamera::ObjectCamera(SceneBase* pScene)
 	: ObjectBase(pScene)
-	, m_pCameraBase(nullptr)
-	, m_pTransform(nullptr)
+	, m_pCompCameraBase(nullptr)
 	, m_bActive(false)
 {
 	SetTag(E_ObjectTag::Camera);	// タグの設定
@@ -35,29 +34,28 @@ ObjectCamera::ObjectCamera(SceneBase* pScene)
 /* ========================================
 	初期化関数
 	-------------------------------------
-	内容：コンポーネントの追加
+	内容：初期化処理
 =========================================== */
 void ObjectCamera::InitLocal()
 {
 	// コンポーネントの追加
-	m_pCameraBase = AddComponent<ComponentCameraBase>();	// カメラの基本機能
-	m_pTransform = GetComponent<ComponentTransform>();		// 座標、回転、拡大縮小(初めからセット済み)
+	m_pCompCameraBase = AddComponent<ComponentCameraBase>();	// カメラの基本機能
+	m_pCompTransform = GetComponent<ComponentTransform>();		// 座標、回転、拡大縮小(初めからセット済み)
 
-	m_pTransform->SetLocalPosition(Vector3(0.0f, 1.0f, -5.0f));
+	// カメラマネージャにカメラを追加
+	CAMERA_MNG_INST.AddCamera(this);	// InitLocalで追加するのは名前が設定された後にするため
 
-	AddComponent<ComponentCameraDebug>();	// デバッグカメラ
-
-	CAMERA_MNG_INST.AddCamera(this);	// カメラマネージャにカメラを追加
-
-
-	AddComponent<ComponentBillboard>();	// ビルボード
-	GetComponent<ComponentBillboard>()->SetTexture(GET_TEXTURE_DATA(TEX_KEY::CAMERA_ICON));	// テクスチャ
+#ifdef _DEBUG
+	// デバッグ用カメラアイコン
+	AddComponent<ComponentBillboard>();
+	GetComponent<ComponentBillboard>()->SetTexture(GET_TEXTURE_DATA(TEX_KEY::CAMERA_ICON));
+#endif // _DEBUG
 }
 
 /* ========================================
 	終了関数
 	-------------------------------------
-	内容：カメラの削除
+	内容：終了処理
 =========================================== */
 void ObjectCamera::UninitLocal()
 {
@@ -72,7 +70,7 @@ void ObjectCamera::UninitLocal()
 =========================================== */
 DirectX::XMFLOAT4X4 ObjectCamera::GetViewMatrix()
 {
-	return m_pCameraBase->GetViewMatrix();
+	return m_pCompCameraBase->GetViewMatrix();
 }
 
 /* ========================================
@@ -82,7 +80,7 @@ DirectX::XMFLOAT4X4 ObjectCamera::GetViewMatrix()
 =========================================== */
 DirectX::XMMATRIX ObjectCamera::GetInvViewMatrix()
 {
-	return m_pCameraBase->GetInvViewMatrix();
+	return m_pCompCameraBase->GetInvViewMatrix();
 }
 
 /* ========================================
@@ -96,15 +94,15 @@ DirectX::XMFLOAT4X4 ObjectCamera::GetProjectionMatrix()
 	// デバッグメニューの平行投影フラグがONの場合
 	if (WIN_CAMERA_INFO["Orthographic"].GetBool())
 	{
-		return m_pCameraBase->GetProjectionMatrixOrtho();
+		return m_pCompCameraBase->GetProjectionMatrixOrtho();
 	}
 	else
 	{
-		return m_pCameraBase->GetProjectionMatrix();
+		return m_pCompCameraBase->GetProjectionMatrix();
 	}
 
 #else
-	return m_pCameraBase->GetProjectionMatrix();
+	return m_pCompCameraBase->GetProjectionMatrix();
 
 #endif // _DEBUG
 
@@ -117,7 +115,7 @@ DirectX::XMFLOAT4X4 ObjectCamera::GetProjectionMatrix()
 =========================================== */
 DirectX::XMFLOAT4X4 ObjectCamera::GetProjectionMatrixUI()
 {
-	return m_pCameraBase->GetProjectionMatrixUI();
+	return m_pCompCameraBase->GetProjectionMatrixUI();
 }
 
 /* ========================================
@@ -127,7 +125,7 @@ DirectX::XMFLOAT4X4 ObjectCamera::GetProjectionMatrixUI()
 =========================================== */
 DirectX::XMFLOAT4X4 ObjectCamera::GetProjectionMatrixOrtho()
 {
-	return m_pCameraBase->GetProjectionMatrixOrtho();
+	return m_pCompCameraBase->GetProjectionMatrixOrtho();
 }
 
 /* ========================================
@@ -139,6 +137,17 @@ bool ObjectCamera::GetActive()
 {
 	return m_bActive;
 }
+
+/* ========================================
+	ゲッター(カメラ基本機能)関数
+	-------------------------------------
+	戻値：カメラ基本機能
+=========================================== */
+ComponentCameraBase* ObjectCamera::GetCameraBase()
+{
+	return m_pCompCameraBase;
+}
+
 
 /* ========================================
 	セッター(有効フラグ)関数

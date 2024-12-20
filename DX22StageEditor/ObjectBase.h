@@ -20,7 +20,7 @@
 
 // =============== 前方宣言 =====================
 class SceneBase;	// シーン基底クラス
-
+class ComponentTransform;	// トランスフォームコンポーネント
 
 // =============== 定数定義 =======================
 
@@ -99,6 +99,7 @@ public:
 	virtual void InputLocalData(std::ifstream& file);	// オブジェクトのデータ入力
 
 	// ゲッター
+	ComponentTransform* GetTransform() const;			// トランスフォームコンポーネントの取得
 	SceneBase* GetOwnerScene() const;					// 所有シーンの取得
 	E_State GetState() const;							// 状態の取得
 	virtual size_t GetTypeID() const;					// コンポーネントの種類IDの取得
@@ -147,6 +148,8 @@ private:
 protected:
 	SceneBase* m_pOwnerScene;	// 所有シーン
 	std::vector<std::unique_ptr<ComponentBase>> m_pComponents;	// コンポーネント一覧
+
+	ComponentTransform* m_pCompTransform;	// トランスフォームコンポーネント
 
 	std::string m_sName;	// オブジェクト名
 	E_State		m_eState;	// オブジェクトの状態
