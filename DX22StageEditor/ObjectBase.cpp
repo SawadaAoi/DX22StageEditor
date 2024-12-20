@@ -425,6 +425,16 @@ ObjectBase::T_LightParam ObjectBase::GetLightMaterial() const
 }
 
 /* ========================================
+	ゲッター(セーブフラグ)関数
+	-------------------------------------
+	戻値：セーブフラグ
+=========================================== */
+bool ObjectBase::GetIsSave() const
+{
+	return m_bIsSave;
+}
+
+/* ========================================
 	セッター(状態)関数
 	-------------------------------------
 	引数1：状態
@@ -478,7 +488,15 @@ void ObjectBase::SetLightUse(bool bUse)
 	m_tLightParam.bLightUse = bUse;
 }
 
-
+/* ========================================
+	セッター(セーブフラグ)関数
+	-------------------------------------
+	引数1：セーブフラグ
+=========================================== */
+void ObjectBase::SetIsSave(bool bIsSave)
+{
+	m_bIsSave = bIsSave;
+}
 
 
 #ifdef _DEBUG
