@@ -173,6 +173,9 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComponentEnemyMoveBase.cpp" />
+    <ClCompile Include="ComponentEnemyMoveLinear.cpp" />
+    <ClCompile Include="ComponentEnemyMoveRandom.cpp" />
     <ClCompile Include="ComponentLightBase.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="LightManager.cpp" />
@@ -254,6 +257,9 @@
     <ClCompile Include="ModelStaticMake.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ComponentEnemyMoveBase.h" />
+    <ClInclude Include="ComponentEnemyMoveLinear.h" />
+    <ClInclude Include="ComponentEnemyMoveRandom.h" />
     <ClInclude Include="ComponentLightBase.h" />
     <ClInclude Include="ComponentOrder.h" />
     <ClInclude Include="FileManager.h" />

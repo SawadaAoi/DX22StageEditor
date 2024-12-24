@@ -11,13 +11,14 @@
 
 // =============== インクルード ===================
 #include <cstdlib>	// rand関数用
+#include <random>	// 乱数生成用
 
 // =============== 名前空間 =====================
 namespace MathUtils
 {
 	// =============== 定数 =====================
-	const float PI = 3.14159265358979323846f;	// 円周率
-	const float EPSILON = 1.0e-5f;	// 許容誤差
+	constexpr float PI		= 3.14159265358979323846f;	// 円周率
+	constexpr float EPSILON = 1.0e-5f;					// 許容誤差
 
 	// =============== 関数 =====================
 	// 角度をラジアンに変換
@@ -32,16 +33,18 @@ namespace MathUtils
 		return radian * 180.0f / PI;
 	}
 
-
-	// ランダムな値を取得(実数版)
-	inline float Random(float min, float max)
+	// 汎用ランダム値生成（テンプレート版）
+	template<typename T>
+	inline T Random(T min, T max)
 	{
-		return min + static_cast<float>(rand()) / (RAND_MAX + 1) * (max - min);
-	}
-
-	// ランダムな値を取得(整数版)
-	inline int Random(int min, int max)
-	{
-		return min + rand() % (max - min + 1);
+		static thread_local std::mt19937 gen(std::random_device{}());
+		if constexpr (std::is_integral<T>::value) {
+			std::uniform_int_distribution<T> dist(min, max);
+			return dist(gen);
+		}
+		else {
+			std::uniform_real_distribution<T> dist(min, max);
+			return dist(gen);
+		}
 	}
 }

@@ -165,6 +165,9 @@
     <Filter Include="ソース ファイル\App\GameObject\Bullet">
       <UniqueIdentifier>{25816d71-b736-401a-bc46-f902c8136b39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\Component\Enemy">
+      <UniqueIdentifier>{9bd09a3a-baca-41be-b239-19c0d892711f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -403,6 +406,15 @@
     </ClCompile>
     <ClCompile Include="RegisterObjectTypeMap.cpp">
       <Filter>ソース ファイル\System\DataInOut</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEnemyMoveRandom.cpp">
+      <Filter>ソース ファイル\App\Component\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEnemyMoveLinear.cpp">
+      <Filter>ソース ファイル\App\Component\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEnemyMoveBase.cpp">
+      <Filter>ソース ファイル\App\Component\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -657,6 +669,15 @@
     </ClInclude>
     <ClInclude Include="ObjectBullet.h">
       <Filter>ソース ファイル\App\GameObject\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEnemyMoveRandom.h">
+      <Filter>ソース ファイル\App\Component\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEnemyMoveLinear.h">
+      <Filter>ソース ファイル\App\Component\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEnemyMoveBase.h">
+      <Filter>ソース ファイル\App\Component\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

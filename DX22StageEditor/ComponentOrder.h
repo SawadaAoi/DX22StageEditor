@@ -23,9 +23,11 @@ enum E_UpdateOrder
 	OrderModelStatic,		// モデル(静的)
 	OrderModelAnim,			// モデル(アニメーション)
 	OrderPlayerControl,		// プレイヤー操作
+	OrderEnemyState,		// 敵状態
+	OrderEnemyMove,			// 敵移動
 	OrderBillboard,			// ビルボード
 	OrderGeometry,			// ジオメトリ
 	OrderCameraBase,		// カメラ基底
-	OrderCameraDebug,		// カメラ(デバッグ)	
+	OrderCameraDebug,		// カメラ(デバッグ)
 	OrderLightBase,			// ライト基底
 };
