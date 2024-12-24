@@ -90,6 +90,7 @@ void ObjectBase::Update()
 	// 所持コンポーネント配列の全要素を更新
 	for (auto& pComponent : m_pComponents)
 	{
+		if (!pComponent->GetActive()) continue;	// コンポーネントが非アクティブの場合は更新しない
 		pComponent->Update();
 	}
 

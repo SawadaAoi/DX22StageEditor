@@ -22,6 +22,7 @@
 ComponentBase::ComponentBase(ObjectBase* pOwner, int nOrder)
 	: m_pOwnerObj(pOwner)
 	, m_nUpdateOrder(nOrder)
+	, m_bActive(true)
 {
 	// 所有者オブジェクトがnullptrの場合はエラーを出力
 	if (pOwner == nullptr)
@@ -94,6 +95,16 @@ int ComponentBase::GetUpdateOrder()
 }
 
 /* ========================================
+	ゲッター(アクティブフラグ)関数
+	-------------------------------------
+	戻値：アクティブフラグ
+=========================================== */
+bool ComponentBase::GetActive()
+{
+	return m_bActive;
+}
+
+/* ========================================
 	ゲッター(コンポーネントID)関数
 	-------------------------------------
 	戻値：コンポーネントID
@@ -103,8 +114,23 @@ size_t ComponentBase::GetTypeID() const
 	return 0;	// コンポーネントの親クラスではIDを持たない
 }
 
+/* ========================================
+	ゲッター(コンポーネントID)関数(静的関数)
+	-------------------------------------
+	戻値：コンポーネントID
+=========================================== */
 size_t ComponentBase::GetStaticTypeID()
 {
 	return reinterpret_cast<size_t>(&GetStaticTypeID);
+}
+
+/* ========================================
+	セッター(アクティブフラグ)関数
+	-------------------------------------
+	引数：アクティブフラグ
+=========================================== */
+void ComponentBase::SetActive(bool bActive)
+{
+	m_bActive = bActive;
 }
 

@@ -47,8 +47,6 @@ ComponentModelAnime::ComponentModelAnime(ObjectBase* pOwner)
 void ComponentModelAnime::Init()
 {
 	m_pCompTran = m_pOwnerObj->GetComponent<ComponentTransform>();
-	SetModel(GET_MODEL_ANIME(ANIME_BASE_KEY::AB_PLAYER));
-	PlayAnime(ANIME_KEY_PLAYER::PLYR_IDLE, true, 1.0f);
 }
 
 /* ========================================

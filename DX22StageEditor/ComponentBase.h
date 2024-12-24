@@ -46,12 +46,17 @@ public:
 	virtual void Uninit();
 	virtual void Update();
 	virtual void Draw();
-	
+
 	// ゲッター
 	ObjectBase* GetOwnerObject();		// 所有者オブジェクトの取得
 	int GetUpdateOrder();				// 更新順序の取得
+	bool GetActive();					// アクティブフラグの取得
+
 	virtual size_t GetTypeID() const;	// コンポーネントの種類IDの取得
 	static size_t GetStaticTypeID();	// コンポーネントの種類IDの取得(静的関数)
+
+	// セッター
+	void SetActive(bool bActive);		// アクティブフラグの設定
 
 #ifdef _DEBUG
 	// デバッグ用の処理(オブジェクト情報ウィンドウに表示)
@@ -59,9 +64,9 @@ public:
 #endif // _DEBUG
 
 protected:
-	ObjectBase*	m_pOwnerObj;	// 所有者オブジェクト
+	ObjectBase* m_pOwnerObj;	// 所有者オブジェクト
 	int			m_nUpdateOrder;	// 更新順序(数値が小さいほど先に更新)
-
+	bool 		m_bActive;		// アクティブフラグ(更新処理を行うかどうか)
 
 };
 
