@@ -168,6 +168,21 @@
     <Filter Include="ソース ファイル\App\Component\Enemy">
       <UniqueIdentifier>{9bd09a3a-baca-41be-b239-19c0d892711f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\Component\Enemy\Move">
+      <UniqueIdentifier>{2b527750-2211-4567-b5db-97d25f755ee1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Enemy\Move\0_Super">
+      <UniqueIdentifier>{e1596205-b9d5-4759-9462-194e4090a2da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Enemy\Attack">
+      <UniqueIdentifier>{7bf3a1fe-549f-4b0c-b85c-03f8930d6041}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Component\Enemy\Attack\0_Super">
+      <UniqueIdentifier>{41934e95-6758-47e8-87d7-4023168a6b6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\Enemy">
+      <UniqueIdentifier>{b03cfbdb-6366-4587-8c5d-d3edf5eeafcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -407,14 +422,29 @@
     <ClCompile Include="RegisterObjectTypeMap.cpp">
       <Filter>ソース ファイル\System\DataInOut</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentEnemyMoveRandom.cpp">
-      <Filter>ソース ファイル\App\Component\Enemy</Filter>
+    <ClCompile Include="ComponentEnemyMoveBase.cpp">
+      <Filter>ソース ファイル\App\Component\Enemy\Move\0_Super</Filter>
     </ClCompile>
     <ClCompile Include="ComponentEnemyMoveLinear.cpp">
+      <Filter>ソース ファイル\App\Component\Enemy\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEnemyMoveRandom.cpp">
+      <Filter>ソース ファイル\App\Component\Enemy\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEnemyMoveChase.cpp">
+      <Filter>ソース ファイル\App\Component\Enemy\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEnemyAttackCharge.cpp">
+      <Filter>ソース ファイル\App\Component\Enemy\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEnemyAttackBase.cpp">
+      <Filter>ソース ファイル\App\Component\Enemy\Attack\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentEnemyState.cpp">
       <Filter>ソース ファイル\App\Component\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentEnemyMoveBase.cpp">
-      <Filter>ソース ファイル\App\Component\Enemy</Filter>
+    <ClCompile Include="ObjectEnemy.cpp">
+      <Filter>ソース ファイル\App\GameObject\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -670,14 +700,29 @@
     <ClInclude Include="ObjectBullet.h">
       <Filter>ソース ファイル\App\GameObject\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentEnemyMoveRandom.h">
-      <Filter>ソース ファイル\App\Component\Enemy</Filter>
+    <ClInclude Include="ComponentEnemyMoveBase.h">
+      <Filter>ソース ファイル\App\Component\Enemy\Move\0_Super</Filter>
     </ClInclude>
     <ClInclude Include="ComponentEnemyMoveLinear.h">
+      <Filter>ソース ファイル\App\Component\Enemy\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEnemyMoveRandom.h">
+      <Filter>ソース ファイル\App\Component\Enemy\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEnemyMoveChase.h">
+      <Filter>ソース ファイル\App\Component\Enemy\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEnemyAttackCharge.h">
+      <Filter>ソース ファイル\App\Component\Enemy\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEnemyAttackBase.h">
+      <Filter>ソース ファイル\App\Component\Enemy\Attack\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEnemyState.h">
       <Filter>ソース ファイル\App\Component\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentEnemyMoveBase.h">
-      <Filter>ソース ファイル\App\Component\Enemy</Filter>
+    <ClInclude Include="ObjectEnemy.h">
+      <Filter>ソース ファイル\App\GameObject\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

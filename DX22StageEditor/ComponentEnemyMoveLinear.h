@@ -46,6 +46,6 @@ private:
 	bool m_bIsReverse;							// 逆順フラグ
 
 	bool m_bDispMoveLine;						// 移動ライン表示フラグ
-	std::unique_ptr<ShapeLine> m_pMoveLine;	// 移動ライン描画用
+	std::unique_ptr<ShapeLine> m_pMoveLine;		// 移動ライン描画用
 };
 

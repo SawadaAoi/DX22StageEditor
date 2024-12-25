@@ -173,9 +173,13 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComponentEnemyAttackBase.cpp" />
+    <ClCompile Include="ComponentEnemyAttackCharge.cpp" />
     <ClCompile Include="ComponentEnemyMoveBase.cpp" />
+    <ClCompile Include="ComponentEnemyMoveChase.cpp" />
     <ClCompile Include="ComponentEnemyMoveLinear.cpp" />
     <ClCompile Include="ComponentEnemyMoveRandom.cpp" />
+    <ClCompile Include="ComponentEnemyState.cpp" />
     <ClCompile Include="ComponentLightBase.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="LightManager.cpp" />
@@ -184,6 +188,7 @@
     <ClCompile Include="ObjectBulletPlayer.cpp" />
     <ClCompile Include="ObjectCameraDebug.cpp" />
     <ClCompile Include="ObjectCameraPlayer.cpp" />
+    <ClCompile Include="ObjectEnemy.cpp" />
     <ClCompile Include="ObjectLight.cpp" />
     <ClCompile Include="ObjectLightDirectional.cpp" />
     <ClCompile Include="ObjectLightPoint.cpp" />
@@ -257,9 +262,13 @@
     <ClCompile Include="ModelStaticMake.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ComponentEnemyAttackBase.h" />
+    <ClInclude Include="ComponentEnemyAttackCharge.h" />
     <ClInclude Include="ComponentEnemyMoveBase.h" />
+    <ClInclude Include="ComponentEnemyMoveChase.h" />
     <ClInclude Include="ComponentEnemyMoveLinear.h" />
     <ClInclude Include="ComponentEnemyMoveRandom.h" />
+    <ClInclude Include="ComponentEnemyState.h" />
     <ClInclude Include="ComponentLightBase.h" />
     <ClInclude Include="ComponentOrder.h" />
     <ClInclude Include="FileManager.h" />
@@ -269,6 +278,7 @@
     <ClInclude Include="ObjectBulletPlayer.h" />
     <ClInclude Include="ObjectCameraDebug.h" />
     <ClInclude Include="ObjectCameraPlayer.h" />
+    <ClInclude Include="ObjectEnemy.h" />
     <ClInclude Include="ObjectLight.h" />
     <ClInclude Include="ObjectLightDirectional.h" />
     <ClInclude Include="ObjectLightPoint.h" />

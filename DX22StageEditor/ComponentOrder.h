@@ -25,6 +25,7 @@ enum E_UpdateOrder
 	OrderPlayerControl,		// プレイヤー操作
 	OrderEnemyState,		// 敵状態
 	OrderEnemyMove,			// 敵移動
+	OrderEnemyAttack,		// 敵攻撃
 	OrderBillboard,			// ビルボード
 	OrderGeometry,			// ジオメトリ
 	OrderCameraBase,		// カメラ基底

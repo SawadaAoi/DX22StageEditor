@@ -62,9 +62,9 @@ private:
 
 	std::vector<Vector3<float>> m_vtMoveLimitRect;	// 移動範囲座標(四角形)
 	float m_fMoveLimitRectPosY;						// 移動範囲座標Y
+
 	bool m_bDispMoveLimitRect;						// 移動範囲表示フラグ
 	std::unique_ptr<ShapeLine>	m_pRectLine;		// 移動範囲描画用
-
 	std::unique_ptr<ShapeSphere> m_pTargetSphere;	// 目的座標描画用
 };
 

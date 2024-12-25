@@ -13,6 +13,7 @@
 #include "ObjectBase.h"
 #include <format>
 #include "ShapeLine.h"
+#include "ColorVec3.h"
 
 // =============== 定数定義 =======================
 const float LIMIT_DISTANCE_SQ = 0.3f * 0.3f;	// 移動先に到達する距離の2乗
@@ -42,7 +43,7 @@ ComponentEnemyMoveLinear::ComponentEnemyMoveLinear(ObjectBase* pOwner)
 	初期化関数
 	-------------------------------------
 	内容：初期化処理
-======================================= */
+========================================= */
 void ComponentEnemyMoveLinear::Init()
 {
 	ComponentEnemyMoveBase::Init();	// 基底クラスの初期化処理を呼び出す
@@ -54,7 +55,7 @@ void ComponentEnemyMoveLinear::Init()
 	更新関数
 	-------------------------------------
 	内容：更新処理
-======================================= */
+========================================= */
 void ComponentEnemyMoveLinear::Update()
 {
 	// 移動座標がない場合は何もしない
@@ -70,11 +71,13 @@ void ComponentEnemyMoveLinear::Update()
 		Move();
 
 	
-	// 移動ラインの更新
-	for (int i = 0; i < m_vtWayPoints.size(); i++)
-	{
-		int nNextIndex = (i + 1) % m_vtWayPoints.size();	// 最後の座標の場合は最初の座標に戻る
-		m_pMoveLine->UpdateLine(i + 1, m_vtWayPoints[i], m_vtWayPoints[nNextIndex], Vector3<float>(0.0f, 0.0f, 1.0f));
+	if (m_bDispMoveLine)
+	{	// 移動ラインの更新
+		for (int i = 0; i < m_vtWayPoints.size(); i++)
+		{
+			int nNextIndex = (i + 1) % m_vtWayPoints.size();	// 最後の座標の場合は最初の座標に戻る
+			m_pMoveLine->UpdateLine(i + 1, m_vtWayPoints[i], m_vtWayPoints[nNextIndex], ColorVec3::BLUE);
+		}
 	}
 
 }
@@ -83,7 +86,7 @@ void ComponentEnemyMoveLinear::Update()
 	描画関数
 	-------------------------------------
 	内容：描画処理
-======================================= */
+========================================= */
 void ComponentEnemyMoveLinear::Draw()
 {
 	if (m_bDispMoveLine)
@@ -96,17 +99,17 @@ void ComponentEnemyMoveLinear::Draw()
 	移動関数
 	-------------------------------------
 	内容：移動処理
-======================================= */
+========================================= */
 void ComponentEnemyMoveLinear::Move()
 {	
 	// 現在の座標番号の座標を取得
 	Vector3<float> vCurrentWayPoint = m_vtWayPoints[m_nCurrentWayPoint];
 
 	// 移動先との距離を計算
-	Vector3<float> vDistance = vCurrentWayPoint - m_pCompTransform->GetWorldPosition();
+	Vector3<float> vDir = vCurrentWayPoint - m_pCompTransform->GetWorldPosition();
 
 	// 移動先に到達している場合
-	if (vDistance.LengthSq() < LIMIT_DISTANCE_SQ)
+	if (vDir.LengthSq() < LIMIT_DISTANCE_SQ)
 	{
 		m_nCurrentWayPoint++;
 
@@ -119,7 +122,7 @@ void ComponentEnemyMoveLinear::Move()
 	else
 	{
 		// 移動先に向かって移動
-		m_pCompRigidbody->SetVelocity(vDistance.GetNormalize() * m_fMoveSpeed);
+		m_pCompRigidbody->SetVelocity(vDir.GetNormalize() * m_fMoveSpeed);
 
 	}
 
@@ -133,7 +136,7 @@ void ComponentEnemyMoveLinear::Move()
 	逆移動関数
 	-------------------------------------
 	内容：逆順に移動処理
-======================================= */
+========================================= */
 void ComponentEnemyMoveLinear::ReverseMove()
 {
 	// 現在の座標番号の座標を取得
@@ -173,7 +176,7 @@ void ComponentEnemyMoveLinear::ReverseMove()
 	内容：移動座標を追加
 	-------------------------------------
 	引数1：移動座標
-======================================= */
+========================================= */
 void ComponentEnemyMoveLinear::AddWayPoint(const Vector3<float>& vWayPoint)
 {
 	m_vtWayPoints.push_back(vWayPoint);
@@ -211,7 +214,7 @@ void ComponentEnemyMoveLinear::AddWayPoint(const Vector3<float>& vWayPoint)
 	-------------------------------------
 	引数1：移動座標
 	引数2：インデックス
-======================================= */
+========================================= */
 void ComponentEnemyMoveLinear::InsertWayPoint(const Vector3<float>& vWayPoint, int nIndex)
 {
 	// インデックスが範囲外の場合は追加しない
@@ -240,6 +243,7 @@ void ComponentEnemyMoveLinear::Debug(DebugUI::Window& window)
 
 	Item* pEnemyMoveLinear = Item::CreateGroup("EnemyMoveLinear");
 
+	pEnemyMoveLinear->AddGroupItem(Item::CreateBind("MoveSpeed", Item::Kind::Float, &m_fMoveSpeed));
 	pEnemyMoveLinear->AddGroupItem(Item::CreateValue("WayPointNum", Item::Kind::Text));
 	pEnemyMoveLinear->AddGroupItem(Item::CreateBind("CurrentWayPoint", Item::Kind::Int, &m_nCurrentWayPoint));
 	pEnemyMoveLinear->AddGroupItem(Item::CreateBind("Reverse", Item::Kind::Bool, &m_bIsReverse));

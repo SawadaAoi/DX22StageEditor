@@ -71,7 +71,7 @@ void ComponentEnemyMoveRandom::Init()
 	m_pTargetSphere = std::make_unique<ShapeSphere>();
 	m_pTargetSphere->SetPosition(m_vTargetPos);
 	m_pTargetSphere->SetScale(TARGET_SPHERE_SCALE);
-	m_pTargetSphere->SetColor(ColorVec3::BLUE);
+	m_pTargetSphere->SetColor(TARGET_COLOR);
 	m_pTargetSphere->SetDrawMode(ShapeSphere::E_DrawMode::DRAW_NORMAL);
 }
 
@@ -110,9 +110,10 @@ void ComponentEnemyMoveRandom::Update()
 void ComponentEnemyMoveRandom::Draw()
 {
 	if (m_bDispMoveLimitRect)
+	{
 		m_pRectLine->Draw();
-
-	m_pTargetSphere->Draw();
+		m_pTargetSphere->Draw();
+	}
 }
 
 /* ========================================
@@ -154,6 +155,14 @@ void ComponentEnemyMoveRandom::SwitchTargetPos()
 		m_vtMoveLimitRect[0], m_vtMoveLimitRect[1], m_vtMoveLimitRect[2], m_vtMoveLimitRect[3]);
 
 	m_pTargetSphere->SetPosition(m_vTargetPos);
+
+#ifdef _DEBUG
+	if (CHECK_DISP_COMP("EnemyMoveRandom"))
+	{
+		WIN_OBJ_INFO["EnemyMoveRandom"]["TargetPos"].SetText(
+			std::format("X:{:.1f} Y:{:.1f} Z:{:.1f}", m_vTargetPos.x, m_vTargetPos.y, m_vTargetPos.z).c_str());
+	}
+#endif // _DEBUG
 }
 
 /* ========================================
@@ -343,6 +352,7 @@ void ComponentEnemyMoveRandom::Debug(DebugUI::Window& window)
 
 	Item* EnemyMoveRandom = Item::CreateGroup("EnemyMoveRandom");
 
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveSpeed", Item::Kind::Float, &m_fMoveSpeed));
 	EnemyMoveRandom->AddGroupItem(Item::CreateValue("TargetPos", Item::Kind::Text));
 	EnemyMoveRandom->AddGroupItem(Item::CreateBind("SwitchTime", Item::Kind::Float, &m_fTargetSwitchTime));
 	EnemyMoveRandom->AddGroupItem(Item::CreateBind("SwitchCnt", Item::Kind::Float, &m_fTargetSwitchCnt));
