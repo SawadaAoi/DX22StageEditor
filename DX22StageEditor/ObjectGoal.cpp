@@ -23,6 +23,7 @@ ObjectGoal::ObjectGoal(SceneBase* pScene)
 	:ObjectBase(pScene)
 	, m_bIsGoal(false)
 {
+	SetTag(E_ObjectTag::Goal);	// É^ÉOÇÃê›íË
 }
 
 /* ========================================

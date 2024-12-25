@@ -189,6 +189,7 @@
     <ClCompile Include="ObjectCameraDebug.cpp" />
     <ClCompile Include="ObjectCameraPlayer.cpp" />
     <ClCompile Include="ObjectEnemy.cpp" />
+    <ClCompile Include="ObjectGameStateManager.cpp" />
     <ClCompile Include="ObjectGoal.cpp" />
     <ClCompile Include="ObjectLight.cpp" />
     <ClCompile Include="ObjectLightDirectional.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="ObjectCameraDebug.h" />
     <ClInclude Include="ObjectCameraPlayer.h" />
     <ClInclude Include="ObjectEnemy.h" />
+    <ClInclude Include="ObjectGameStateManager.h" />
     <ClInclude Include="ObjectGoal.h" />
     <ClInclude Include="ObjectLight.h" />
     <ClInclude Include="ObjectLightDirectional.h" />

@@ -31,9 +31,13 @@ const std::string ITEM_OBJ_LIST_NAME = "Objects";
 // UTF-8文字列変換マクロ
 #define UTF8(str) reinterpret_cast<const char*>(u8##str)
 
-// デバッグオブジェクト詳細にコンポーネントに表示されているか && オーナーオブジェクト名が一致しているか
+// デバッグオブジェクト詳細にコンポーネントが表示されているか && オーナーオブジェクト名が一致しているか
 #define CHECK_DISP_COMP(name) &WIN_OBJ_INFO[name] != DebugUI::Item::dummy  \
 								&& WIN_OBJ_INFO["ObjectName"].GetText() == m_pOwnerObj->GetName()
+
+// デバッグオブジェクト詳細にオブジェクトが表示されているか && 自オブジェクト名が一致しているか
+#define CHECK_DISP_OBJ(name) &WIN_OBJ_INFO[name] != DebugUI::Item::dummy  \
+								&& WIN_OBJ_INFO["ObjectName"].GetText() == GetName()
 
 // =============== 名前空間 ===================
 namespace DebugUI

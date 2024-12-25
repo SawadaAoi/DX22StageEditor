@@ -514,6 +514,9 @@ void ObjectBase::Debug()
 
 	pObjInfo["ObjectBase"]["ObjectReName"].SetPath(this->GetName().c_str());	// 変更後の名前を設定
 
+	// ローカルデバッグ処理
+	DebugLocal(pObjInfo);
+
 	// 各コンポーネント情報をオブジェクト情報ウィンドウに表示
 	auto it = m_pComponents.begin();
 	while (it != m_pComponents.end())
