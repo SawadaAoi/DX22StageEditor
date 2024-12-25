@@ -19,4 +19,5 @@ enum E_ObjectTag
 	Ground,			// 地面
 	Camera,			// カメラ
 	Light,			// ライト
+	Goal,			// ゴール
 };

@@ -19,7 +19,7 @@
 // =============== 定数定義 =======================
 #define TEX_KEY				TextureManager::E_TEX_KEY	// キー省略
 #define GET_TEXTURE_DATA	TextureManager::GetInstance().GetTextureData	// 文章省略
-#define TEXTURE_MNG_INST	TextureManager::GetInstance()	// インスタンス取得
+#define TEXTURE_MNG_INST TextureManager::GetInstance()	// インスタンス取得
 
 class TextureManager
 {
@@ -33,6 +33,8 @@ public:
 		LIGHT_ICON,		// デバッグ用ライトアイコン
 		BLOCK_SIMPLE,	// シンプルなブロック
 		GROUND_GRASS,	// 草地
+		PLAYER_HP,		// プレイヤーHP
+		STAGE_GOAL,		// ゴール
 		MAX,
 	};
 
@@ -45,7 +47,8 @@ public:
 		{TEX_KEY::LIGHT_ICON,	"Assets/Texture/Debug_Light_Icon.png"	},
 		{TEX_KEY::BLOCK_SIMPLE,	"Assets/Texture/Block_Simple.png"		},
 		{TEX_KEY::GROUND_GRASS,	"Assets/Texture/Ground_Grass.png"		},
-
+		{TEX_KEY::PLAYER_HP,	"Assets/Texture/Player_Hp.png"			},
+		{TEX_KEY::STAGE_GOAL,	"Assets/Texture/Stage_Goal.png"			},
 
 	};
 

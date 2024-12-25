@@ -28,14 +28,13 @@ const float DEFAULT_LIGHT_AMBIENT = 0.3f;	// デフォルト環境光
 =========================================== */
 ObjectBase::ObjectBase(SceneBase* pScene)
 	: m_pOwnerScene(pScene)				// 所有シーンを設定
-	, m_pCompTransform(nullptr)			// Transformコンポーネントをnullptrに設定
 	, m_eState(E_State::STATE_ACTIVE)	// 状態をアクティブに設定
 	, m_pParentObj(nullptr)				// 親オブジェクトをnullptrに設定
 	, m_pChildObjs()					// 子オブジェクト配列を初期化
 	, m_pComponents()					// コンポーネント配列を初期化
 	, m_eTag(E_ObjectTag::None)			// タグをNoneに設定
 	, m_sName("NoName")					// オブジェクト名をNoNameに設定
-	, m_tLightParam{ DEFAULT_LIGHT_DIFFUSE, DEFAULT_LIGHT_SPECULAR, DEFAULT_LIGHT_AMBIENT, true }	// ライトパラメータ初期化
+	, m_tLightParam{ DEFAULT_LIGHT_DIFFUSE, DEFAULT_LIGHT_SPECULAR, DEFAULT_LIGHT_AMBIENT, true}	// ライトパラメータ初期化
 {
 	// 所有者オブジェクトがnullptrの場合はエラーを出力
 	if (pScene == nullptr)
@@ -113,6 +112,7 @@ void ObjectBase::Draw()
 	// 所持コンポーネント配列の全要素を描画
 	for (auto& pComponent : m_pComponents)
 	{
+		if (!pComponent->GetActive()) continue;	// コンポーネントが非アクティブの場合は更新しない
 		pComponent->Draw();
 	}
 
@@ -191,7 +191,6 @@ void ObjectBase::SetParentObject(ObjectBase* pParentObj)
 	}
 
 	m_pParentObj->AddChildObject(this);	// 親オブジェクトの更新
-
 }
 
 /* ========================================
@@ -215,7 +214,6 @@ void ObjectBase::AddChildObject(ObjectBase* pChildObj)
 	if (pChildObj->GetParentObject() == this) return;
 
 	pChildObj->SetParentObject(this);	// 子オブジェクトの更新
-
 }
 
 /* ========================================
@@ -426,16 +424,6 @@ ObjectBase::T_LightParam ObjectBase::GetLightMaterial() const
 }
 
 /* ========================================
-	ゲッター(セーブフラグ)関数
-	-------------------------------------
-	戻値：セーブフラグ
-=========================================== */
-bool ObjectBase::GetIsSave() const
-{
-	return m_bIsSave;
-}
-
-/* ========================================
 	セッター(状態)関数
 	-------------------------------------
 	引数1：状態
@@ -474,9 +462,9 @@ void ObjectBase::SetName(std::string sName)
 =========================================== */
 void ObjectBase::SetLightMaterial(float fDiffuse, float fSpecular, float fAmbient)
 {
-	m_tLightParam.fDiffuse = fDiffuse;
+	m_tLightParam.fDiffuse	= fDiffuse;
 	m_tLightParam.fSpecular = fSpecular;
-	m_tLightParam.fAmbient = fAmbient;
+	m_tLightParam.fAmbient	= fAmbient;
 }
 
 /* ========================================
@@ -489,15 +477,7 @@ void ObjectBase::SetLightUse(bool bUse)
 	m_tLightParam.bLightUse = bUse;
 }
 
-/* ========================================
-	セッター(セーブフラグ)関数
-	-------------------------------------
-	引数1：セーブフラグ
-=========================================== */
-void ObjectBase::SetIsSave(bool bIsSave)
-{
-	m_bIsSave = bIsSave;
-}
+
 
 
 #ifdef _DEBUG
@@ -605,7 +585,7 @@ void ObjectBase::ChangeName()
 	// オブジェクト名変更
 	int listNo = ITEM_OBJ_LIST.GetListNo(this->GetListName().c_str());			// オブジェクト一覧の表示位置取得
 	ITEM_OBJ_LIST.RemoveListItem(sOldName.c_str(), DebugUI::CHILD_HEAD_TEXT);	// 変更前の名前をリストから削除
-
+	
 	this->SetName(sReName);												// 内部の名前変更
 	ITEM_OBJ_LIST.InsertListItem(this->GetListName().c_str(), listNo);	// オブジェクト一覧に変更後の名前を追加
 
@@ -639,8 +619,6 @@ void ObjectBase::ChangeParentList(std::string sParentName)
 		this->RemoveParentObject();			// 親オブジェクトがない場合(Noneを選択)は解除
 		ITEM_OBJ_LIST.SetListNo(-1);
 	}
-
-	
 }
 
 /* ========================================
@@ -654,7 +632,7 @@ std::string ObjectBase::GetListName()
 {
 	std::string sName;							// リスト表示名
 	int nGeneCnt = this->GetGenerationCount();	// 世代数取得
-
+	
 	// 親オブジェクトがある場合
 	if (nGeneCnt > 0)
 	{
