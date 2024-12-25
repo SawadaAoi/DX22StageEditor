@@ -1,5 +1,5 @@
 /* ========================================
-	DX22Base/
+	CatRobotGame/
 	------------------------------------
 	地面接触判定コンポーネント用cpp
 	------------------------------------
@@ -8,12 +8,14 @@
 
 // =============== インクルード =====================
 #include "ComponentGroundRaycast.h"
+
+#include "ColorVec3.h"
+#include "ComponentGround.h"	// 地面オブジェクトが持つ法線を取得するため
+#include "ComponentGroundBox.h"
+#include "ComponentTransform.h"
+#include "ObjectGround.h"		// 接触対象の地面オブジェクト
 #include "SceneBase.h"
 #include <vector>
-#include "ComponentTransform.h"
-#include "ComponentGround.h"	// 地面オブジェクトが持つ法線を取得するため
-#include "ObjectGround.h"		// 接触対象の地面オブジェクト
-#include "ColorVec3.h"
 
 /* ========================================
 	コンストラクタ関数
@@ -129,13 +131,16 @@ void ComponentGroundRaycast::CheckGround()
 		ComponentTransform* pPlaneTran	= pObject->GetComponent<ComponentTransform>();
 		ComponentGround*	pGround		= pObject->GetComponent<ComponentGround>();
 
+		// 地面コンポーネントがない場合は地面ボックスコンポーネントを取得
+		pGround  = pGround ? pGround : pObject->GetComponent<ComponentGroundBox>();
+
 		// コンポーネントが取得できない場合は次のオブジェクトへ
 		if (pPlaneTran == nullptr) continue;
 		if (pGround == nullptr) continue;
 
 		
 		// レイが地面に当たっているかどうかを判定
-		if (!CheckHit(pPlaneTran->GetWorldPosition(), pGround->GetWorldNormalDirection().GetNormalize()))
+		if (!CheckHit(pGround))
 		{
 			m_bIsHit = false;
 			continue;
@@ -162,13 +167,16 @@ void ComponentGroundRaycast::CheckGround()
 	-------------------------------------
 	内容：レイが地面に当たっているかどうかを判定
 	-------------------------------------
-	引数1：地面の座標
-	引数2：地面の法線(単位ベクトル)
+	引数1：地面コンポーネント
 	-------------------------------------
 	戻り値：当たっている場合はtrue
 =========================================== */
-bool ComponentGroundRaycast::CheckHit(const Vector3<float>& vGroundPos, const Vector3<float> vGroundNormal)
+bool ComponentGroundRaycast::CheckHit(ComponentGround* pPlaneGround)
 {
+	// 地面の座標と法線を取得
+	Vector3<float> vGroundPos		= GetGroundCenterPos(pPlaneGround);
+	Vector3<float> vGroundNormal	= pPlaneGround->GetWorldNormalDirection().GetNormalize();
+
 	// レイ
 	Vector3<float> vRayStart	= m_vStartPos;									// 始点
 	Vector3<float> vRayEnd		= m_vStartPos + (m_vDirection * m_fRayLength);	// 終点
@@ -272,6 +280,43 @@ bool ComponentGroundRaycast::CheckOnGround(ComponentGround* pPlaneGround)
 
 	// すべての三角形の内側にない場合はfalseを返す(接触点が地面の外側にある)
 	return false;	
+}
+
+/* ========================================
+	地面中心座標取得関数
+	-------------------------------------
+	内容：地面の中心座標を取得
+	-------------------------------------
+	引数1：地面コンポーネント
+	-------------------------------------
+	戻り値：地面の中心座標
+=========================================== */
+Vector3<float> ComponentGroundRaycast::GetGroundCenterPos(ComponentGround* pPlaneGround)
+{
+
+	Vector3<float> vCenter = Vector3<float>::Zero();
+
+	std::vector<ComponentGround::T_TriangleVertex> vTriangleVertex = pPlaneGround->GetTriangleVertex();
+
+	std::vector<Vector3<float>> vQuadVertexPos;	// 四角形の頂点座標を格納
+
+	vQuadVertexPos.push_back(vTriangleVertex[0].pos[0]);	// 左上
+	vQuadVertexPos.push_back(vTriangleVertex[0].pos[1]);	// 右上
+	vQuadVertexPos.push_back(vTriangleVertex[1].pos[1]);	// 右下
+	vQuadVertexPos.push_back(vTriangleVertex[1].pos[2]);	// 左下
+
+	// 四角形の中心座標を計算（4点の平均）
+	for (const auto& vertex : vQuadVertexPos)
+	{
+		vCenter.x += vertex.x;
+		vCenter.y += vertex.y;
+		vCenter.z += vertex.z;
+	}
+	vCenter.x /= 4.0f;
+	vCenter.y /= 4.0f;
+	vCenter.z /= 4.0f;
+
+	return vCenter;
 }
 
 

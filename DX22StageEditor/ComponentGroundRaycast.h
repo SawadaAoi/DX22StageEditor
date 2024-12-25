@@ -1,5 +1,5 @@
 /* ========================================
-	DX22Base/
+	CatRobotGame/
 	------------------------------------
 	地面接触判定コンポーネント用ヘッダ
 	------------------------------------
@@ -49,10 +49,11 @@ public:
 #endif // _DEBUG
 
 private:
-	void CheckGround();																		// 地面との接触判定
-	bool CheckHit(const Vector3<float>& vPlanePos, const Vector3<float> vPlaneNormal);		// レイが地面に当たっているかどうかを判定
-	bool CheckOnGround(ComponentGround* pPlaneGround);										// 接触座標が地面の上にあるかどうかを判定
+	void CheckGround();									// 地面との接触判定
+	bool CheckHit(ComponentGround* pPlaneGround);		// レイが地面に当たっているかどうかを判定
+	bool CheckOnGround(ComponentGround* pPlaneGround);	// 接触座標が地面の上にあるかどうかを判定
 
+	Vector3<float> GetGroundCenterPos(ComponentGround* pPlaneGround);	// 地面の座標を取得
 private:
 	ComponentTransform* m_pOwnerTransform;	// 座標、回転、スケール
 

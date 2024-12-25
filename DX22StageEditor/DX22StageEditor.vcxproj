@@ -180,6 +180,7 @@
     <ClCompile Include="ComponentEnemyMoveLinear.cpp" />
     <ClCompile Include="ComponentEnemyMoveRandom.cpp" />
     <ClCompile Include="ComponentEnemyState.cpp" />
+    <ClCompile Include="ComponentGroundBox.cpp" />
     <ClCompile Include="ComponentLightBase.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="LightManager.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="ComponentEnemyMoveLinear.h" />
     <ClInclude Include="ComponentEnemyMoveRandom.h" />
     <ClInclude Include="ComponentEnemyState.h" />
+    <ClInclude Include="ComponentGroundBox.h" />
     <ClInclude Include="ComponentLightBase.h" />
     <ClInclude Include="ComponentOrder.h" />
     <ClInclude Include="FileManager.h" />

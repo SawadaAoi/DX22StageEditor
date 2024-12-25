@@ -1,5 +1,5 @@
 /* ========================================
-	DX22Base/
+	CatRobotGame/
 	------------------------------------
 	地面コンポーネント用ヘッダ
 	------------------------------------
@@ -41,7 +41,7 @@ public:
 	void Draw() override;
 
 	// ゲッター
-	Vector3<float> GetWorldNormalDirection();				// 法線を取得
+	Vector3<float> GetWorldNormalDirection();			// 法線を取得
 	bool GetIsDispNormal();								// 法線の表示フラグを取得
 	std::vector<T_TriangleVertex> GetTriangleVertex();	// 三角形の頂点を取得
 
@@ -55,9 +55,9 @@ public:
 #ifdef _DEBUG
 	void Debug(DebugUI::Window& window) override;
 #endif // _DEBUG
-private:
-	void UpdateTriangleVertex();	// 三角形の頂点を更新
-private:
+protected:
+	virtual void UpdateTriangleVertex();	// 三角形の頂点を更新
+protected:
 	ComponentTransform* m_pCompTransform;	// 所有オブジェクトの座標、回転、スケール
 
 	std::unique_ptr<ShapeLine>			m_pNormalLine;				// 法線
