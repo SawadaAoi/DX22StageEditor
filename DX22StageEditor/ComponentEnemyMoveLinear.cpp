@@ -16,7 +16,7 @@
 #include "ColorVec3.h"
 
 // =============== 定数定義 =======================
-const float LIMIT_DISTANCE_SQ = 0.3f * 0.3f;	// 移動先に到達する距離の2乗
+const float LIMIT_DISTANCE_SQ = 0.35f * 0.35f;	// 移動先に到達する距離の2乗
 
 /* ========================================
 	コンストラクタ関数
@@ -32,6 +32,7 @@ ComponentEnemyMoveLinear::ComponentEnemyMoveLinear(ObjectBase* pOwner)
 	, m_bIsReverse(false)
 #ifdef _DEBUG
 	, m_bDispMoveLine(true)
+	, m_nSelectWayPointIdx(0)
 #else
 	, m_bDispMoveLine(false)
 #endif // _DEBUG
@@ -76,7 +77,11 @@ void ComponentEnemyMoveLinear::Update()
 		for (int i = 0; i < m_vtWayPoints.size(); i++)
 		{
 			int nNextIndex = (i + 1) % m_vtWayPoints.size();	// 最後の座標の場合は最初の座標に戻る
-			m_pMoveLine->UpdateLine(i + 1, m_vtWayPoints[i], m_vtWayPoints[nNextIndex], ColorVec3::BLUE);
+			Vector3<float> vStart = m_vtWayPoints[i];
+			Vector3<float> vEnd = m_vtWayPoints[nNextIndex];
+			vStart.y	+= 0.5f;
+			vEnd.y		+= 0.5f;
+			m_pMoveLine->UpdateLine(i + 1, vStart, vEnd, ColorVec3::BLUE);
 		}
 	}
 
@@ -105,8 +110,9 @@ void ComponentEnemyMoveLinear::Move()
 	// 現在の座標番号の座標を取得
 	Vector3<float> vCurrentWayPoint = m_vtWayPoints[m_nCurrentWayPoint];
 
-	// 移動先との距離を計算
+	// 移動先とのベクトルを計算
 	Vector3<float> vDir = vCurrentWayPoint - m_pCompTransform->GetWorldPosition();
+	vDir.y = 0.0f;
 
 	// 移動先に到達している場合
 	if (vDir.LengthSq() < LIMIT_DISTANCE_SQ)
@@ -121,8 +127,13 @@ void ComponentEnemyMoveLinear::Move()
 	}
 	else
 	{
+		// 目標座標方向へ移動速度を設定(y軸速度は変更しない)
+		Vector3<float> vVel = m_pCompRigidbody->GetVelocity();
+		vVel.x = vDir.GetNormalize().x * m_fMoveSpeed;
+		vVel.z = vDir.GetNormalize().z * m_fMoveSpeed;
+
 		// 移動先に向かって移動
-		m_pCompRigidbody->SetVelocity(vDir.GetNormalize() * m_fMoveSpeed);
+		m_pCompRigidbody->SetVelocity(vVel);
 
 	}
 
@@ -142,11 +153,12 @@ void ComponentEnemyMoveLinear::ReverseMove()
 	// 現在の座標番号の座標を取得
 	Vector3<float> vCurrentWayPoint = m_vtWayPoints[m_nCurrentWayPoint];
 
-	// 移動先との距離を計算
-	Vector3<float> vDistance = vCurrentWayPoint - m_pCompTransform->GetWorldPosition();
+	// 移動先とのベクトルを計算
+	Vector3<float> vDir = vCurrentWayPoint - m_pCompTransform->GetWorldPosition();
+	vDir.y = 0.0f;
 
 	// 移動先に到達している場合
-	if (vDistance.LengthSq() < LIMIT_DISTANCE_SQ)
+	if (vDir.LengthSq() < LIMIT_DISTANCE_SQ)
 	{
 		m_nCurrentWayPoint--;
 
@@ -158,8 +170,13 @@ void ComponentEnemyMoveLinear::ReverseMove()
 	}
 	else
 	{
+		// 目標座標方向へ移動速度を設定(y軸速度は変更しない)
+		Vector3<float> vVel = m_pCompRigidbody->GetVelocity();
+		vVel.x = vDir.GetNormalize().x * m_fMoveSpeed;
+		vVel.z = vDir.GetNormalize().z * m_fMoveSpeed;
+
 		// 移動先に向かって移動
-		m_pCompRigidbody->SetVelocity(vDistance.GetNormalize() * m_fMoveSpeed);
+		m_pCompRigidbody->SetVelocity(vVel);
 
 	}
 
@@ -187,21 +204,13 @@ void ComponentEnemyMoveLinear::AddWayPoint(const Vector3<float>& vWayPoint)
 		m_pCompTransform->SetLocalPosition(vWayPoint);
 	}
 
+	m_nCurrentWayPoint = 0;
+
 #ifdef _DEBUG
 	if (CHECK_DISP_COMP("EnemyMoveLinear"))
 	{
 		// 移動座標リストの更新
-		WIN_OBJ_INFO["EnemyMoveLinear"]["WayPointNum"].SetText(std::to_string(m_vtWayPoints.size()).c_str());
-		WIN_OBJ_INFO["EnemyMoveLinear"]["WayPoints"].RemoveListItemAll();
-		for (int i = 0; i < m_vtWayPoints.size(); i++)
-		{// 座標を文字列に変換
-			std::string strX = " X:" + std::format("{:.1f}", m_vtWayPoints[i].x);
-			std::string strY = " Y:" + std::format("{:.1f}", m_vtWayPoints[i].y);
-			std::string strZ = " Z:" + std::format("{:.1f}", m_vtWayPoints[i].z);
-
-			// リストに追加
-			WIN_OBJ_INFO["EnemyMoveLinear"]["WayPoints"].AddListItem((std::to_string(i) + "=" + strX + strY + strZ).c_str());
-		}
+		InitDebugWayPointList();
 	}
 #endif // _DEBUG
 
@@ -224,8 +233,84 @@ void ComponentEnemyMoveLinear::InsertWayPoint(const Vector3<float>& vWayPoint, i
 	}
 
 	m_vtWayPoints.insert(m_vtWayPoints.begin() + nIndex, vWayPoint);
+#ifdef _DEBUG
+	if (CHECK_DISP_COMP("EnemyMoveLinear"))
+	{
+		// 移動座標リストの更新
+		InitDebugWayPointList();
+	}
+#endif // _DEBUG
 }
 
+
+/* ========================================
+	移動座標削除関数
+	-------------------------------------
+	内容：指定したインデックスの移動座標を削除
+	-------------------------------------
+	引数1：インデックス
+========================================= */
+void ComponentEnemyMoveLinear::RemoveWayPoint(int nIndex)
+{
+	// 移動ラインの更新
+	for (int i = 0; i < m_vtWayPoints.size(); i++)
+	{
+		m_pMoveLine->UpdateLine(i + 1, Vector3<float>::Zero(), Vector3<float>::Zero());
+	}
+
+	// インデックスが範囲外の場合は削除しない
+	if (nIndex < 0 || nIndex >= m_vtWayPoints.size())
+	{
+		return;
+	}
+
+	m_vtWayPoints.erase(m_vtWayPoints.begin() + nIndex);
+
+	// インデックスが最後の座標の場合は最後の座標に戻す
+	if (m_nCurrentWayPoint >= m_vtWayPoints.size())
+	{
+		m_nCurrentWayPoint = m_vtWayPoints.size() - 1;
+	}
+
+#ifdef _DEBUG
+	if (CHECK_DISP_COMP("EnemyMoveLinear"))
+	{
+		// 移動座標リストの更新
+		InitDebugWayPointList();
+		m_nSelectWayPointIdx = m_nCurrentWayPoint;
+	}
+#endif // _DEBUG
+}
+
+/* ========================================
+	ゲッター(移動座標配列)関数
+	-------------------------------------
+	戻値：std::vector<Vector3<float>>& 移動座標配列
+=========================================== */
+std::vector<Vector3<float>>& ComponentEnemyMoveLinear::GetWayPoints()
+{
+	return m_vtWayPoints;
+}
+
+/* ========================================
+	ゲッター(逆順フラグ)関数
+	-------------------------------------
+	戻値：bool	逆順フラグ
+=========================================== */
+bool ComponentEnemyMoveLinear::GetIsReverse()
+{
+	return m_bIsReverse;
+}
+
+/* ========================================
+	セッター(逆順フラグ)関数
+	-------------------------------------
+	引数1：bool	逆順フラグ
+=========================================== */
+void ComponentEnemyMoveLinear::SetIsReverse(bool bIsReverse)
+{
+	m_bIsReverse = bIsReverse;
+}
 
 
 
@@ -241,18 +326,46 @@ void ComponentEnemyMoveLinear::Debug(DebugUI::Window& window)
 {
 	using namespace DebugUI;
 
-	Item* pEnemyMoveLinear = Item::CreateGroup("EnemyMoveLinear");
+	Item* pGroupMoveLinear = Item::CreateGroup("EnemyMoveLinear");
 
-	pEnemyMoveLinear->AddGroupItem(Item::CreateBind("MoveSpeed", Item::Kind::Float, &m_fMoveSpeed));
-	pEnemyMoveLinear->AddGroupItem(Item::CreateValue("WayPointNum", Item::Kind::Text));
-	pEnemyMoveLinear->AddGroupItem(Item::CreateBind("CurrentWayPoint", Item::Kind::Int, &m_nCurrentWayPoint));
-	pEnemyMoveLinear->AddGroupItem(Item::CreateBind("Reverse", Item::Kind::Bool, &m_bIsReverse));
-	pEnemyMoveLinear->AddGroupItem(Item::CreateBind("DispMoveLine", Item::Kind::Bool, &m_bDispMoveLine));
+	pGroupMoveLinear->AddGroupItem(Item::CreateBind("MoveSpeed", Item::Kind::Float, &m_fMoveSpeed));
+	pGroupMoveLinear->AddGroupItem(Item::CreateBind("Reverse", Item::Kind::Bool, &m_bIsReverse));
+	pGroupMoveLinear->AddGroupItem(Item::CreateBind("DispMoveLine", Item::Kind::Bool, &m_bDispMoveLine, false, true));
+	pGroupMoveLinear->AddGroupItem(Item::CreateValue("WayPointNum", Item::Kind::Text));
+	pGroupMoveLinear->AddGroupItem(Item::CreateCallBack("CurrentWayPoint", Item::Kind::Int,		// 現在の座標番号
+		[this](bool isWrite, void* arg){ FuncWayCurrent(isWrite, arg);}));
+	pGroupMoveLinear->AddGroupItem(Item::CreateCallBack("AddWayPoint", Item::Kind::Command,		// 移動座標追加
+		[this](bool isWrite, void* arg) { AddWayPoint({ 0.0f, 0.0f, 0.0f });}));
+	pGroupMoveLinear->AddGroupItem(Item::CreateCallBack("RemoveWayPoint", Item::Kind::Command, 	// 移動座標削除
+		[this](bool isWrite, void* arg)	{ RemoveWayPoint(m_nSelectWayPointIdx);}, false, true));
+
+	// 移動座標
+	pGroupMoveLinear->AddGroupItem(Item::CreateCallBack("WayPoint", Item::Kind::Vector, 
+		[this](bool isWrite, void* arg){ FuncWayPoint(isWrite, arg);}));
 
 	// 移動座標リスト
-	Item* WayList = Item::CreateList("WayPoints", nullptr,false);
+	pGroupMoveLinear->AddGroupItem(Item::CreateList("WayPointList", [this](const void* arg)
+	{
+		std::string sName = reinterpret_cast<const char*>(arg);
+		m_nSelectWayPointIdx = WIN_OBJ_INFO["EnemyMoveLinear"]["WayPointList"].GetListNo(sName.c_str());
 
-	// リストに追加
+	}));
+
+	window.AddItem(pGroupMoveLinear);
+	InitDebugWayPointList();
+
+	m_nSelectWayPointIdx = 0;
+}
+
+/* ========================================
+	移動座標リスト初期化関数
+	-------------------------------------
+	内容：デバッグ用の移動座標リストを初期化
+=========================================== */
+void ComponentEnemyMoveLinear::InitDebugWayPointList()
+{
+	WIN_OBJ_INFO["EnemyMoveLinear"]["WayPointNum"].SetText(std::to_string(m_vtWayPoints.size()).c_str());
+	WIN_OBJ_INFO["EnemyMoveLinear"]["WayPointList"].RemoveListItemAll();
 	for (int i = 0; i < m_vtWayPoints.size(); i++)
 	{
 		// 座標を文字列に変換
@@ -261,14 +374,61 @@ void ComponentEnemyMoveLinear::Debug(DebugUI::Window& window)
 		std::string strZ = " Z:" + std::format("{:.1f}", m_vtWayPoints[i].z);
 
 		// リストに追加
-		WayList->AddListItem((std::to_string(i) + "=" + strX + strY + strZ).c_str());
+		WIN_OBJ_INFO["EnemyMoveLinear"]["WayPointList"].AddListItem((std::to_string(i) + "=" + strX + strY + strZ).c_str());
 	}
 
-	pEnemyMoveLinear->AddGroupItem(WayList);
+	WIN_OBJ_INFO["EnemyMoveLinear"]["WayPointList"].SetListNo(m_nSelectWayPointIdx);
+}
 
-	window.AddItem(pEnemyMoveLinear);
+/* ========================================
+	デバッグ項目クリック(座標番号)関数
+	-------------------------------------
+	内容：デバッグ用の座標番号をクリックした時の処理
+	-------------------------------------
+	引数1：書き込みフラグ
+	引数2：引数
+=========================================== */
+void ComponentEnemyMoveLinear::FuncWayCurrent(bool isWrite, void* arg)
+{
+	int nWayPoint = *reinterpret_cast<int*>(arg);	// 引数の座標番号を取得
+	if (isWrite)
+	{
+		m_nCurrentWayPoint = nWayPoint;
+		// 範囲外の場合は範囲内に収める
+		if (m_nCurrentWayPoint >= m_vtWayPoints.size())
+			m_nCurrentWayPoint = m_vtWayPoints.size() - 1;
+		else if (m_nCurrentWayPoint < 0)
+			m_nCurrentWayPoint = 0;
+	}
+	else
+	{
+		*reinterpret_cast<int*>(arg) = m_nCurrentWayPoint;
+	}
+}
 
-	WIN_OBJ_INFO["EnemyMoveLinear"]["WayPointNum"].SetText(std::to_string(m_vtWayPoints.size()).c_str());
+/* ========================================
+	デバッグ項目クリック(座標)関数
+	-------------------------------------
+	内容：デバッグ用の座標をクリックした時の処理
+	-------------------------------------
+	引数1：書き込みフラグ
+	引数2：引数
+=========================================== */
+void ComponentEnemyMoveLinear::FuncWayPoint(bool isWrite, void* arg)
+{
+	if (m_vtWayPoints.empty()) return;
+	Vector3<float>* pvPos = reinterpret_cast<Vector3<float>*>(arg);
+
+	if (isWrite)
+	{
+		m_vtWayPoints[m_nSelectWayPointIdx] = *pvPos;	// 変更した座標を設定
+		InitDebugWayPointList();						// 移動座標リストの更新
+
+	}
+	else
+	{
+		*pvPos = m_vtWayPoints[m_nSelectWayPointIdx];
+	}
 }
 
 #endif // _DEBUG

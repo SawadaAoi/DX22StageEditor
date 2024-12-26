@@ -59,7 +59,7 @@ void ComponentGroundBox::UpdateTriangleVertex()
 	// 1つ目の三角形 (左上、右上、左下)
 	m_TriangleVertices[0].pos[0] = vVertexPos[1];	// 左上
 	m_TriangleVertices[0].pos[1] = vVertexPos[0];	// 右上
-	m_TriangleVertices[0].pos[2] = vVertexPos[2];	// 左下
+	m_TriangleVertices[0].pos[2] = vVertexPos[3];	// 左下
 
 	// 2つ目の三角形 (右上、右下、左下)
 	m_TriangleVertices[1].pos[0] = vVertexPos[0];	// 右上

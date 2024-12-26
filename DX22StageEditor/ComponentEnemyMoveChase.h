@@ -44,6 +44,8 @@ public:
 #endif // _DEBUG
 private:
 	void Move();
+	void ChaseTarget();	// プレイヤーを追跡する
+	void BackToStartPos();	// 移動開始座標に戻る
 
 	// プレイヤーとの距離ラインを描画する
 	void DrawPlayerDistLine();

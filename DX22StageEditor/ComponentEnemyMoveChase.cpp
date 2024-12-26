@@ -113,60 +113,97 @@ void ComponentEnemyMoveChase::Draw()
 ========================================= */
 void ComponentEnemyMoveChase::Move()
 {
-	// プレイヤーの座標を取得
-	Vector3<float> vTargetPos = m_pTargetObj->GetTransform()->GetWorldPosition();
+	// 追跡対象との距離
+	float fDistSq = m_pTargetObj->GetTransform()->GetWorldPosition().DistanceSq(m_pCompTransform->GetWorldPosition());
 
-	Vector3<float> vDir = vTargetPos - m_pCompTransform->GetWorldPosition();
-
+	
 	// 追跡開始距離より近づいたら追跡開始
-	if(vDir.LengthSq() < (m_fChaseStartDist * m_fChaseStartDist))
+	if(fDistSq < (m_fChaseStartDist * m_fChaseStartDist))
 	{
-		// プレイヤーとの距離が追跡限界距離より遠い場合は追跡
-		if (vDir.LengthSq() > m_fLimitDistSq)
-		{
-			vDir.y = 0.0f;
-			// プレイヤーの座標に向かって移動
-			m_pCompRigidbody->SetVelocity(vDir.GetNormalize() * m_fMoveSpeed);
-
-			// 移動先の座標を向く(高さは考慮しない)
-			Vector3<float> vLook = vTargetPos;
-			vLook.y = m_pCompTransform->GetWorldPosition().y;
-			m_pCompTransform->LookAt(vLook);
-		}
-		else
-		{
-			// 移動停止
-			m_pCompRigidbody->SetVelocity(Vector3<float>::Zero());
-			// 正面を向く
-			m_pCompTransform->SetLocalRotation(m_qStartRot);
-		}
-
+		ChaseTarget();
 	}
 	// 追跡開始距離より遠い場合は初期座標に向かって移動
 	else
 	{
-		Vector3<float> vDir = m_vStartPos - m_pCompTransform->GetWorldPosition();
-
-		if (vDir.LengthSq() > LIMIT_DIST_SQ_TO_START)
-		{
-			vDir.y = 0.0f;
-			// 移動開始座標に向かって移動
-			m_pCompRigidbody->SetVelocity(vDir.GetNormalize() * m_fMoveSpeed);
-
-			// 移動先の座標を向く(高さは考慮しない)
-			Vector3<float> vLook = m_vStartPos;
-			vLook.y = m_pCompTransform->GetWorldPosition().y;
-			m_pCompTransform->LookAt(vLook);
-		}
-		else
-		{
-			// 移動停止
-			m_pCompRigidbody->SetVelocity(Vector3<float>::Zero());
-			// 正面を向く
-			m_pCompTransform->SetLocalRotation(m_qStartRot);
-		}
+		BackToStartPos();
 	}
 
+}
+
+/* ========================================
+	対象オブジェクト追跡移動関数
+	-------------------------------------
+	内容：対象オブジェクトを追跡する
+========================================= */
+void ComponentEnemyMoveChase::ChaseTarget()
+{
+	// プレイヤーの座標を取得
+	Vector3<float> vTargetPos = m_pTargetObj->GetTransform()->GetWorldPosition();
+
+	// プレイヤーの方向
+	Vector3<float> vDirTarget = vTargetPos - m_pCompTransform->GetWorldPosition();
+	vDirTarget.y = 0.0f;
+
+	// 追跡対象との距離が追跡限界距離より遠い場合は追跡
+	if (vDirTarget.LengthSq() > m_fLimitDistSq)
+	{
+		// 追跡対象の方向へ速度を設定(Y軸は考慮しない)
+		Vector3<float> vVelocity = m_pCompRigidbody->GetVelocity();
+		vVelocity.x = vDirTarget.GetNormalize().x * m_fMoveSpeed;
+		vVelocity.z = vDirTarget.GetNormalize().z * m_fMoveSpeed;
+
+		m_pCompRigidbody->SetVelocity(vVelocity);
+
+	}
+	else
+	{
+		// 移動停止
+		Vector3<float> vVelocity = m_pCompRigidbody->GetVelocity();
+		vVelocity.x = 0.0f;
+		vVelocity.z = 0.0f;
+		m_pCompRigidbody->SetVelocity(vVelocity);
+	}
+
+	// 追跡対象の方向を向く
+	Vector3<float> vLook = vTargetPos;
+	vLook.y = m_pCompTransform->GetWorldPosition().y;
+	m_pCompTransform->LookAt(vLook);
+}
+
+/* ========================================
+	移動開始座標帰還関数
+	-------------------------------------
+	内容：移動開始座標に戻る
+========================================= */
+void ComponentEnemyMoveChase::BackToStartPos()
+{
+	// 移動開始座標の方向
+	Vector3<float> vDirStart = m_vStartPos - m_pCompTransform->GetWorldPosition();
+	vDirStart.y = 0.0f;
+
+	//
+	if (vDirStart.LengthSq() > LIMIT_DIST_SQ_TO_START)
+	{
+		// 移動開始座標方向へ速度を設定(Y軸は考慮しない)
+		Vector3<float> vVelocity = m_pCompRigidbody->GetVelocity();
+		vVelocity.x = vDirStart.GetNormalize().x * m_fMoveSpeed;
+		vVelocity.z = vDirStart.GetNormalize().z * m_fMoveSpeed;
+
+		m_pCompRigidbody->SetVelocity(vVelocity);
+
+		// 移動開始座標の方向を向く
+		Vector3<float> vLook = m_vStartPos;
+		vLook.y = m_pCompTransform->GetWorldPosition().y;
+		m_pCompTransform->LookAt(vLook);
+	}
+	else
+	{
+		// 移動停止
+		Vector3<float> vVelocity = m_pCompRigidbody->GetVelocity();
+		vVelocity.x = 0.0f;
+		vVelocity.z = 0.0f;
+		m_pCompRigidbody->SetVelocity(vVelocity);
+	}
 }
 
 /* ========================================

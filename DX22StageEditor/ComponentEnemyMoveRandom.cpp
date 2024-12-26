@@ -133,7 +133,10 @@ void ComponentEnemyMoveRandom::Move()
 	}
 
 	// ˆÚ“®æ‚ÉŒü‚©‚Á‚ÄˆÚ“®
-	m_pCompRigidbody->SetVelocity(vDistance.GetNormalize() * m_fMoveSpeed);
+	Vector3<float> vVelocity = m_pCompRigidbody->GetVelocity();
+	vVelocity.x = vDistance.GetNormalize().x * m_fMoveSpeed;
+	vVelocity.z = vDistance.GetNormalize().z * m_fMoveSpeed;
+	m_pCompRigidbody->SetVelocity(vVelocity);
 
 	// ˆÚ“®æ‚ÌÀ•W‚ğŒü‚­(‚‚³‚Íl—¶‚µ‚È‚¢)
 	Vector3<float> vLook = m_vTargetPos;
