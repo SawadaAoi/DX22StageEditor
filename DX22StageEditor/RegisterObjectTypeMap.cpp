@@ -13,6 +13,9 @@
 #include "ObjectPlayer.h"
 #include "ObjectGround.h"
 #include "ObjectBlock.h"
+#include "ObjectEnemy.h"
+#include "ObjectEnemyLinear.h"
+#include "ObjectGoal.h"
 
 // カメラ
 #include "ObjectCamera.h"
@@ -25,6 +28,9 @@
 #include "ObjectLightPoint.h"
 #include "ObjectLightSpot.h"
 
+// システム
+#include "ObjectGameStateManager.h"
+
 
 /* ========================================
 	全オブジェクト登録関数
@@ -36,10 +42,11 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectBase);
 	
 	REGISTER_OBJECT_TYPE(ObjectPlayer);
-	
 	REGISTER_OBJECT_TYPE(ObjectGround);
-
 	REGISTER_OBJECT_TYPE(ObjectBlock);
+	REGISTER_OBJECT_TYPE(ObjectEnemy);
+	REGISTER_OBJECT_TYPE(ObjectEnemyLinear);
+	REGISTER_OBJECT_TYPE(ObjectGoal);
 
 	REGISTER_OBJECT_TYPE(ObjectCamera);
 	REGISTER_OBJECT_TYPE(ObjectCameraDebug);
@@ -49,5 +56,8 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectLightDirectional);
 	REGISTER_OBJECT_TYPE(ObjectLightPoint);
 	REGISTER_OBJECT_TYPE(ObjectLightSpot);
+
+	REGISTER_OBJECT_TYPE(ObjectGameStateManager);
+
 
 }

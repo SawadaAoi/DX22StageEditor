@@ -17,9 +17,15 @@
 #include "ComponentModelAnime.h"
 
 // =============== 定数定義 =======================
-const int	MAX_HP = 5;	// プレイヤーの最大HP
-const float INVINCIBLE_TIME = 2.0f;	// 無敵時間
-const float INV_FLASH_INTERVAL = 0.1f;	// 無敵点滅間隔
+const int	MAX_HP				= 5;	// プレイヤーの最大HP
+const float INVINCIBLE_TIME		= 2.0f;	// 無敵時間
+const float INV_FLASH_INTERVAL	= 0.1f;	// 無敵点滅間隔
+// レイ
+const float				RAY_LENGTH	= 0.2f;									// レイの長さ
+const Vector3<float>	RAY_OFFSET	= Vector3<float>(0.0f, -0.4f, 0.0f);	// レイの開始位置
+// リジッドボディ
+const float				GROUND_DRAG = 0.9f;	// 地面摩擦
+
 
 /* ========================================
 	コンストラクタ関数
@@ -54,18 +60,22 @@ void ObjectPlayer::InitLocal()
 	m_pCompTransform =GetComponent<ComponentTransform>();
 
 	m_pCompGroundRaycast = AddComponent<ComponentGroundRaycast>();
-	m_pCompGroundRaycast->SetStartPosOffset(Vector3<float>(0.0f, -0.4f, 0.0f));
-	m_pCompGroundRaycast->SetRayLength(0.2f);
+	m_pCompGroundRaycast->SetStartPosOffset(RAY_OFFSET);
+	m_pCompGroundRaycast->SetRayLength(RAY_LENGTH);
 
 	AddComponent<ComponentCollisionOBB>();
 	
 	m_pCompRigidbody = AddComponent<ComponentRigidbody>();
 	m_pCompRigidbody->SetUseGravity(true);
-	m_pCompRigidbody->SetGroundDrag(0.9f);
+	m_pCompRigidbody->SetGroundDrag(GROUND_DRAG);
 
 	m_pCompPlayerController = AddComponent<ComponentPlayerController>();
 
 	m_pCompModelAnime = AddComponent<ComponentModelAnime>();
+
+	m_pCompModelAnime->SetModel(GET_MODEL_ANIME(ANIME_BASE_KEY::AB_PLAYER));
+	m_pCompModelAnime->PlayAnime(ANIME_KEY_PLAYER::PLYR_IDLE, true, 1.0f);
+
 
 }
 
@@ -86,13 +96,13 @@ void ObjectPlayer::UpdateLocal()
 }
 
 /* ========================================
-	衝突判定(開始時)関数
+	衝突判定(継続時)関数
 	-------------------------------------
-	内容：他オブジェクトとの衝突判定(開始時)
+	内容：他オブジェクトとの衝突判定(継続時)
 	-------------------------------------
 	引数：衝突相手オブジェクト
 =========================================== */
-void ObjectPlayer::OnCollisionEnter(ObjectBase* pHit)
+void ObjectPlayer::OnCollisionStay(ObjectBase* pHit)
 {
 	// 敵キャラと接触したら
 	if (pHit->GetTag() == E_ObjectTag::Enemy)
@@ -132,6 +142,9 @@ void ObjectPlayer::CheckGround()
 ========================================= */
 void ObjectPlayer::Damage()
 {
+	if (m_bInvincible)	return;	// 無敵時間中はダメージを受けない
+	if (m_nHp <= 0)		return;	// HPが0以下の場合はダメージを受けない
+
 	// ダメージアニメーション
 
 	m_bInvincible = true;	// 無敵時間開始

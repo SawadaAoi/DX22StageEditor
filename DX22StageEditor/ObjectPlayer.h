@@ -29,7 +29,7 @@ public:
 	void InitLocal() override;
 	void UpdateLocal() override;
 
-	void OnCollisionEnter(ObjectBase* pHit) override;
+	void OnCollisionStay(ObjectBase* pHit) override;
 
 	// ゲッター
 	int GetHp();
@@ -57,6 +57,7 @@ private:
 	int m_nHp;
 	int m_nMaxHp;
 
+	// 無敵時間
 	bool	m_bInvincible;	// 無敵時間フラグ
 	float	m_fInvCnt;		// 無敵時間カウント
 	float	m_fInvFlashCnt;	// 無敵時間点滅カウント

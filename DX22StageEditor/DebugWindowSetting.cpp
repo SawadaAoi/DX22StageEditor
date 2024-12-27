@@ -16,6 +16,7 @@
 #include "CameraManager.h"	// カメラマネージャ
 #include "FileManager.h"
 #include "ObjectTypeRegistry.h"
+#include "ComponentTransform.h"
 
 // シーン
 #include <type_traits>
@@ -155,7 +156,7 @@ namespace DebugUI
 			// 選択したらシーン変更
 			std::string sSceneName = reinterpret_cast<const char*>(arg);	// リスト項目名
 			SCENE_MAP.at(sSceneName)();	// シーン変更
-		},false, false);
+		},true, false);
 
 		// シーン名をリストに追加
 		for (auto& scene : SCENE_MAP)
@@ -164,6 +165,7 @@ namespace DebugUI
 		}
 
 		WIN_SCENE_LIST.AddItem(pSceneList);
+
 	}
 
 	/* ========================================
@@ -226,6 +228,8 @@ namespace DebugUI
 	=========================================== */
 	void InitObjectTypeList()
 	{
+		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateValue("CreatePos", Item::Kind::Vector));
+
 		// オブジェクトタイプ一覧
 		Item* pObjectTypeList = Item::CreateList("ObjectTypes", [](const void* arg)
 		{
@@ -238,6 +242,11 @@ namespace DebugUI
 			{
 				SceneBase* pScene = SceneManager::GetScene();			// シーン取得
 				pObject->Init(pScene->CreateUniqueName(sObjTypeName));	// オブジェクト初期化(名前重複避ける)
+
+				Vector3<float> vPos;
+				vPos = WIN_OBJ_TYPE_LIST["CreatePos"].GetVector();
+				pObject->GetTransform()->SetLocalPosition(vPos);
+
 				pScene->AddSceneObjectBase(pObject);					// シーンに追加
 			}
 

@@ -189,6 +189,9 @@
     <Filter Include="ソース ファイル\App\GameObject\System">
       <UniqueIdentifier>{b2cb55be-b26e-40ad-94f5-dfe7cd08f2d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\Enemy\0_Super">
+      <UniqueIdentifier>{3d24bb22-85bd-446c-8f44-f63ad61dc483}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -449,9 +452,6 @@
     <ClCompile Include="ComponentEnemyState.cpp">
       <Filter>ソース ファイル\App\Component\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectEnemy.cpp">
-      <Filter>ソース ファイル\App\GameObject\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectGoal.cpp">
       <Filter>ソース ファイル\App\GameObject\Other</Filter>
     </ClCompile>
@@ -460,6 +460,12 @@
     </ClCompile>
     <ClCompile Include="ComponentGroundBox.cpp">
       <Filter>ソース ファイル\App\Component\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectEnemyLinear.cpp">
+      <Filter>ソース ファイル\App\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectEnemy.cpp">
+      <Filter>ソース ファイル\App\GameObject\Enemy\0_Super</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -736,9 +742,6 @@
     <ClInclude Include="ComponentEnemyState.h">
       <Filter>ソース ファイル\App\Component\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectEnemy.h">
-      <Filter>ソース ファイル\App\GameObject\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectGoal.h">
       <Filter>ソース ファイル\App\GameObject\Other</Filter>
     </ClInclude>
@@ -747,6 +750,12 @@
     </ClInclude>
     <ClInclude Include="ComponentGroundBox.h">
       <Filter>ソース ファイル\App\Component\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectEnemyLinear.h">
+      <Filter>ソース ファイル\App\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectEnemy.h">
+      <Filter>ソース ファイル\App\GameObject\Enemy\0_Super</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

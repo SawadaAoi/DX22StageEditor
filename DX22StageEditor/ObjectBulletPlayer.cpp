@@ -50,6 +50,11 @@ void ObjectBulletPlayer::OnCollisionEnter(ObjectBase* pHit)
 	{
 		return;
 	}
+
+	if (pHit->GetTag() == E_ObjectTag::Enemy)
+	{
+		pHit->OnCollisionStay(this);
+	}
 	
 	SetState(E_State::STATE_DEAD);
 }

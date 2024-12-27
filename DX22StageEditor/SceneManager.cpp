@@ -18,7 +18,7 @@
 =========================================== */
 void SceneManager::Init()
 {
-	ChangeScene<SceneStageSave_1>();
+	//ChangeScene<SceneStageSave_1>();
 }
 
 /* ========================================
