@@ -52,6 +52,8 @@ void ObjectEnemyLinear::OutPutLocalData(std::ofstream& file)
 
 	S_SaveDataEnemyLinear data;
 
+	// 移動速度
+	data.fMoveSpeed = m_pCompEnemyMoveLinear->GetMoveSpeed();
 	// 移動座標数
 	data.nWayPointNum = m_pCompEnemyMoveLinear->GetWayPoints().size();
 	// 逆順フラグ
@@ -84,13 +86,15 @@ void ObjectEnemyLinear::InputLocalData(std::ifstream& file)
 	// ファイルから読み込む
 	file.read((char*)&data, sizeof(S_SaveDataEnemyLinear));
 
+	// 移動速度
+	m_pCompEnemyMoveLinear->SetMoveSpeed(data.fMoveSpeed);
 	// 移動座標数
 	int nWayPointNum = data.nWayPointNum;
 	// 逆順フラグ
-	bool bIsReverse = data.bIsReverse;
+	m_pCompEnemyMoveLinear->SetIsReverse(data.bIsReverse);
 
 	// 移動座標
-	for (int i = 0; i < nWayPointNum; i++)
+	for (int i = 0; i < data.nWayPointNum; i++)
 	{
 		Vector3<float> wayPoint;
 

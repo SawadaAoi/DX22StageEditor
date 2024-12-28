@@ -1,11 +1,11 @@
 /* ========================================
 	CatRobotGame/
 	------------------------------------
-	オブジェクト(敵キャラ線移動)用ヘッダ
+	オブジェクト(敵キャラ追跡移動)用ヘッダ
 	------------------------------------
-	説明：線移動する敵キャラクター
+	説明：追跡移動する敵キャラクター
 	------------------------------------
-	ObjectEnemyLinear.h
+	ObjectEnemyChase.h
 ========================================== */
 #pragma once
 
@@ -13,31 +13,29 @@
 #include "ObjectEnemy.h"
 
 // =============== 前方宣言 =======================
-class ComponentEnemyMoveLinear;
+class ComponentEnemyMoveChase;
 
 // =============== クラス定義 =====================
-class ObjectEnemyLinear :
+class ObjectEnemyChase :
     public ObjectEnemy
 {
 public:
 	// セーブデータ
-	struct S_SaveDataEnemyLinear
+	struct S_SaveDataEnemyChase
 	{
-		float fMoveSpeed;	// 移動速度
-		int nWayPointNum;	// 移動座標数
-		bool bIsReverse;	// 逆順フラグ
+		float fMoveSpeed;		// 移動速度
+		float fChaseStartDist;	// 追跡開始距離
+		float fLimitDistSq;		// 追跡限界距離
 	};
-
 public:
-	ObjectEnemyLinear(SceneBase* pScene);
+	ObjectEnemyChase(SceneBase* pScene);
 	void InitLocal() override;
 
 	void OutPutLocalData(std::ofstream& file) override;
 	void InputLocalData(std::ifstream& file) override;
 
-	DEFINE_OBJECT_TYPE(ObjectEnemyLinear)	// オブジェクトの種類ID取得関数
+	DEFINE_OBJECT_TYPE(ObjectEnemyChase)	// オブジェクトの種類ID取得関数
 private:
-	ComponentEnemyMoveLinear* m_pCompEnemyMoveLinear;
-
+	ComponentEnemyMoveChase* m_pCompEnemyMoveChase;
 };
 

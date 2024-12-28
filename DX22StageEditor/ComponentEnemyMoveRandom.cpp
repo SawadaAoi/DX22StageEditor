@@ -269,6 +269,25 @@ float ComponentEnemyMoveRandom::GetTargetSwitchTime() const
 	return m_fTargetSwitchTime;
 }
 
+/* ========================================
+	ゲッター(移動範囲座標)関数
+	-------------------------------------
+	戻値：std::vector<Vector3<float>>	移動範囲座標
+=========================================== */
+std::vector<Vector3<float>>& ComponentEnemyMoveRandom::GetMoveLimitRect()
+{
+	return m_vtMoveLimitRect;
+}
+
+/* ========================================
+	セッター(目的座標切り替え時間)関数
+	-------------------------------------
+	引数：float	目的座標切り替え時間
+=========================================== */
+void ComponentEnemyMoveRandom::SetTargetSwitchTime(float fTime)
+{
+	m_fTargetSwitchTime = fTime;
+}
 
 /* ========================================
 	セッター(移動範囲座標)関数
@@ -291,10 +310,10 @@ void ComponentEnemyMoveRandom::SetMoveLimitRectSquare(float fSize)
 
 	float fHalfSize = fSize * 0.5f;
 
-	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfSize, m_fMoveLimitRectPosY, fHalfSize));
-	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfSize, m_fMoveLimitRectPosY, fHalfSize));
-	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfSize, m_fMoveLimitRectPosY, -fHalfSize));
-	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfSize, m_fMoveLimitRectPosY, -fHalfSize));
+	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfSize, m_fMoveLimitRectPosY, fHalfSize));	// 右上
+	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfSize, m_fMoveLimitRectPosY, fHalfSize));	// 左上
+	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfSize, m_fMoveLimitRectPosY, -fHalfSize));	// 左下
+	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfSize, m_fMoveLimitRectPosY, -fHalfSize));	// 右下
 }
 
 /* ========================================
@@ -309,10 +328,10 @@ void ComponentEnemyMoveRandom::SetMoveLimitRectXZ(const Vector2<float>& vSize)
 	float fHalfX = vSize.x * 0.5f;
 	float fHalfZ = vSize.y * 0.5f;
 
-	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfX, m_fMoveLimitRectPosY, fHalfZ));
-	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfX, m_fMoveLimitRectPosY, fHalfZ));
-	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfX, m_fMoveLimitRectPosY, -fHalfZ));
-	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfX, m_fMoveLimitRectPosY, -fHalfZ));
+	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfX, m_fMoveLimitRectPosY, fHalfZ));		// 右上
+	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfX, m_fMoveLimitRectPosY, fHalfZ));		// 左上
+	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfX, m_fMoveLimitRectPosY, -fHalfZ));	// 左下
+	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfX, m_fMoveLimitRectPosY, -fHalfZ));		// 右下
 }
 
 /* ========================================
@@ -362,10 +381,10 @@ void ComponentEnemyMoveRandom::Debug(DebugUI::Window& window)
 	EnemyMoveRandom->AddGroupItem(Item::CreateBind("DispMoveLimitRect", Item::Kind::Bool, &m_bDispMoveLimitRect));
 
 	// 移動範囲リスト
-	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_1", Item::Kind::Vector, &m_vtMoveLimitRect[0]));
-	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_2", Item::Kind::Vector, &m_vtMoveLimitRect[1]));
-	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_3", Item::Kind::Vector, &m_vtMoveLimitRect[2]));
-	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_4", Item::Kind::Vector, &m_vtMoveLimitRect[3]));
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_1", Item::Kind::Vector, &m_vtMoveLimitRect[0]));	// 右上
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_2", Item::Kind::Vector, &m_vtMoveLimitRect[1]));	// 左上
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_3", Item::Kind::Vector, &m_vtMoveLimitRect[2]));	// 左下
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_4", Item::Kind::Vector, &m_vtMoveLimitRect[3]));	// 右下
 
 	window.AddItem(EnemyMoveRandom);
 

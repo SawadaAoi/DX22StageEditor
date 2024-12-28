@@ -32,8 +32,10 @@ public:
 	// ゲッター
 	Vector3<float> GetTargetPos() const;
 	float GetTargetSwitchTime() const;
+	std::vector<Vector3<float>>& GetMoveLimitRect();
 
 	// セッター
+	void SetTargetSwitchTime(float fTime);
 	void SetMoveLimitRect(const std::vector<Vector3<float>>& vtRect);	// 移動範囲を設定する
 	void SetMoveLimitRectSquare(float fSize);				// 移動範囲を正方形に設定する場合の一辺の長さ
 	void SetMoveLimitRectXZ(const Vector2<float>& vSize);	// 移動範囲をXZ平面で設定する場合のサイズ

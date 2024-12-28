@@ -27,7 +27,6 @@ public:
 	// セーブデータ
 	struct S_SaveDataEnemy
 	{
-		int nHp;
 		int nMaxHp;
 	};
 public:

@@ -251,7 +251,6 @@ void ObjectEnemy::OutPutLocalData(std::ofstream& file)
 	S_SaveDataEnemy data;
 
 	// HP
-	data.nHp = m_nHp;
 	data.nMaxHp = m_nMaxHp;
 
 	// ƒtƒ@ƒCƒ‹‚É‘‚«‚Ş
@@ -273,6 +272,5 @@ void ObjectEnemy::InputLocalData(std::ifstream& file)
 	file.read((char*)&data, sizeof(S_SaveDataEnemy));
 
 	// HP
-	m_nHp = data.nHp;
 	m_nMaxHp = data.nMaxHp;
 }
