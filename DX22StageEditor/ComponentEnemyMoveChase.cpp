@@ -52,7 +52,7 @@ void ComponentEnemyMoveChase::Init()
 {
 	ComponentEnemyMoveBase::Init();
 
-	m_pTargetObj = m_pOwnerObj->GetOwnerScene()->FindSceneObject("Player");
+	m_pTargetObj = m_pOwnerObj->GetOwnerScene()->GetSceneObjectTag(E_ObjectTag::Player);
 	m_pDistLine = std::make_unique<ShapeLine>(1);
 
 	m_vStartPos = m_pCompTransform->GetWorldPosition();
@@ -79,7 +79,7 @@ void ComponentEnemyMoveChase::Update()
 	// ƒvƒŒƒCƒ„[‚ª‚¢‚È‚¢ê‡‚Í‰½‚à‚µ‚È‚¢
 	if (!m_pTargetObj)
 	{
-		m_pTargetObj = m_pOwnerObj->GetOwnerScene()->FindSceneObject("Player");
+		m_pTargetObj = m_pOwnerObj->GetOwnerScene()->GetSceneObjectTag(E_ObjectTag::Player);
 		return;
 	}
 

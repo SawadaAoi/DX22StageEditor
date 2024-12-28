@@ -36,8 +36,7 @@ ObjectGameStateManager::ObjectGameStateManager(SceneBase* pScene)
 void ObjectGameStateManager::InitLocal()
 {
 	// プレイヤーオブジェクトを取得
-	std::vector<ObjectBase*> pPlayerList = m_pOwnerScene->GetSceneObjectsTag(E_ObjectTag::Player);
-	m_pPlayer = static_cast<ObjectPlayer*>(pPlayerList[0]);
+	m_pPlayer = static_cast<ObjectPlayer*>(m_pOwnerScene->GetSceneObjectTag(E_ObjectTag::Player));
 }
 
 /* ========================================
@@ -50,8 +49,7 @@ void ObjectGameStateManager::UpdateLocal()
 	if (!m_pPlayer)
 	{
 		// プレイヤーオブジェクトを取得
-		std::vector<ObjectBase*> pPlayerList = m_pOwnerScene->GetSceneObjectsTag(E_ObjectTag::Player);
-		m_pPlayer = static_cast<ObjectPlayer*>(pPlayerList[0]);
+		m_pPlayer = static_cast<ObjectPlayer*>(m_pOwnerScene->GetSceneObjectTag(E_ObjectTag::Player));
 		return;
 	}
 

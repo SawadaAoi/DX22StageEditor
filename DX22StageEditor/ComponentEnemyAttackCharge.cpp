@@ -57,7 +57,7 @@ void ComponentEnemyAttackCharge::Init()
 {
 	ComponentEnemyAttackBase::Init();
 
-	m_pTarget = m_pOwnerObj->GetOwnerScene()->FindSceneObject("Player");
+	m_pTarget = m_pOwnerObj->GetOwnerScene()->GetSceneObjectTag(E_ObjectTag::Player);
 
 	// 突進終了座標用スフィア生成
 	m_pChargeEndSphere = std::make_unique<ShapeSphere>();
@@ -77,7 +77,7 @@ void ComponentEnemyAttackCharge::Update()
 {
 	if (!m_pTarget)
 	{
-		m_pTarget = m_pOwnerObj->GetOwnerScene()->FindSceneObject("Player");
+		m_pTarget = m_pOwnerObj->GetOwnerScene()->GetSceneObjectTag(E_ObjectTag::Player);
 		return;
 	}
 

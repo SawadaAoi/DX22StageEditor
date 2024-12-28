@@ -64,6 +64,7 @@ public:
 	// ゲッター
 	std::vector<ObjectBase*> GetAllSceneObjects();					// シーン上に存在する全てのオブジェクトを取得 
 	std::vector<ObjectBase*> GetSceneObjectsTag(E_ObjectTag tag);	// タグに対応するオブジェクトを取得
+	ObjectBase* GetSceneObjectTag(E_ObjectTag tag);					// タグに対応するオブジェクトを取得(一番最初に見つかったもの)
 
 #ifdef _DEBUG
 	void SetTransformEditMode(int nMode);	// 変形エディタのモードを設定

@@ -379,6 +379,25 @@ std::string SceneBase::CreateUniqueName(std::string sName)
 }
 
 /* ========================================
+	全オブジェクト取得関数
+	-------------------------------------
+	内容：シーンに所属する全てのオブジェクトを取得
+	-------------------------------------
+	戻値：取得したオブジェクトのポインタ配列
+=========================================== */
+std::vector<ObjectBase*> SceneBase::GetAllSceneObjects()
+{
+	std::vector<ObjectBase*> objects;
+
+	for (const auto& pObject : m_pObjects)
+	{
+		objects.push_back(pObject.get());
+	}
+
+	return objects;
+}
+
+/* ========================================
 	タグ別オブジェクト収集関数
 	-------------------------------------
 	内容：シーンに所属する特定のタグのオブジェクト
@@ -405,23 +424,29 @@ std::vector<ObjectBase*> SceneBase::GetSceneObjectsTag(E_ObjectTag tag)
 }
 
 /* ========================================
-	全オブジェクト取得関数
+	タグ別オブジェクト収集関数
 	-------------------------------------
-	内容：シーンに所属する全てのオブジェクトを取得
+	内容：シーンに所属する特定のタグのオブジェクト
+		　を一番最初に見つかったものを取得する
 	-------------------------------------
-	戻値：取得したオブジェクトのポインタ配列
-=========================================== */
-std::vector<ObjectBase*> SceneBase::GetAllSceneObjects()
+	戻値：取得したオブジェクトのポインタ
+========================================== */
+ObjectBase* SceneBase::GetSceneObjectTag(E_ObjectTag tag)
 {
-	std::vector<ObjectBase*> objects;
-
+	// シーンに所属するオブジェクトを検索
 	for (const auto& pObject : m_pObjects)
 	{
-		objects.push_back(pObject.get());
+		// 一番最初に見つかったオブジェクトを返す
+		if (pObject->GetTag() == tag)
+		{
+			return pObject.get();
+		}
 	}
 
-	return objects;
+	return nullptr;
 }
+
+
 
 
 
