@@ -12,6 +12,7 @@
 #include "ComponentBillboard.h"
 #include "TextureManager.h"
 
+
 /* ========================================
 	コンストラクタ関数
 	-------------------------------------
@@ -33,7 +34,9 @@ ObjectBulletPlayer::ObjectBulletPlayer(SceneBase* pScene)
 void ObjectBulletPlayer::InitLocal()
 {
 	ObjectBullet::InitLocal();
-	AddComponent<ComponentBillboard>()->SetTexture(GET_TEXTURE_DATA(TEX_KEY::TEST2));
+	AddComponent<ComponentBillboard>()->SetTexture(GET_TEXTURE_DATA(TEX_KEY::PLAYER_BULLET));
+
+	m_pCompTransform->SetLocalScale({ 0.5f, 0.5f, 0.5f });
 }
 
 /* ========================================

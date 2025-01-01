@@ -34,6 +34,7 @@ public:
 		BLOCK_SIMPLE,	// シンプルなブロック
 		GROUND_GRASS,	// 草地
 		PLAYER_HP,		// プレイヤーHP
+		PLAYER_BULLET,	// プレイヤー弾
 		STAGE_GOAL,		// ゴール
 		MAX,
 	};
@@ -48,6 +49,7 @@ public:
 		{TEX_KEY::BLOCK_SIMPLE,	"Assets/Texture/Block_Simple.png"		},
 		{TEX_KEY::GROUND_GRASS,	"Assets/Texture/Ground_Grass.png"		},
 		{TEX_KEY::PLAYER_HP,	"Assets/Texture/Player_Hp.png"			},
+		{TEX_KEY::PLAYER_BULLET,"Assets/Texture/Player_Bullet.png"		},
 		{TEX_KEY::STAGE_GOAL,	"Assets/Texture/Stage_Goal.png"			},
 
 	};

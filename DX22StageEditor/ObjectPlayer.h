@@ -17,6 +17,7 @@
 class ComponentTransform;
 class ComponentGroundRaycast;
 class ComponentRigidbody;
+class ComponentModelStatic;
 class ComponentModelAnime;
 class ComponentPlayerController;
 
@@ -50,6 +51,7 @@ private:
 private:
 	ComponentGroundRaycast*		m_pCompGroundRaycast;
 	ComponentRigidbody*			m_pCompRigidbody;
+	ComponentModelStatic*		m_pCompModelStatic;
 	ComponentModelAnime*		m_pCompModelAnime;
 	ComponentPlayerController*	m_pCompPlayerController;
 
