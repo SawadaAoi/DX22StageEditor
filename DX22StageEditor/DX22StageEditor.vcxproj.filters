@@ -473,6 +473,9 @@
     <ClCompile Include="ObjectEnemyChase.cpp">
       <Filter>ソース ファイル\App\GameObject\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCollisionPlane.cpp">
+      <Filter>ソース ファイル\App\Component\Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">
@@ -768,6 +771,9 @@
     </ClInclude>
     <ClInclude Include="ObjectEnemyChase.h">
       <Filter>ソース ファイル\App\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCollisionPlane.h">
+      <Filter>ソース ファイル\App\Component\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

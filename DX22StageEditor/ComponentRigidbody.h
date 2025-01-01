@@ -17,7 +17,7 @@
 // =============== 前方宣言 =======================
 class ComponentTransform;
 class ComponentGroundRaycast;
-class ComponentCollisionOBB;
+class ComponentCollisionBase;
 
 // =============== クラス定義 ===================
 class ComponentRigidbody :
@@ -62,10 +62,11 @@ public:
 private:
 	void CheckRaycastGround();		// 地面接触判定
 	void ResolveOverlapCollision();	// 衝突時のめり込み解決
+	void SetCollisionComponent();	// 衝突判定コンポーネント取得
 private:
 	ComponentTransform*		m_pCompTransform;		// 座標、回転、スケール
 	ComponentGroundRaycast* m_pCompGroundRay;		// 地面接触判定
-	ComponentCollisionOBB*	m_pCompCollisionOBB;	// 衝突判定(OBB)
+	ComponentCollisionBase*	m_pCompCollisionBase;	// 衝突判定(OBB)
 
     Vector3<float>			m_vVelocity;		// 速度
     Vector3<float>			m_vAcceleration;	// 加速度

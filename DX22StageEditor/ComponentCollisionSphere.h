@@ -41,6 +41,8 @@ public:
 #endif // _DEBUG
 private:
 	bool CheckCollisionSphere(ComponentCollisionSphere* otherCol);	// ‹…“¯m‚ÌÕ“Ë”»’è
+	bool CheckCollisionAABB(ComponentCollisionAABB* otherCol);		// ‹…‚ÆAABB‚ÌÕ“Ë”»’è
+	bool CheckCollisionOBB(ComponentCollisionOBB* otherCol);		// ‹…‚ÆOBB‚ÌÕ“Ë”»’è
 private:
 	float m_fRadius;			// ”¼Œa
 };

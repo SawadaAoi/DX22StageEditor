@@ -46,6 +46,26 @@ public:
 		COL_SPHERE,		// スフィアコリジョン
 	};
 
+
+	// 最小移動ベクトル構造体(めり込み戻し用)
+	struct T_MTV
+	{
+		Vector3<float>	vAxis;		// 衝突軸
+		float			fOverlap;	// 重なり量
+		bool			bIsCol;		// 衝突しているか
+		bool			bIsTrigger;	// true:トリガー判定用(すり抜け判定)
+		std::string		sName;		// 衝突相手オブジェクト名
+
+		T_MTV()
+		{
+			vAxis = Vector3<float>(0.0f, 0.0f, 0.0f);
+			fOverlap = 10000.0f;
+			bIsCol = false;
+			bIsTrigger = false;
+			sName = "None";
+		}
+	};
+
 public:
 	ComponentCollisionBase(ObjectBase* pOwner);
 	~ComponentCollisionBase(); 
@@ -65,6 +85,8 @@ public:
 	bool GetDynamic();
 	bool GetEnable();
 	bool GetTrigger();
+	std::vector<T_MTV> GetMtvs();
+	T_MTV GetMtv(std::string sName);
 
 	// セッター
 	void SetPosition(Vector3<float> vPos);
@@ -76,17 +98,21 @@ public:
 	void SetDynamic(bool bDynamic);
 	void SetEnable(bool bEnable);
 	void SetTrigger(bool bTrigger);
+	void SetMtvs(std::vector<T_MTV> mtvs);
 
 	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数
 
 #ifdef _DEBUG
 	void DebugColBase(DebugUI::Item* pGroupItem, std::string sCompName);
+	void UpdateDebugMTVList();
 #endif // _DEBUG
+private:
+	void UpdateMTVList();	// 最小移動ベクトルリスト更新関数
+
 protected:
 	virtual bool CheckCollision(ComponentCollisionBase* otherCol) = 0;		// 衝突判定
-	bool CheckCollisionAABBToSphere(ComponentCollisionAABB* colAABB, ComponentCollisionSphere* colSphere);							// AABBと球の衝突判定
-	bool CheckCollisionAABBToOBB(ComponentCollisionAABB* colAABB, ComponentCollisionOBB* colOBB);									// AABBとOBBの衝突判定
-	bool CheckCollisionOBBToSphere(ComponentCollisionOBB* colOBB, ComponentCollisionSphere* colSphere, bool bSetMtv = false);		// OBBと球の衝突判定
+	void SetColObjMTV(T_MTV tMtv, std::string sName);						// 最小移動ベクトル更新関数
+
 protected:
 	class ComponentTransform*	m_pOwnerTransform;		// 所持オブジェクトのトランスフォーム
 	Vector3<float>				m_vPosition;			// コリジョンの中心座標
@@ -108,9 +134,15 @@ protected:
 
 	static  inline bool m_bIsDispColAll = false;	// 全コリジョン表示フラグ
 
+	// 最小移動ベクトル構造体配列
+	// ※衝突時のめり込み解消に使用
+	// ※衝突確認するオブジェクト数分
+	std::vector<T_MTV>	m_tMtvs;
+
 #ifdef _DEBUG
 	DebugUI::Item*	m_pColObjList;	// 衝突オブジェクトリスト(デバッグ表示用)
 	std::string		m_sColCompName;	// コンポーネント名(デバッグメニュー表示確認用)
+	int				m_nSelectMTV;	// 選択中の最小移動ベクトル
 #endif // _DEBUG
 };
 

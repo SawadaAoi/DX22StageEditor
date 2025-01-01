@@ -39,6 +39,7 @@ ComponentCollisionBase::ComponentCollisionBase(ObjectBase* pOwner)
 	, m_bIsTrigger(false)
 #ifdef _DEBUG
 	, m_pColObjList(nullptr)
+	, m_nSelectMTV(-1)	// 選択中の最小移動ベクトル
 #endif // _DEBUG
 
 {
@@ -48,6 +49,9 @@ ComponentCollisionBase::ComponentCollisionBase(ObjectBase* pOwner)
 	m_pOwnerObj->GetOwnerScene()->AddObjectCollision(this);
 
 	m_pOwnerTransform = m_pOwnerObj->GetComponent<ComponentTransform>();
+
+
+	m_tMtvs.clear();	// MTV構造体リストクリア
 }
 
 /* ========================================
@@ -83,9 +87,12 @@ void ComponentCollisionBase::Update()
 		m_qRotation = m_pOwnerTransform->GetWorldRotation();
 		m_vScale = m_pOwnerTransform->GetWorldScale();
 	}
+
 #ifdef _DEBUG
 	if (CHECK_DISP_COMP(m_sColCompName.c_str()))
 	{
+		UpdateDebugMTVList();	// 最小移動ベクトルリスト更新
+
 		// 衝突オブジェクトリストの追加、削除
 		if (m_pColObjList != nullptr)
 		{
@@ -101,6 +108,8 @@ void ComponentCollisionBase::Update()
 	// 全オブジェクト当たり判定線表示フラグ更新
 	m_bIsDispColAll = WIN_BASIC_SETTING["DispCollision"].GetBool();
 #endif // _DEBUG
+
+	UpdateMTVList();	// 最小移動ベクトルリスト更新
 }
 
 /* ========================================
@@ -202,141 +211,54 @@ void ComponentCollisionBase::UpdateCollisionMap(ComponentCollisionBase* otherCol
 }
 
 /* ========================================
-	AABB・球衝突判定関数
+	衝突相手MTV更新関数
 	-------------------------------------
-	内容：AABBと球が衝突しているかを確認する
+	内容：MTVリストから衝突相手の名と一致するものを探し、
+		  MTV構造体の値を更新する
 	-------------------------------------
-	引数1：オブジェクト球コリジョン
-	引数2：オブジェクトAABBコリジョン
-	-------------------------------------
-	戻値：true=衝突している/false=衝突していない
+	引数1：衝突相手情報をセットしたMTV構造体
+	引数2：衝突相手の名前
 =========================================== */
-bool ComponentCollisionBase::CheckCollisionAABBToSphere(ComponentCollisionAABB* colAABB, ComponentCollisionSphere* colSphere)
+void ComponentCollisionBase::SetColObjMTV(T_MTV tMtv, std::string sName)
 {
-	Vector3<float> vClosestPoint;	// AABB上で球に最も近い点
-
-	// 各軸での最も近い点を求める
-	vClosestPoint.x = std::clamp(colSphere->GetPosition().x, colAABB->GetMin().x,colAABB->GetMax().x);
-	vClosestPoint.y = std::clamp(colSphere->GetPosition().y, colAABB->GetMin().y,colAABB->GetMax().y);
-	vClosestPoint.z = std::clamp(colSphere->GetPosition().z, colAABB->GetMin().z,colAABB->GetMax().z);
-
-	// 最も近い点と球の中心との距離を求める(計算量を減らすために2乗距離で比較)
-	float fDistance = (vClosestPoint - colSphere->GetPosition()).LengthSq();
-
-	// 球の半径よりも距離が近い場合は衝突している
-	return fDistance < (colSphere->GetRadius() * colSphere->GetRadius());
-}
-
-/* ========================================
-	AABB・OBBの衝突判定関数
-	-------------------------------------
-	内容：AABBとOBBが衝突しているかを確認する
-	-------------------------------------
-	引数1：AABBコリジョン
-	引数2：OBBコリジョン
-	-------------------------------------
-	戻り値：true=衝突している/false=衝突していない
-=========================================== */
-bool ComponentCollisionBase::CheckCollisionAABBToOBB(ComponentCollisionAABB* colAABB, ComponentCollisionOBB* colOBB)
-{
-	// AABBを親クラスにキャスト
-	ComponentCollisionBase* m_pAABBAsOBB = static_cast<ComponentCollisionBase*>(colAABB);
-
-	// AABBをOBBとして扱うために値を設定
-	m_pAABBAsOBB->SetPosition(colAABB->GetPosition());				// 座標はAABBの座標
-	m_pAABBAsOBB->SetScale(colAABB->GetMax() - colAABB->GetMin());	// 大きさはAABBの最大座標と最小座標の差
-	m_pAABBAsOBB->SetRotation(Quaternion());						// 回転はなし
-	
-	return colOBB->CheckCollisionOBB(m_pAABBAsOBB);
-}
-
-/* ========================================
-	OBB・球衝突判定関数
-	-------------------------------------
-	内容：OBBと球が衝突しているかを確認する
-	-------------------------------------
-	引数1：OBBコリジョン
-	引数2：球コリジョン
-	引数3：最小移動ベクトル設定フラグ
-		 　※true=最小移動ベクトルを設定する(OBB側から呼ばれた時)
-	-------------------------------------
-	戻り値：true=衝突している/false=衝突していない
-=========================================== */
-bool ComponentCollisionBase::CheckCollisionOBBToSphere(ComponentCollisionOBB* colOBB, ComponentCollisionSphere* colSphere, bool bSetMtv)
-{
-	using T_MTV		= ComponentCollisionOBB::T_MTV;				// 名称省略
-	T_MTV tMtv		= T_MTV();									// MTV構造体
-
-	bool bResult	= false;	// 衝突結果
-
-	// OBBの構造体作成
-	ComponentCollisionOBB::T_OBB tObb	= colOBB->CreateOBB(colOBB);						
-	// 球の中心からOBBの中心までのベクトルを計算
-	Vector3<float> vDis					= colSphere->GetPosition() - colOBB->GetPosition();	
-	// OBB上の最も近い点を求める
-	Vector3<float> vClosestOBB			= colOBB->GetPosition();	// OBBの中心を初期値とする
-
-
-	// OBBの各ローカル軸に対して、球の中心からOBBの中心までのベクトルを射影
-	for (int i = 0; i < 3; i++)
+	for (auto& mtv : m_tMtvs)
 	{
-		// OBBのローカル軸を取得
-		Vector3<float> vAxis = tObb.vAxis[i];
-
-		// 球の中心からOBBの中心までのベクトルをOBBのローカル軸に射影
-		float fDis = vDis.Dot(vAxis);
-
-		// OBBのローカル軸に射影したベクトルをOBBのローカル軸に戻す
-		// OBBの表面上の座標に変換し、OBBの中心座標に加算
-		// この処理でOBB表面上の最も近い点を求める
-		vClosestOBB += vAxis * std::clamp(fDis, -tObb.fExtent[i], tObb.fExtent[i]);
-
-	}
-
-	Vector3<float> vSphCenToCloOBB = colSphere->GetPosition() - vClosestOBB;	// 球の中心からOBB上の最も近い点までのベクトル
-	// 最も近い点と球の中心との距離を求める(計算量を減らすために2乗距離で比較)
-	float fDistanceSq = vSphCenToCloOBB.LengthSq();
-	float fRadiusSq = colSphere->GetRadius() * colSphere->GetRadius();	// 球の半径の2乗
-
-	// 球の半径よりも距離が近い場合は衝突している
-	if(fDistanceSq < fRadiusSq)
-	{
-		// 衝突している場合、最小移動ベクトルを設定
-		tMtv.vAxis		= vSphCenToCloOBB.GetNormalize();					// 衝突軸(球の中心からOBB上の最も近い点へのベクトル)の反対方向
-		tMtv.fOverlap	= colSphere->GetRadius() - std::sqrt(fDistanceSq);	// 重なり量
-		tMtv.bIsCol		= true;												// 衝突結果
-
-		bResult			= true;
-	}
-	else
-	{
-		tMtv.bIsCol		= false;
-		bResult			= false;
-	}
-
-	// 最小移動ベクトルを設定する場合
-	if (bSetMtv)
-	{
-		std::vector<T_MTV> mtvs = colOBB->GetMtvs();	// MTV構造体リストを取得
-		// 同じ名前のMTVを更新
-		for (auto& mtv : mtvs)
+		if (mtv.sName == sName)
 		{
-			if (mtv.sName == colSphere->GetOwnerObject()->GetName())
-			{
-				mtv.bIsCol		= tMtv.bIsCol;
-				mtv.vAxis		= tMtv.vAxis;
-				mtv.fOverlap	= tMtv.fOverlap;
-				mtv.bIsTrigger = colSphere->GetTrigger();
-				break;
-			}
+			mtv = tMtv;
+			break;
 		}
-		colOBB->SetMtvs(mtvs);							// OBBのMTV構造体リストを更新
 	}
-
-	return bResult;
-	
 }
 
+/* ========================================
+	最小移動ベクトルリスト更新関数
+	-------------------------------------
+	内容：最小移動ベクトルリストを更新する
+=========================================== */
+void ComponentCollisionBase::UpdateMTVList()
+{
+	// MTV構造体配列クリア
+	m_tMtvs.clear();
+
+	// MTV構造体リストに当たり判定を持つオブジェクトを追加
+	for (const auto& colObj : m_bColStatesMap)
+	{
+		// 名前のみ登録
+		T_MTV mtv = T_MTV();
+		mtv.sName = colObj.first->GetName();
+		m_tMtvs.push_back(mtv);
+
+#ifdef _DEBUG
+		// デバッグ用の衝突オブジェクトリストに追加
+		if (CHECK_DISP_COMP(m_sColCompName.c_str()))
+		{
+			DebugUI::Item* list = &WIN_OBJ_INFO[m_sColCompName.c_str()]["MTVs"];	// MTVリスト取得
+			list->AddListItem(("MTV_" + mtv.sName).c_str());				// MTVリストに追加
+		}
+#endif // _DEBUG
+	}
+}
 
 /* ========================================
 	ゲッター(座標)関数
@@ -429,6 +351,37 @@ bool ComponentCollisionBase::GetTrigger()
 }
 
 /* ========================================
+	ゲッター(最小移動ベクトル構造体配列)関数
+	-------------------------------------
+	戻値：vector<T_MTV>	最小移動ベクトル構造体配列
+=========================================== */
+std::vector<ComponentCollisionBase::T_MTV> ComponentCollisionBase::GetMtvs()
+{
+	return m_tMtvs;
+}
+
+/* ========================================
+	ゲッター(最小移動ベクトル構造体)関数
+	-------------------------------------
+	引数1：相手オブジェクト名
+	-------------------------------------
+	戻値：T_MTV	最小移動ベクトル構造体
+=========================================== */
+ComponentCollisionBase::T_MTV ComponentCollisionBase::GetMtv(std::string sName)
+{
+	for (const auto& mtv : m_tMtvs)
+	{
+		if (mtv.sName == sName)
+		{
+			return mtv;
+		}
+	}
+
+	return T_MTV();
+}
+
+
+/* ========================================
 	セッター(座標)関数
 	-------------------------------------
 	引数1：座標
@@ -518,6 +471,17 @@ void ComponentCollisionBase::SetTrigger(bool bTrigger)
 	m_bIsTrigger = bTrigger;
 }
 
+/* ========================================
+	セッター(最小移動ベクトル構造体配列)関数
+	-------------------------------------
+	引数：最小移動ベクトル構造体配列
+=========================================== */
+void ComponentCollisionBase::SetMtvs(std::vector<T_MTV> mtvs)
+{
+	m_tMtvs = mtvs;
+}
+
+
 
 #ifdef _DEBUG
 /* ========================================
@@ -578,9 +542,59 @@ void ComponentCollisionBase::DebugColBase(DebugUI::Item* pGroupItem, std::string
 	pGroupItem->AddGroupItem(Item::CreateBind("IsEnabled",		Item::Kind::Bool, &m_bIsEnabled));	// 有効フラグ
 	pGroupItem->AddGroupItem(Item::CreateBind("IsTrigger",		Item::Kind::Bool, &m_bIsTrigger));	// トリガーフラグ
 
+	// --------------------------------------
+
+	// 最小移動ベクトル構造体
+	pGroupItem->AddGroupItem(Item::CreateValue("MTV_Name", Item::Kind::Text));	// 衝突相手オブジェクト名
+	pGroupItem->AddGroupItem(Item::CreateValue("MTV_Axis", Item::Kind::Vector));	// 最小移動ベクトルの軸
+	pGroupItem->AddGroupItem(Item::CreateValue("MTV_Overlap", Item::Kind::Float));	// 最小移動ベクトルの重なり量
+	pGroupItem->AddGroupItem(Item::CreateValue("MTV_IsCol", Item::Kind::Bool));		// 衝突しているか
+
+	// 衝突構造体リストのコールバック関数
+	Item::ConstCallback callback = [this](const void* arg)
+	{
+		std::string sObjName = reinterpret_cast<const char*>(arg);	// リスト項目名
+
+		// リスト番号取得
+		Item* pList = &WIN_OBJ_INFO[m_sColCompName.c_str()]["MTVs"];
+		m_nSelectMTV = pList->GetListNo(sObjName.c_str());
+
+		WIN_OBJ_INFO[m_sColCompName.c_str()]["MTV_Name"].SetText(m_tMtvs.at(m_nSelectMTV).sName.c_str());	// 衝突相手オブジェクト名
+	};
+
+	// 最小移動ベクトル構造体配列の表示
+	pGroupItem->AddGroupItem(Item::CreateList("MTVs", callback));
+
 	m_pColObjList = Item::CreateList("CollObjectList", nullptr);	// 衝突オブジェクトリスト
-	m_pColObjList->AddListItem("None");	// デフォルトでNoneを追加(空の場合表示されないため
+	m_pColObjList->AddListItem("None");								// デフォルトでNoneを追加(空の場合表示されないため
 	pGroupItem->AddGroupItem(m_pColObjList);
+
+}
+
+/* ========================================
+	最小移動ベクトルリスト更新関数
+	-------------------------------------
+	内容：最小移動ベクトルリストの更新処理
+=========================================== */
+void ComponentCollisionBase::UpdateDebugMTVList()
+{
+	// 現在選択中の最小移動ベクトルを取得
+	if (m_tMtvs.size() > 0 && m_nSelectMTV != -1)
+	{
+		// 最小移動ベクトル構造体の表示
+		WIN_OBJ_INFO[m_sColCompName.c_str()]["MTV_Axis"].SetVector(m_tMtvs.at(m_nSelectMTV).vAxis.ToXMFLOAT3());
+		WIN_OBJ_INFO[m_sColCompName.c_str()]["MTV_Overlap"].SetFloat(m_tMtvs.at(m_nSelectMTV).fOverlap);
+		WIN_OBJ_INFO[m_sColCompName.c_str()]["MTV_IsCol"].SetBool(m_tMtvs.at(m_nSelectMTV).bIsCol);
+	}
+	else
+	{
+		// MTV構造体リストが空の場合、初期値を表示
+		WIN_OBJ_INFO[m_sColCompName.c_str()]["MTV_Axis"].SetVector(Vector3<float>(0.0f, 0.0f, 0.0f).ToXMFLOAT3());
+		WIN_OBJ_INFO[m_sColCompName.c_str()]["MTV_Overlap"].SetFloat(0);
+		WIN_OBJ_INFO[m_sColCompName.c_str()]["MTV_IsCol"].SetBool(false);
+	}
+
+	WIN_OBJ_INFO[m_sColCompName.c_str()]["MTVs"].RemoveListItemAll();	// MTV構造体リストをクリア
 
 }
 #endif // _DEBUG

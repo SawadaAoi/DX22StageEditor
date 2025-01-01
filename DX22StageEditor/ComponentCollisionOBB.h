@@ -47,24 +47,6 @@ public:
 		}
 	};
 
-	// 最小移動ベクトル構造体(めり込み戻し用)
-	struct T_MTV
-	{
-		Vector3<float>	vAxis;		// 衝突軸
-		float			fOverlap;	// 重なり量
-		bool			bIsCol;		// 衝突しているか
-		bool			bIsTrigger;	// true:トリガー判定用(すり抜け判定)
-		std::string		sName;		// 衝突相手オブジェクト名
-
-		T_MTV()
-		{
-			vAxis		= Vector3<float>(0.0f, 0.0f, 0.0f);
-			fOverlap	= 10000.0f;
-			bIsCol		= false;
-			bIsTrigger	= false;
-			sName		= "None";
-		}
-	};
 
 public:
 	ComponentCollisionOBB(ObjectBase* pOwner);
@@ -74,13 +56,11 @@ public:
 	// 衝突判定
 	bool CheckCollision(ComponentCollisionBase* otherCol) override;
 	bool CheckCollisionOBB(ComponentCollisionBase* otherCol);		// OBBとOBB
+	bool CheckCollisionAABB(ComponentCollisionAABB* otherCol);		// OBBとAABB
+	bool CheckCollisionSphere(ComponentCollisionSphere* otherCol);	// OBBと球
 	T_OBB CreateOBB(ComponentCollisionBase* Col);					// OBB構造体作成
 
-	// ゲッター
-	std::vector<T_MTV> GetMtvs();
 
-	// セッター
-	void SetMtvs(std::vector<T_MTV> mtvs);
 
 	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数
 #ifdef _DEBUG
@@ -92,15 +72,5 @@ private:
 	bool CheckCrossSeparateAxis(T_OBB tObb1, T_OBB tObb2, Vector3<float> vDis);	// OBB同士の交差軸分離判定
 
 	float GetProjectionLength(Vector3<float> vAxis, T_OBB tObb);	// 射影線の長さ取得
-
-
-private:
-	// 最小移動ベクトル構造体配列
-	// ※衝突時のめり込み解消に使用
-	// ※衝突確認するオブジェクト数分
-	std::vector<T_MTV>	m_tMtvs;	
-#ifdef _DEBUG
-	int m_nSelectMTV;	// 選択中の最小移動ベクトル
-#endif // _DEBUG
 };
 

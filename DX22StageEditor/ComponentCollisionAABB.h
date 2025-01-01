@@ -30,6 +30,8 @@ public:
 	// è’ìÀîªíË
 	bool CheckCollision(ComponentCollisionBase* otherCol) override;
 	bool CheckCollisionAABB(ComponentCollisionAABB* otherCol);		// AABBÇ∆AABB
+	bool CheckCollisionOBB(ComponentCollisionOBB* otherCol);		// AABBÇ∆OBB
+	bool CheckCollisionSphere(ComponentCollisionSphere* otherCol);	// AABBÇ∆ãÖ
 
 	// ÉQÉbÉ^Å[
 	Vector3<float> GetMin();

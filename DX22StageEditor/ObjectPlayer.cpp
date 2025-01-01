@@ -12,6 +12,8 @@
 #include "ComponentTransform.h"
 #include "ComponentRigidbody.h"
 #include "ComponentCollisionOBB.h"
+#include "ComponentCollisionAABB.h"
+#include "ComponentCollisionSphere.h"
 #include "ComponentPlayerController.h"
 #include "ComponentGroundRaycast.h"
 #include "ComponentModelAnime.h"
@@ -63,7 +65,9 @@ void ObjectPlayer::InitLocal()
 	m_pCompGroundRaycast->SetStartPosOffset(RAY_OFFSET);
 	m_pCompGroundRaycast->SetRayLength(RAY_LENGTH);
 
-	AddComponent<ComponentCollisionOBB>();
+	//AddComponent<ComponentCollisionOBB>();
+	//AddComponent<ComponentCollisionAABB>();
+	AddComponent<ComponentCollisionSphere>();
 	
 	m_pCompRigidbody = AddComponent<ComponentRigidbody>();
 	m_pCompRigidbody->SetUseGravity(true);

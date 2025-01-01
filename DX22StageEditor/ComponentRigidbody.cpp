@@ -10,16 +10,19 @@
 #include "ComponentRigidbody.h"
 #include "ComponentTransform.h"
 #include "ComponentGroundRaycast.h"
+#include "ComponentCollisionBase.h"
+#include "ComponentCollisionAABB.h"
 #include "ComponentCollisionOBB.h"
+#include "ComponentCollisionSphere.h"
 #include "ObjectBase.h"
 
 
 // =============== 定数定義 =======================
-const float GRAVITY_FORCE = -9.8f;	// 重力
-const float GROUND_CHECK_DELAY = 0.1f;		// 地面接触判定の遅延時間(
+const float GRAVITY_FORCE		= -9.8f;	// 重力
+const float GROUND_CHECK_DELAY	= 0.1f;		// 地面接触判定の遅延時間(
 
 // 抵抗初期値
-const float DEFAULT_AIR_DRAG = 0.1f;  // 空気抵抗の係数
+const float DEFAULT_AIR_DRAG	= 0.1f;  // 空気抵抗の係数
 const float DEFAULT_GROUND_DRAG = 0.5f;  // 地面上での摩擦（減衰）係数
 
 /* ========================================
@@ -30,10 +33,10 @@ const float DEFAULT_GROUND_DRAG = 0.5f;  // 地面上での摩擦（減衰）係数
 	引数1：所有者オブジェクト
 ========================================== */
 ComponentRigidbody::ComponentRigidbody(ObjectBase* pOwner)
-	: ComponentBase(pOwner, OrderRigidBody)
+	: ComponentBase(pOwner,OrderRigidBody)
 	, m_pCompTransform(nullptr)
 	, m_pCompGroundRay(nullptr)
-	, m_pCompCollisionOBB(nullptr)
+	, m_pCompCollisionBase(nullptr)
 	, m_vVelocity(Vector3<float>(0.0f, 0.0f, 0.0f))
 	, m_vAcceleration(Vector3<float>(0.0f, 0.0f, 0.0f))
 	, m_fMass(1.0f)
@@ -52,9 +55,10 @@ ComponentRigidbody::ComponentRigidbody(ObjectBase* pOwner)
 ========================================= */
 void ComponentRigidbody::Init()
 {
-	m_pCompTransform = m_pOwnerObj->GetComponent<ComponentTransform>();
-	m_pCompGroundRay = m_pOwnerObj->GetComponent<ComponentGroundRaycast>();
-	m_pCompCollisionOBB = m_pOwnerObj->GetComponent<ComponentCollisionOBB>();
+	m_pCompTransform		= m_pOwnerObj->GetComponent<ComponentTransform>();
+	m_pCompGroundRay		= m_pOwnerObj->GetComponent<ComponentGroundRaycast>();
+
+	SetCollisionComponent();	
 }
 
 /* ========================================
@@ -70,26 +74,25 @@ void ComponentRigidbody::Update()
 		m_vAcceleration += Vector3<float>(0.0f, GRAVITY_FORCE, 0.0f);
 	}
 
-
 	// 抵抗力の計算（空気中と地面で異なる係数を使用）
-	float dragCoefficient = m_bIsGround ? m_fGroundDrag : m_fAirDrag;
-	Vector3<float> fDragForce = (m_vVelocity * -1.0f) * dragCoefficient;
+	float dragCoefficient		= m_bIsGround ? m_fGroundDrag : m_fAirDrag;
+	Vector3<float> fDragForce	= (m_vVelocity * -1.0f) * dragCoefficient;
 
 	// 抵抗力を加速度に反映
 	m_vAcceleration += fDragForce / m_fMass;
 
-	m_vVelocity += m_vAcceleration * DELTA_TIME;	// 加速度を速度に加算
+	m_vVelocity		 += m_vAcceleration * DELTA_TIME;		// 加速度を速度に加算
 	m_pCompTransform->Translate(m_vVelocity * DELTA_TIME);	// 速度を座標に加算
 
 
 	// 衝突判定がある場合
-	if (m_pCompCollisionOBB)
+	if (m_pCompCollisionBase)
 	{
 		ResolveOverlapCollision();	// 衝突時のめり込み解決
 	}
 	else
 	{
-		m_pCompCollisionOBB = m_pOwnerObj->GetComponent<ComponentCollisionOBB>();
+		SetCollisionComponent();
 	}
 
 
@@ -97,7 +100,7 @@ void ComponentRigidbody::Update()
 	if (m_pCompGroundRay)
 	{
 		CheckRaycastGround();	// 地面接触判定
-
+		
 	}
 	else
 	{
@@ -132,11 +135,11 @@ void ComponentRigidbody::AddForce(const Vector3<float>& vForce, E_ForceMode eMod
 
 	switch (eMode)
 	{
-		// 力を継続的に加算
+	// 力を継続的に加算
 	case E_ForceMode::FORCE:
 		m_vAcceleration += vForce / m_fMass;
 		break;
-		// 瞬間的な力を加算
+	// 瞬間的な力を加算
 	case E_ForceMode::IMPULSE:
 		m_vVelocity += vForce / m_fMass;
 		break;
@@ -145,7 +148,7 @@ void ComponentRigidbody::AddForce(const Vector3<float>& vForce, E_ForceMode eMod
 	// ジャンプの場合は地面接触判定の遅延時間を設定
 	if (eMode == E_ForceMode::IMPULSE && vForce.y > 0.0f && m_pCompGroundRay)
 	{
-		m_fGroundCheckDelay = GROUND_CHECK_DELAY;
+		m_fGroundCheckDelay = GROUND_CHECK_DELAY;	
 	}
 }
 
@@ -185,17 +188,17 @@ void ComponentRigidbody::ResolveOverlapCollision()
 	using T_MTV = ComponentCollisionOBB::T_MTV;
 
 	// めり込み情報配列を取得
-	std::vector<T_MTV> mtvs = m_pCompCollisionOBB->GetMtvs();
+	std::vector<T_MTV> mtvs = m_pCompCollisionBase->GetMtvs();
 
 	// オブジェクト数分ループ
 	for (const T_MTV& mtv : mtvs)
 	{
 		// 衝突している場合 && トリガーでない場合
-		if (mtv.bIsCol && !mtv.bIsTrigger && !m_pCompCollisionOBB->GetTrigger())
+		if (mtv.bIsCol && !mtv.bIsTrigger && !m_pCompCollisionBase->GetTrigger())
 		{
 			// めり込み方向
-			Vector3<float> vReturnDir = mtv.vAxis * -1.0f;	// 衝突軸の反対方向
-			float fOverlapDis = mtv.fOverlap;			// 重なり量
+			Vector3<float> vReturnDir	= mtv.vAxis * -1.0f;	// 衝突軸の反対方向
+			float fOverlapDis			= mtv.fOverlap;			// 重なり量
 
 			m_pCompTransform->Translate(vReturnDir * fOverlapDis);
 
@@ -207,8 +210,32 @@ void ComponentRigidbody::ResolveOverlapCollision()
 			{
 				m_vVelocity -= (vReturnDir * fDot);	// めり込み方向に対する速度の成分を減算
 			}
-			//DebugConsole::Printf("MTV.vAxis: %f, %f, %f", m_pCompCollisionOBB->GetMTV().vAxis.x, m_pCompCollisionOBB->GetMTV().vAxis.y, m_pCompCollisionOBB->GetMTV().vAxis.z);
 		}
+	}
+}
+
+/* ========================================
+	衝突コンポーネント設定関数
+	-------------------------------------
+	内容：所有者オブジェクトに設定されているコリジョンコンポーネントを取得
+		　形状によって異なるコリジョンコンポーネントを取得
+========================================= */
+void ComponentRigidbody::SetCollisionComponent()
+{
+	// AABB
+	if (m_pOwnerObj->GetComponent<ComponentCollisionAABB>())
+	{
+		m_pCompCollisionBase = m_pOwnerObj->GetComponent<ComponentCollisionAABB>();
+	}
+	// OBB
+	else if (m_pOwnerObj->GetComponent<ComponentCollisionOBB>())
+	{
+		m_pCompCollisionBase = m_pOwnerObj->GetComponent<ComponentCollisionOBB>();
+	}
+	// 球
+	else if (m_pOwnerObj->GetComponent<ComponentCollisionSphere>())
+	{
+		m_pCompCollisionBase = m_pOwnerObj->GetComponent<ComponentCollisionSphere>();
 	}
 }
 
@@ -330,12 +357,12 @@ void ComponentRigidbody::Debug(DebugUI::Window& window)
 
 	Item* pGroupRig = Item::CreateGroup("Rigidbody");
 
-	pGroupRig->AddGroupItem(Item::CreateBind("Velocity", Item::Kind::Vector, &m_vVelocity));
-	pGroupRig->AddGroupItem(Item::CreateBind("Acceleration", Item::Kind::Vector, &m_vDispAccel));
-	pGroupRig->AddGroupItem(Item::CreateBind("Mass", Item::Kind::Float, &m_fMass));
-	pGroupRig->AddGroupItem(Item::CreateBind("UseGravity", Item::Kind::Bool, &m_bUseGravity));
-	pGroupRig->AddGroupItem(Item::CreateBind("AirDrag", Item::Kind::Float, &m_fAirDrag));
-	pGroupRig->AddGroupItem(Item::CreateBind("GroundDrag", Item::Kind::Float, &m_fGroundDrag));
+	pGroupRig->AddGroupItem(Item::CreateBind("Velocity",	Item::Kind::Vector, &m_vVelocity));
+	pGroupRig->AddGroupItem(Item::CreateBind("Acceleration",Item::Kind::Vector, &m_vDispAccel));
+	pGroupRig->AddGroupItem(Item::CreateBind("Mass",		Item::Kind::Float,	&m_fMass));
+	pGroupRig->AddGroupItem(Item::CreateBind("UseGravity",	Item::Kind::Bool,	&m_bUseGravity));
+	pGroupRig->AddGroupItem(Item::CreateBind("AirDrag",		Item::Kind::Float,	&m_fAirDrag));
+	pGroupRig->AddGroupItem(Item::CreateBind("GroundDrag",	Item::Kind::Float,	&m_fGroundDrag));
 
 	window.AddItem(pGroupRig);
 }
