@@ -44,9 +44,11 @@ public:
 	template<typename T>
 	T* AddSceneObject(std::string sName);	// オブジェクト追加
 	template<typename T>
-	T* GetSceneObject(std::string sName);	// オブジェクト取得
+	T* GetSceneObject(std::string sName);	// オブジェクト取得(名前指定)
 	template<typename T>
-	std::vector<T*> GetSceneObjects();		// オブジェクト取得
+	T* GetSceneObject();					// オブジェクト取得(型検索(最初に見つかったもの))
+	template<typename T>
+	std::vector<T*> GetSceneObjects();		// オブジェクト取得(型検索(全て))
 
 	void AddSceneObjectBase(ObjectBase* pObject);	// オブジェクト追加
 	ObjectBase* FindSceneObject(std::string sName);	// オブジェクト検索
