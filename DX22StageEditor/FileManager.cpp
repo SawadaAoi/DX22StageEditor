@@ -54,6 +54,8 @@ void FileManager::StageObjectOutput(std::string sPath)
 		if (object->GetTag() == E_ObjectTag::Camera && !bOutputCamera) continue;
 		if (object->GetTag() == E_ObjectTag::Light && !bOutputLight) continue;
 
+		if (!object->GetIsSave()) continue;	// 保存フラグが立っていない場合はスキップ
+
 		// オブジェクトの情報を格納する構造体
 		S_SaveDataObject data;
 

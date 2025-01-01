@@ -74,12 +74,12 @@ HRESULT AppController::Init()
 =========================================== */
 void AppController::Uninit()
 {
+
+	SceneManager::Uninit();	// シーン管理削除
+
 #ifdef _DEBUG
 	DebugUI::Menu::Uninit();
 #endif
-
-
-	SceneManager::Uninit();	// シーン管理削除
 
 
 	DebugConsole::Uninit();	// デバッグコンソール終了

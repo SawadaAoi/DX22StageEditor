@@ -111,6 +111,7 @@ public:
 	std::string GetName() const;						// オブジェクト名の取得
 	T_LightParam GetLightMaterial() const;				// ライトパラメータの取得
 
+	bool GetIsSave() const;							// セーブするかどうかの取得
 	// セッター
 	void SetState(E_State eState);		// 状態の設定
 	void SetTag(E_ObjectTag eTag);		// タグの設定
@@ -118,6 +119,7 @@ public:
 	void SetLightMaterial(float fDiffuse = 1.0f, float fSpecular = 0.0f, float fAmbient = 0.3f);	// ライトパラメータの設定
 	void SetLightUse(bool bUse);		// ライト使用の設定
 
+	void SetIsSave(bool bIsSave);		// セーブするかどうかの設定
 #ifdef _DEBUG
 	void Debug();					// デバッグ用の処理(オブジェクト情報ウィンドウに表示)
 	virtual void DebugLocal(DebugUI::Window& window) {};	// 個別デバッグ処理
@@ -160,7 +162,8 @@ protected:
 
 	T_LightParam m_tLightParam;	// ライトパラメータ
 
-	bool m_bIsSave;	// セーブするかどうか
+	// セーブするかどうか(実行中に自身の子クラスを作成したオブジェクトの保存時に、子クラスを保存しないようにするため)
+	bool m_bIsSave;	
 };
 
 #include "ObjectBase.inl"
