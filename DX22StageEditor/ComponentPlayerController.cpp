@@ -99,7 +99,8 @@ void ComponentPlayerController::Init()
 	m_pCompTran = m_pOwnerObj->GetComponent<ComponentTransform>();	// トランスフォームを取得
 	m_pCompRigidbody = m_pOwnerObj->GetComponent<ComponentRigidbody>();	// リジッドボディを取得
 
-	m_pObjCamera = SceneManager::GetScene()->GetSceneObject<ObjectCameraPlayer>("PlayerCamera");	// カメラオブジェクトを取得
+	m_pObjCamera = SceneManager::GetScene()->GetSceneObject<ObjectCameraPlayer>();	// カメラオブジェクトを取得
+
 }
 
 /* ========================================
@@ -118,17 +119,17 @@ void ComponentPlayerController::Uninit()
 ========================================== */
 void ComponentPlayerController::Update()
 {
+	// カメラオブジェクトが取得できていない場合は取得
+	if (!m_pObjCamera)
+	{
+		m_pObjCamera = SceneManager::GetScene()->GetSceneObject<ObjectCameraPlayer>();
+		return;
+	}
+
 	// 入力無効
 	if (!m_bIsInputEnable) return;	
 	// シフトキーを押している間は移動なし
 	if (Input::IsKeyPress(VK_SHIFT)) return;
-
-	// カメラオブジェクトが取得できていない場合は取得
-	if (!m_pObjCamera)
-	{
-		m_pObjCamera = SceneManager::GetScene()->GetSceneObject<ObjectCameraPlayer>("PlayerCamera");
-		return;
-	}
 
 	Move();		// 移動
 	Jump();		// ジャンプ
@@ -343,6 +344,16 @@ void ComponentPlayerController::SetRotateSpeed(float fRotateSpeed)
 void ComponentPlayerController::SetUseJump(bool bUseJump)
 {
 	m_bUseJump = bUseJump;
+}
+
+/* ========================================
+	セッター(入力有効フラグ)関数
+	-------------------------------------
+	引数1：bool		入力有効フラグ
+=========================================== */
+void ComponentPlayerController::SetInputEnable(bool bEnable)
+{
+	m_bIsInputEnable = bEnable;
 }
 
 

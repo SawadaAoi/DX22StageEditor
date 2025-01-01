@@ -63,6 +63,8 @@ private:
 	bool CheckClearGoal();
 	bool CheckClearKillEnemy();
 	void CheckGameOver();
+
+	void ClearGame();
 private:
 	E_GameState m_eGameState;	// ƒQ[ƒ€ó‘Ô
 	E_ClearType m_eClearType;	// ƒNƒŠƒAğŒ

@@ -30,6 +30,8 @@ public:
 	void InitLocal() override;
 	void UpdateLocal() override;
 
+	void GameClear();
+
 	void OnCollisionStay(ObjectBase* pHit) override;
 
 	// ÉQÉbÉ^Å[

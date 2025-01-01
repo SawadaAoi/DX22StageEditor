@@ -10,22 +10,22 @@
 #include "CameraManager.h"	
 #include "SceneBase.h"		// シーン基底クラス
 #include "DebugMenu.h"
-#include "ObjectCameraDebug.h"
 
 // オブジェクトフォーカスに使用
 #include "ObjectBase.h"
 #include "ComponentTransform.h"
 
 // =============== 定数定義 =======================
-const std::string DEFAULT_CAMERA_NAME = "DefaultCamera";	// デフォルトカメラ名
-const Vector3<float> FOCUS_OFFSET = Vector3<float>(0.0f, 2.0f, -5.0f);	// フォーカス時のカメラ位置
+const std::string DEFAULT_CAMERA_NAME	= "DefaultCamera";	// デフォルトカメラ名
+const Vector3<float> FOCUS_OFFSET		= Vector3<float>(0.0f, 2.0f, -5.0f);	// フォーカス時のカメラ位置
+
 
 /* ========================================
 	コンストラクタ関数
 	-------------------------------------
 	内容：初期化
 =========================================== */
-CCameraManager::CCameraManager()
+CameraManager::CameraManager()
 	: m_pScene(nullptr)	// シーンクラスのポインタを初期化
 	, m_pCameraList()	// カメラリストを初期化
 	, m_pActiveCamera(nullptr)	// アクティブカメラを初期化
@@ -39,9 +39,9 @@ CCameraManager::CCameraManager()
 	-------------------------------------
 	戻値：自クラスのインスタンス
 =========================================== */
-CCameraManager& CCameraManager::GetInstance()
+CameraManager& CameraManager::GetInstance()
 {
-	static CCameraManager instance;
+	static CameraManager instance;
 	return instance;
 }
 
@@ -54,17 +54,17 @@ CCameraManager& CCameraManager::GetInstance()
 	-------------------------------------
 	引数1：シーンクラスのポインタ
 =========================================== */
-void CCameraManager::Init(SceneBase* pScene)
+void CameraManager::Init(SceneBase* pScene)
 {
 	m_pScene = pScene;	// シーンクラスのポインタを取得
 
 	// カメラ一覧をクリア
-	m_pCameraList.clear();
+	m_pCameraList.clear();	
 
 	// シーンからカメラリストを取得
-	for (auto pObject : m_pScene->GetSceneObjectsTag(E_ObjectTag::Camera))
+	for (ObjectBase* pObj : m_pScene->GetSceneObjectsTag(E_ObjectTag::Camera))
 	{
-		AddCamera(dynamic_cast<ObjectCamera*>(pObject));
+		AddCamera(static_cast<ObjectCamera*>(pObj));
 	}
 
 	// カメラが存在する場合
@@ -75,7 +75,7 @@ void CCameraManager::Init(SceneBase* pScene)
 	// カメラが存在しない場合
 	else
 	{
-		m_pScene->AddSceneObject<ObjectCameraDebug>(DEFAULT_CAMERA_NAME);	// カメラ追加
+		m_pScene->AddSceneObject<ObjectCamera>(DEFAULT_CAMERA_NAME);	// カメラ追加
 		SwitchCamera(0);												// アクティブにする
 	}
 }
@@ -88,7 +88,7 @@ void CCameraManager::Init(SceneBase* pScene)
 	-------------------------------------
 	引数1：カメラ番号(0～)
 =========================================== */
-void CCameraManager::SwitchCamera(int num)
+void CameraManager::SwitchCamera(int num)
 {
 	// カメラリストのサイズが指定数より小さい場合
 	// カメラ配列番号(0～)、カメラ番号(1～)のため、サイズより大きい場合は処理しない
@@ -102,7 +102,31 @@ void CCameraManager::SwitchCamera(int num)
 
 #ifdef _DEBUG
 	// オブジェクト一覧に追加
-	WIN_CAMERA_INFO["Active"].SetText(m_pActiveCamera->GetName().c_str());
+	WIN_CAMERA_INFO["ActiveCamera"].SetText(m_pActiveCamera->GetName().c_str());
+
+#endif // _DEBUG
+}
+
+/* ========================================
+	カメラ切り替え関数
+	-------------------------------------
+	内容：カメラの切り替え
+	-------------------------------------
+	引数1：カメラのポインタ
+=========================================== */
+void CameraManager::SwitchCamera(ObjectCamera* pCamera)
+{
+	if (pCamera == nullptr) return;
+
+	// カメラリストを全て非アクティブにする
+	ResetActiveCamera();
+
+	pCamera->SetActive(true);		// 指定のカメラをアクティブにする
+	m_pActiveCamera = pCamera;	// アクティブカメラを設定
+
+#ifdef _DEBUG
+	// オブジェクト一覧に追加
+	WIN_CAMERA_INFO["ActiveCamera"].SetText(m_pActiveCamera->GetName().c_str());
 
 #endif // _DEBUG
 }
@@ -114,7 +138,7 @@ void CCameraManager::SwitchCamera(int num)
 	-------------------------------------
 	引数：カメラのポインタ
 =========================================== */
-void CCameraManager::AddCamera(ObjectCamera* pCamera)
+void CameraManager::AddCamera(ObjectCamera* pCamera)
 {
 	m_pCameraList.push_back(pCamera);
 #ifdef _DEBUG
@@ -132,13 +156,12 @@ void CCameraManager::AddCamera(ObjectCamera* pCamera)
 	-------------------------------------
 	引数：カメラのポインタ
 =========================================== */
-void CCameraManager::RemoveCamera(ObjectCamera* pCamera)
+void CameraManager::RemoveCamera(ObjectCamera* pCamera)
 {
 	// カメラリストから削除
 	m_pCameraList.erase(std::remove(m_pCameraList.begin(), m_pCameraList.end(), pCamera), m_pCameraList.end());
 #ifdef _DEBUG
-	if (pCamera == nullptr) return;
-	// オブジェクト一覧に追加
+	// カメラリストから削除
 	WIN_CAMERA_INFO["CameraList"].RemoveListItem(pCamera->GetName().c_str());
 
 #endif // _DEBUG
@@ -151,7 +174,7 @@ void CCameraManager::RemoveCamera(ObjectCamera* pCamera)
 	-------------------------------------
 	引数：オブジェクトのポインタ
 =========================================== */
-void CCameraManager::FocusMoveCamera(ObjectBase* pObj)
+void CameraManager::FocusMoveCamera(ObjectBase* pObj)
 {
 	ComponentTransform* pCameraTrans = GetActiveCamera()->GetComponent<ComponentTransform>();	// カメラのトランスフォーム取得
 	ComponentTransform* pTargetTrans = pObj->GetComponent<ComponentTransform>();				// ターゲットのトランスフォーム取得
@@ -168,13 +191,12 @@ void CCameraManager::FocusMoveCamera(ObjectBase* pObj)
 
 }
 
-
 /* ========================================
 	アクティブカメラリセット関数
 	-------------------------------------
 	内容：アクティブカメラをリセット
 =========================================== */
-void CCameraManager::ResetActiveCamera()
+void CameraManager::ResetActiveCamera()
 {
 	// カメラリストを全て非アクティブにする
 	for (auto pCamera : m_pCameraList)
@@ -191,7 +213,7 @@ void CCameraManager::ResetActiveCamera()
 	-------------------------------------
 	戻値：ObjectCamera*		有効カメラのポインタ
 ============================================ */
-ObjectCamera* CCameraManager::GetActiveCamera()
+ObjectCamera* CameraManager::GetActiveCamera()
 {
 	return m_pActiveCamera;
 }
@@ -203,7 +225,7 @@ ObjectCamera* CCameraManager::GetActiveCamera()
 	-------------------------------------
 	戻値：int		カメラ数
 ============================================ */
-int CCameraManager::GetCameraNum()
+int CameraManager::GetCameraNum()
 {
 	return m_pCameraList.size();
 }

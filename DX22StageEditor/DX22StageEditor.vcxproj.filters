@@ -476,6 +476,9 @@
     <ClCompile Include="ComponentCollisionPlane.cpp">
       <Filter>ソース ファイル\App\Component\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectCameraGameClear.cpp">
+      <Filter>ソース ファイル\App\GameObject\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">
@@ -774,6 +777,9 @@
     </ClInclude>
     <ClInclude Include="ComponentCollisionPlane.h">
       <Filter>ソース ファイル\App\Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCameraGameClear.h">
+      <Filter>ソース ファイル\App\GameObject\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

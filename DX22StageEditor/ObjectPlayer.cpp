@@ -64,8 +64,6 @@ ObjectPlayer::ObjectPlayer(SceneBase* pScene)
 ========================================= */
 void ObjectPlayer::InitLocal()
 {
-	m_pCompTransform =GetComponent<ComponentTransform>();
-
 	m_pCompGroundRaycast = AddComponent<ComponentGroundRaycast>();
 	m_pCompGroundRaycast->SetStartPosOffset(RAY_OFFSET);
 	m_pCompGroundRaycast->SetRayLength(RAY_LENGTH);
@@ -106,6 +104,13 @@ void ObjectPlayer::UpdateLocal()
 
 	// ダメージ後の無敵時間処理
 	if (m_bInvincible)	InvincibleUpdate();
+}
+
+void ObjectPlayer::GameClear()
+{
+	m_pCompPlayerController->SetInputEnable(false);			// 操作を無効に
+	m_pCompTransform->LookAt(-Vector3<float>::Forward());	// プレイヤーの向きを-Z方向に
+	m_pCompRigidbody->SetVelocity(Vector3<float>::Zero());	// 移動速度を0に
 }
 
 /* ========================================

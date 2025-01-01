@@ -54,7 +54,7 @@ void ObjectCameraPlayer::InitLocal()
 {
 	ObjectCamera::InitLocal();
 	// プレイヤーオブジェクトを取得
-	m_pPlayer = m_pOwnerScene->GetSceneObject<ObjectPlayer>("Player");
+	m_pPlayer = m_pOwnerScene->GetSceneObjectTag(E_ObjectTag::Player);
 
 }
 
@@ -65,12 +65,16 @@ void ObjectCameraPlayer::InitLocal()
 =========================================== */
 void ObjectCameraPlayer::UpdateLocal()
 {
+	// カメラがアクティブでない場合は処理しない
+	if (!m_bActive) return;
+
 	// プレイヤーオブジェクトが取得できていない場合は取得
 	if (!m_pPlayer)
 	{
-		m_pPlayer = m_pOwnerScene->GetSceneObject<ObjectPlayer>("Player");
+		m_pPlayer = m_pOwnerScene->GetSceneObjectTag(E_ObjectTag::Player);
 		return;
 	}
+
 
 	// プレイヤーの座標を取得
 	Vector3<float> playerPos = m_pPlayer->GetComponent<ComponentTransform>()->GetWorldPosition();

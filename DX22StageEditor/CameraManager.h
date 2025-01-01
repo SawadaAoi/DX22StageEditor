@@ -17,17 +17,18 @@ class SceneBase;
 class ObjectBase;
 
 // =============== 定数定義 =====================
-#define CAMERA_MNG_INST CCameraManager::GetInstance()	// instance取得
+#define CAMERA_MNG_INST CameraManager::GetInstance()	// instance取得
 
 
 // =============== クラス定義 =====================
-class CCameraManager
+class CameraManager
 {
 public:
-	static CCameraManager& GetInstance();	// インスタンス取得
+	static CameraManager& GetInstance();	// インスタンス取得
 	void Init(SceneBase* pScene);	// シーン開始時にカメラ初期化
 	
 	void SwitchCamera(int num);	// カメラ切り替え
+	void SwitchCamera(ObjectCamera* pCamera);	// カメラ切り替え
 
 	void AddCamera(ObjectCamera* pCamera);	// カメラ追加
 	void RemoveCamera(ObjectCamera* pCamera);	// カメラ削除
@@ -39,7 +40,7 @@ public:
 	int GetCameraNum();
 
 private:
-	CCameraManager();	// コンストラクタ	
+	CameraManager();	// コンストラクタ	
 	void ResetActiveCamera();	// アクティブカメラをリセット
 
 	std::vector<ObjectCamera*> m_pCameraList;	// カメラリスト

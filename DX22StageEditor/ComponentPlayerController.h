@@ -52,6 +52,7 @@ public:
 	void SetMoveSpeed(float fMoveSpeed);
 	void SetRotateSpeed(float fRotateSpeed);
 	void SetUseJump(bool bUseJump);
+	void SetInputEnable(bool bEnable);
 
 	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数
 

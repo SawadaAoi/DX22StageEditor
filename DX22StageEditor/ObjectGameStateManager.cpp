@@ -12,6 +12,10 @@
 #include "ObjectBase.h"
 #include "ObjectGoal.h"
 #include "ObjectPlayer.h"
+#include "ObjectCameraGameClear.h"
+#include "CameraManager.h"
+#include "ComponentTransform.h"
+#include "ComponentRigidbody.h"
 
 /* ========================================
 	コンストラクタ関数
@@ -90,7 +94,10 @@ void ObjectGameStateManager::CheckClear()
 
 	// クリア条件を満たしていたらゲームクリア
 	if (bClear)
+	{
 		m_eGameState = E_GameState::GS_GAMECLEAR;
+		ClearGame();
+	}
 }
 
 /* ========================================
@@ -147,6 +154,23 @@ void ObjectGameStateManager::CheckGameOver()
 	{
 		m_eGameState = E_GameState::GS_GAMEOVER;
 	}
+}
+
+/* ========================================
+	ゲームクリア処理関数
+	-------------------------------------
+	内容：ゲームクリア時の処理
+======================================== */
+void ObjectGameStateManager::ClearGame()
+{
+	// ゲームクリア用カメラを追加
+	ObjectCameraGameClear* pCamera = m_pOwnerScene->AddSceneObject<ObjectCameraGameClear>("CameraGameClear");
+
+	// カメラをアクティブに
+	CAMERA_MNG_INST.SwitchCamera(pCamera);
+
+	// プレイヤーのステージクリア時の処理を実行
+	m_pPlayer->GameClear();
 }
 
 
