@@ -14,6 +14,7 @@
 // オブジェクトフォーカスに使用
 #include "ObjectBase.h"
 #include "ComponentTransform.h"
+#include "ObjectCameraDebug.h"
 
 // =============== 定数定義 =======================
 const std::string DEFAULT_CAMERA_NAME	= "DefaultCamera";	// デフォルトカメラ名
@@ -75,7 +76,7 @@ void CameraManager::Init(SceneBase* pScene)
 	// カメラが存在しない場合
 	else
 	{
-		m_pScene->AddSceneObject<ObjectCamera>(DEFAULT_CAMERA_NAME);	// カメラ追加
+		m_pScene->AddSceneObject<ObjectCameraDebug>(DEFAULT_CAMERA_NAME);	// カメラ追加
 		SwitchCamera(0);												// アクティブにする
 	}
 }

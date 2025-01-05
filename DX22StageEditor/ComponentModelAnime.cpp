@@ -102,8 +102,8 @@ void ComponentModelAnime::Draw()
 	m_pModel->SetWVPMatrix(matWVP);	// ワールド行列をセット
 
 	ObjectBase::T_LightParam lightParam = m_pOwnerObj->GetLightMaterial();
-	m_pModel->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, lightParam.bLightUse);	// ライトパラメータ設定
-	m_pModel->SetLights(LIGHT_MNG_INST.GetLightList());																	// ライト設定
+	m_pModel->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, lightParam.bLightUse);					// ライトパラメータ設定
+	m_pModel->SetLights(LIGHT_MNG_INST.GetLightList());	// ライト設定
 	m_pModel->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetWorldPosition());	// カメラ位置設定
 
 #ifdef _DEBUG
@@ -174,6 +174,9 @@ void ComponentModelAnime::PlayAnimeParametric(int animeNo1, int animeNo2, float 
 	引数1：アニメ番号1
 	引数2：アニメ番号2
 	引数3：合成率
+	引数4：ブレンド時間
+	引数5：ループ再生フラグ
+	引数6：再生速度
 =========================================== */
 void ComponentModelAnime::PlayAnimeParametricBlend(int animeNo1, int animeNo2, float blendRate, float blendTime, bool loop, float speed)
 {
@@ -181,6 +184,66 @@ void ComponentModelAnime::PlayAnimeParametricBlend(int animeNo1, int animeNo2, f
 	m_pModel->SetParametric(animeNo1, animeNo2);
 	m_pModel->SetParametricBlend(blendRate);
 	m_pModel->PlayBlend(ModelAnime::PARAMETRIC_ANIME, blendTime, loop, speed);
+}
+
+/* ========================================
+	アニメ再生中判定関数
+	-------------------------------------
+	内容：アニメーション再生中か判定
+	-------------------------------------
+	引数1：アニメ番号
+	-------------------------------------
+	戻り値：bool	再生中かどうか
+=========================================== */
+bool ComponentModelAnime::GetIsPlayAnime(int animeNo)
+{
+	if (!m_pModel) return false;
+	return m_pModel->IsPlay(animeNo);
+}
+
+/* ========================================
+	アニメ再生時間取得関数
+	-------------------------------------
+	内容：アニメーション再生時間取得
+	-------------------------------------
+	引数1：アニメ番号
+	-------------------------------------
+	戻り値：float	再生時間
+=========================================== */
+float ComponentModelAnime::GetAnimeNowTime(int animeNo)
+{
+	if (!m_pModel) return 0.0f;
+	return m_pModel->GetAnimeNowTime(animeNo);
+}
+
+/* ========================================
+	アニメ総再生時間取得関数
+	-------------------------------------
+	内容：アニメーション総再生時間取得
+	-------------------------------------
+	引数1：アニメ番号
+	-------------------------------------
+	戻り値：float	総再生時間
+=========================================== */
+float ComponentModelAnime::GetAnimeTotalTime(int animeNo)
+{
+	if (!m_pModel) return 0.0f;
+	return m_pModel->GetAnimeTotalTime(animeNo);
+}
+
+/* ========================================
+	アニメ再生割合取得関数
+	-------------------------------------
+	内容：アニメーション再生割合取得
+	-------------------------------------
+	引数1：アニメ番号
+	-------------------------------------
+	戻り値：float	再生割合
+=========================================== */
+float ComponentModelAnime::GetAnimePlaybackRatio(int animeNo)
+{
+	if (!m_pModel) return 0.0f;
+	return m_pModel->GetAnimePlaybackRatio(animeNo);
 }
 
 /* ========================================
@@ -211,6 +274,18 @@ bool ComponentModelAnime::GetIsVisible()
 Vector3<float> ComponentModelAnime::GetPosOffset()
 {
 	return m_vPosOffset;
+}
+
+/* ========================================
+	セッター(アニメ再生割合)関数
+	-------------------------------------
+	引数1：アニメ番号
+	引数2：再生割合
+=========================================== */
+void ComponentModelAnime::SetAnimeTimeRatio(int animeNo, float rate)
+{
+	if (!m_pModel) return;
+	m_pModel->SetAnimationTimeRatio(animeNo, rate);
 }
 
 /* ========================================

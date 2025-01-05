@@ -30,23 +30,20 @@ public:
 	enum E_MODEL_KEY
 	{
 		TEST_MODEL,
-		TEST_MODEL2,
 		PLAYER_CAT,
 		MAX,
 	};
 
 	const std::unordered_map < ModelStaticManager::E_MODEL_KEY, std::string > MODEL_FBX_PATH
 	{
-		{MODEL_KEY::TEST_MODEL, "Assets/Model/Test/TestObject.fbx"},
-		{MODEL_KEY::TEST_MODEL2, "Assets/Model/Golem/Golem.fbx"},
-		{MODEL_KEY::PLAYER_CAT, "Assets/Model/PlayerCat/Cat.fbx"},
+		{MODEL_KEY::TEST_MODEL, "Assets/Model/Static/Test/TestObject.fbx"},
+		{MODEL_KEY::PLAYER_CAT, "Assets/Model/Static/Player/Cat.fbx"},
 	};
 
 	// 各モデルデータ大きさ指定
 	const std::unordered_map < ModelStaticManager::E_MODEL_KEY, float > MODEL_FBX_SCALE
 	{
 		{MODEL_KEY::TEST_MODEL, 1.0f},
-		{MODEL_KEY::TEST_MODEL2, 0.01f},
 		{MODEL_KEY::PLAYER_CAT, 0.6f},
 	};
 

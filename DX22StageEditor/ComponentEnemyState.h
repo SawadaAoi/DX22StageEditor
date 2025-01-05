@@ -17,6 +17,7 @@ class ComponentTransform;
 class ComponentRigidbody;
 class ComponentEnemyMoveBase;
 class ComponentEnemyAttackBase;
+class ComponentModelAnime;
 
 // =============== ƒNƒ‰ƒX’è‹` ===================
 class ComponentEnemyState :
@@ -46,10 +47,13 @@ public:
 
 	DEFINE_COMPONENT_TYPE
 private:
+	void MoveAnime();
+private:
 	ComponentTransform*			m_pCompTransform;
 	ComponentRigidbody*			m_pCompRigidbody;
 	ComponentEnemyMoveBase*		m_pCompEnemyMove;
 	ComponentEnemyAttackBase*	m_pCompEnemyAttack;
+	ComponentModelAnime*		m_pCompModelAnime;
 	
 	E_EnemyState				m_eEnemyState;
 };

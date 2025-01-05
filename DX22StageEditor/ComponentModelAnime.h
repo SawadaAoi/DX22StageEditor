@@ -14,7 +14,6 @@
 #include "ComponentBase.h"
 #include "ModelAnimeManager.h"
 
-
 // =============== 前方宣言 =======================
 class ComponentTransform;	// トランスフォームコンポーネント
 class ModelAnime;			// アニメーションモデル
@@ -37,11 +36,16 @@ public:
 	void PlayAnimeParametricBlend(int animeNo1, int animeNo2, float blendRate, float blendTime, bool loop = false, float speed = 1.0f);
 
 	// ゲッター
+	bool GetIsPlayAnime(int animeNo);
+	float GetAnimeNowTime(int animeNo);
+	float GetAnimeTotalTime(int animeNo);
+	float GetAnimePlaybackRatio(int animeNo);
 	ModelAnime* GetModel();
 	bool GetIsVisible();
 	Vector3<float> GetPosOffset();
 
 	// セッター
+	void SetAnimeTimeRatio(int animeNo, float rate);
 	void SetModel(ModelAnime* pModel);
 	void SetIsVisible(bool bIsVisible);
 	void SetPosOffset(Vector3<float> offset);
@@ -61,13 +65,14 @@ private:
 	
 	bool				m_bIsVisible;	// 表示フラグ
 	Vector3<float>		m_vPosOffset;	// 位置オフセット
-#ifdef _DEBUG
-	bool m_bDispBone;	// ボーン表示フラグ
-	ModelAnimeManager::E_ANIME_BASE_KEY m_nModelKey;	// モデルキー
-	int m_nAnimeKey;	// アニメーションキー
 
-	bool m_bAnimeLoop;
-	float m_fAnimeSpeed;
+#ifdef _DEBUG
+	bool								m_bDispBone;	// ボーン表示フラグ
+	ModelAnimeManager::E_ANIME_BASE_KEY m_nModelKey;	// モデルキー
+	int									m_nAnimeKey;	// アニメーションキー
+
+	bool	m_bAnimeLoop;
+	float	m_fAnimeSpeed;
 
 	ModelAnime* m_pDelModel;
 #endif // _DEBUG

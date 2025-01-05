@@ -18,6 +18,7 @@
 // =============== 前方宣言 =======================
 class ComponentTransform;
 class ComponentRigidbody;
+class ComponentModelAnime;
 class ObjectCameraPlayer;
 
 // =============== クラス定義 =====================
@@ -70,10 +71,13 @@ private:
 
 	// 移動方向に回転する
 	void RotateToMoveDir(Vector3<float> moveDir);
+
+	void MoveAnime(Vector3<float> vMoveDir);	// 移動アニメーション
 private:
 	 ComponentTransform* m_pCompTran;	 
 	 ComponentRigidbody* m_pCompRigidbody;	
 	 ObjectCameraPlayer* m_pObjCamera;
+	 ComponentModelAnime* m_pCompModelAnime;
 
 	 float m_fMoveSpeed;	// 移動速度
 	 float m_fRotateSpeed;	// 回転速度
@@ -85,6 +89,6 @@ private:
 	 // 入力有効フラグ
 	 bool m_bIsInputEnable;
 
-
+	 bool m_bShot;	// ショットフラグ(連射防止用)
 };
 

@@ -15,49 +15,41 @@
 // モデルデータ保存先パス
 const std::unordered_map < ANIME_BASE_KEY, std::string > BASE_MODEL_FBX_PATH
 {
-	{ANIME_BASE_KEY::AB_PLAYER, "Assets/Model/Player/Player_Base2.fbx" },	// プレイヤー
-	{ANIME_BASE_KEY::AB_ENEMY_G1, "Assets/Model/Enemy/Enemy_G1/Enemy_G1_Base.fbx" },	// 敵G1
-	{ANIME_BASE_KEY::AB_ENEMY_Y2, "Assets/Model/Enemy/Enemy_Y2/Enemy_Y2_Base.fbx" },	// 敵Y2
-	{ANIME_BASE_KEY::AB_ENEMY_R3, "Assets/Model/Enemy/Enemy_R3/Enemy_R3_Base.fbx" },	// 敵R3
+	{ANIME_BASE_KEY::AB_PLAYER,			"Assets/Model/Anime/Player/Player_Base.fbx" },			// プレイヤー
+	{ANIME_BASE_KEY::AB_ENEMY_MOUSE,	"Assets/Model/Anime/Enemy/Mouse/EnemyMouse_Base.fbx" },	// 敵Mouse
 };
 
 // 各モデルデータ大きさ指定
 const std::unordered_map < ANIME_BASE_KEY, float > BASE_MODEL_FBX_SCALE
 {
-	{ANIME_BASE_KEY::AB_PLAYER,	0.7f},
-	{ANIME_BASE_KEY::AB_ENEMY_G1,	1.0f},
-	{ANIME_BASE_KEY::AB_ENEMY_Y2,	1.0f},
-	{ANIME_BASE_KEY::AB_ENEMY_R3,	1.0f},
+	{ANIME_BASE_KEY::AB_PLAYER,			0.4f},
+	{ANIME_BASE_KEY::AB_ENEMY_MOUSE,	0.4f},
 };
 
-// プレイヤーアニメーションデータ保存先パス
-const std::unordered_map < int, std::string > ANIME_DATA_PATH_PLAYER
+// プレイヤー(猫)アニメーションデータ保存先パス
+const std::unordered_map < int, std::string > ANIME_DATA_PLAYER_CAT_PATH
 {
-	{ANIME_KEY_PLAYER::PLYR_IDLE		, "Assets/Model/Player/Player_Idle.fbx" },	// 待機
-	{ANIME_KEY_PLAYER::PLYR_WALK		, "Assets/Model/Player/Player_Walk.fbx" },	// 歩行
-	{ANIME_KEY_PLAYER::PLYR_SHOT		, "Assets/Model/Player/Player_Shot.fbx" },	// 射撃
-	{ANIME_KEY_PLAYER::PLYR_WALK_SHOT	, "Assets/Model/Player/Player_Walk_Shot.fbx" },	// 歩行射撃
-	{ANIME_KEY_PLAYER::PLYR_GAMECLEAR	, "Assets/Model/Player/Player_GameClear.fbx" },	// ゲームクリア
+	{ANIME_KEY_PLAYER::PLYR_IDLE		, "Assets/Model/Anime/Player/Player_Idle.fbx" },	// 待機
+	{ANIME_KEY_PLAYER::PLYR_WALK		, "Assets/Model/Anime/Player/Player_Walk.fbx" },	// 歩行
+	{ANIME_KEY_PLAYER::PLYR_SHOT		, "Assets/Model/Anime/Player/Player_Shot.fbx" },	// ショット
 };
 
-// 敵キャラアニメーションデータ保存先パス
-const std::unordered_map < int, std::string > ANIME_DATA_ENEMY_PATH
+
+// 敵キャラ(ネズミ)アニメーションデータ保存先パス
+const std::unordered_map < int, std::string > ANIME_DATA_ENEMY_MOUSE_PATH
 {
-	{ANIME_KEY_ENEMY::ENMY_IDLE		, "Assets/Model/Enemy/Enemy_Idle.fbx" },	// 待機
-	{ANIME_KEY_ENEMY::ENMY_WALK		, "Assets/Model/Enemy/Enemy_Walk.fbx" },	// 歩行
-	{ANIME_KEY_ENEMY::ENMY_NOT_ANIME	, "Assets/Model/Enemy/Enemy_NotAnime.fbx" },	// アニメーション無し(滑走状態)
-	{ANIME_KEY_ENEMY::ENMY_VIBRATION	, "Assets/Model/Enemy/Enemy_Vibration.fbx" },	// 振動(停止状態)
-
+	{ANIME_KEY_ENEMY_MOUSE::ENMYM_IDLE		, "Assets/Model/Anime/Enemy/Mouse/EnemyMouse_Idle.fbx" },	// 待機
+	{ANIME_KEY_ENEMY_MOUSE::ENMYM_WALK		, "Assets/Model/Anime/Enemy/Mouse/EnemyMouse_Walk.fbx" },	// 歩行
+	
 };
+
 
 // アニメーションデータマップ紐づけ
 // モデルデータキーと各アニメーションマップを紐づける
 const std::unordered_map < ANIME_BASE_KEY, std::unordered_map < int, std::string > > ANIME_DATA_MAP_PATH
 {
-	{ANIME_BASE_KEY::AB_PLAYER, ANIME_DATA_PATH_PLAYER},
-	{ANIME_BASE_KEY::AB_ENEMY_G1, ANIME_DATA_ENEMY_PATH},
-	{ANIME_BASE_KEY::AB_ENEMY_Y2, ANIME_DATA_ENEMY_PATH},
-	{ANIME_BASE_KEY::AB_ENEMY_R3, ANIME_DATA_ENEMY_PATH},
+	{ANIME_BASE_KEY::AB_ENEMY_MOUSE,	ANIME_DATA_ENEMY_MOUSE_PATH},
+	{ANIME_BASE_KEY::AB_PLAYER,		ANIME_DATA_PLAYER_CAT_PATH},
 };
 
 
@@ -141,7 +133,10 @@ void ModelAnimeManager::LoadAnimeData(E_ANIME_BASE_KEY e_GetKey, std::unordered_
 {
 	for(std::pair<int, std::string> PathMap : dataPath)
 	{
-		m_apAnimeModelDatas.at(e_GetKey)->AddAnimation(PathMap.second.c_str());
+		if (m_apAnimeModelDatas.at(e_GetKey)->AddAnimation(PathMap.second.c_str()) == ModelAnime::ANIME_NONE)
+		{
+			MessageBox(NULL, PathMap.second.c_str(), "Error", MB_OK);	//エラーメッセージの表示
+		}
 
 	}
 

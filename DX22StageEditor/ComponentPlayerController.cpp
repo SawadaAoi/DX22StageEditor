@@ -14,19 +14,31 @@
 
 #include "ComponentRigidbody.h"	// リジッドボディコンポーネント
 #include "ComponentTransform.h"	// トランスフォームコンポーネント
+#include "ComponentModelAnime.h"	// アニメーションモデルコンポーネント
 
 #include "Input.h"
 #include "SceneManager.h"
 #include "unordered_map"
+#include "ModelAnimeManager.h"
+
+#include <cmath>
 
 // =============== 定数定義 =======================
 // ComponentRigidbody::E_ForceModeを省略
 using E_ForceMode = ComponentRigidbody::E_ForceMode;
 
+const float DEFAULT_MOVE_SPEED = 5.0f;		// 移動速度
+const float DEFAULT_ROTATE_SPEED = 15.0f;	// 回転速度
+const float DEFAULT_JUMP_POWER = 5.0f;		// ジャンプ力
 
-const float DEFAULT_MOVE_SPEED		= 5.0f;	// 移動速度
-const float DEFAULT_ROTATE_SPEED	= 15.0f;	// 回転速度
-const float DEFAULT_JUMP_POWER		= 5.0f;	// ジャンプ力
+
+// アニメーション
+const float ANIME_SPEED_IDLE = 1.0f;	// 待機アニメーション速度
+const float ANIME_SPEED_WALK = 1.0f;	// 移動アニメーション速度
+const float ANIME_SPEED_SHOT = 3.0f;	// ショットアニメーション速度
+
+const float ANIME_BLEND_TIME = 0.2f;	// アニメーションブレンド時間
+const float ANIME_SHOT_OK_RATIO = 0.5f;		// ショット可能なアニメ再生率
 
 // 入力キーマップ
 const std::unordered_map<std::string, BYTE> KEY_MAP
@@ -79,12 +91,14 @@ ComponentPlayerController::ComponentPlayerController(ObjectBase* pOwner)
 	, m_pObjCamera(nullptr)
 	, m_pCompTran(nullptr)
 	, m_pCompRigidbody(nullptr)
+	, m_pCompModelAnime(nullptr)
 	, m_fMoveSpeed(DEFAULT_MOVE_SPEED)
 	, m_fRotateSpeed(DEFAULT_ROTATE_SPEED)
 	, m_fJumpPower(DEFAULT_JUMP_POWER)
 	, m_MoveKey{ 'W', 'S', 'A', 'D', VK_SPACE , VK_RETURN }
 	, m_bIsInputEnable(true)
 	, m_bUseJump(true)
+	, m_bShot(false)
 
 {
 }
@@ -98,6 +112,7 @@ void ComponentPlayerController::Init()
 {
 	m_pCompTran = m_pOwnerObj->GetComponent<ComponentTransform>();	// トランスフォームを取得
 	m_pCompRigidbody = m_pOwnerObj->GetComponent<ComponentRigidbody>();	// リジッドボディを取得
+	m_pCompModelAnime = m_pOwnerObj->GetComponent<ComponentModelAnime>();	// アニメーションモデルを取得
 
 	m_pObjCamera = SceneManager::GetScene()->GetSceneObject<ObjectCameraPlayer>();	// カメラオブジェクトを取得
 
@@ -126,14 +141,21 @@ void ComponentPlayerController::Update()
 		return;
 	}
 
+	if (!m_pCompModelAnime)
+	{
+		m_pCompModelAnime = m_pOwnerObj->GetComponent<ComponentModelAnime>();
+		return;
+	}
+
 	// 入力無効
-	if (!m_bIsInputEnable) return;	
+	if (!m_bIsInputEnable) return;
 	// シフトキーを押している間は移動なし
 	if (Input::IsKeyPress(VK_SHIFT)) return;
 
 	Move();		// 移動
 	Jump();		// ジャンプ
 	Shot();		// ショット
+
 }
 
 
@@ -149,10 +171,13 @@ void ComponentPlayerController::Move()
 
 	// キーボード入力
 	moveDir = MoveKeybord();
-	
+
 	m_pCompRigidbody->AddForce(moveDir * m_fMoveSpeed);
 
 	RotateToMoveDir(moveDir);	// 移動方向に回転
+
+	// 移動アニメーション
+	MoveAnime(moveDir);
 }
 
 /* ========================================
@@ -176,15 +201,29 @@ void ComponentPlayerController::Jump()
 	弾発射関数
 	-------------------------------------
 	内容：進行方向に弾を発射する
+		　キー入力で、アニメ再生
+		  アニメの適切なタイミングで弾を発射
 ========================================== */
 void ComponentPlayerController::Shot()
 {
-	// ショット
-	if (Input::IsKeyTrigger(m_MoveKey[E_MoveKey::SHOT]))
+	// ショットキーが押されたら　かつ　ショットアニメが再生されていない場合
+	if (Input::IsKeyTrigger(m_MoveKey[E_MoveKey::SHOT]) &&
+		!m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_SHOT))
 	{
+		m_pCompModelAnime->PlayAnimeBlend(ANIME_KEY_PLAYER::PLYR_SHOT, ANIME_BLEND_TIME, false, ANIME_SPEED_SHOT);
+		m_bShot = true;		// 連射防止
+	}
+
+	// ショットアニメが再生されている場合 かつ ショットアニメが手を上げるところまで再生されたら
+	if (m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_SHOT)
+		&& m_pCompModelAnime->GetAnimePlaybackRatio(ANIME_KEY_PLAYER::PLYR_SHOT) >= ANIME_SHOT_OK_RATIO
+		&& m_bShot)	// 既に弾を発射していないか
+	{
+
 		ObjectBullet* pBullet = m_pOwnerObj->GetOwnerScene()->AddSceneObject<ObjectBulletPlayer>("PlayerBullet");
 		pBullet->GetTransform()->SetLocalPosition(m_pCompTran->GetWorldPosition());
 		pBullet->GetTransform()->SetLocalRotation(m_pCompTran->GetWorldRotation());
+		m_bShot = false;	// 連射防止
 	}
 }
 
@@ -268,9 +307,9 @@ void ComponentPlayerController::RotateToMoveDir(Vector3<float> moveDir)
 
 	moveDir.Normalize();	// 正規化
 
-	float targetRad			= atan2(moveDir.x, moveDir.z);								// 目標角度
-	Quaternion qTargetRot	= Quaternion::FromEulerAngle({ 0.0f, targetRad, 0.0f });	// 目標回転
-	Quaternion qSelfRot		= m_pCompTran->GetLocalRotation();							// 自身回転
+	float targetRad = atan2(moveDir.x, moveDir.z);								// 目標角度
+	Quaternion qTargetRot = Quaternion::FromEulerAngle({ 0.0f, targetRad, 0.0f });	// 目標回転
+	Quaternion qSelfRot = m_pCompTran->GetLocalRotation();							// 自身回転
 
 	// 回転が遠回りにならないように調整
 	// ※クォータニオン同士の内積が負の場合は最短距離で回転しないため、回転方向を逆にする
@@ -283,6 +322,33 @@ void ComponentPlayerController::RotateToMoveDir(Vector3<float> moveDir)
 
 	m_pCompTran->SetLocalRotation(qRot);	// 回転を設定
 
+}
+
+/* ========================================
+	移動アニメーション関数
+	-------------------------------------
+	内容：移動アニメーション処理
+	-------------------------------------
+	引数1：Vector3<float>		移動方向
+=========================================== */
+void ComponentPlayerController::MoveAnime(Vector3<float> vMoveDir)
+{
+	// ショットアニメが再生されている場合、移動アニメは再生しない
+	if (m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_SHOT)) return;
+
+	// 移動している場合
+	if (std::abs(vMoveDir.x) > 0.0f || std::abs(vMoveDir.z) > 0.0f)
+	{
+		// 既に歩行アニメが再生されている場合は再生しない
+		if (!m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_WALK))
+			m_pCompModelAnime->PlayAnimeBlend(ANIME_KEY_PLAYER::PLYR_WALK, ANIME_BLEND_TIME, true, ANIME_SPEED_WALK);
+	}
+	else
+	{
+		// 既に待機アニメが再生されている場合は再生しない
+		if (!m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_IDLE))
+			m_pCompModelAnime->PlayAnimeBlend(ANIME_KEY_PLAYER::PLYR_IDLE, ANIME_BLEND_TIME, true, ANIME_SPEED_IDLE);
+	}
 }
 
 
@@ -374,15 +440,15 @@ void ComponentPlayerController::Debug(DebugUI::Window& window)
 
 	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("IsInputEnable", Item::Kind::Bool, &m_bIsInputEnable));	// 入力有効フラグ
 
-	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("MoveSpeed",		Item::Kind::Float, &m_fMoveSpeed));		// 移動速度
-	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("RotateSpeed",	Item::Kind::Float, &m_fRotateSpeed));	// 回転速度
-	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("JumpPower",		Item::Kind::Float, &m_fJumpPower));		// ジャンプ力
+	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("MoveSpeed", Item::Kind::Float, &m_fMoveSpeed));		// 移動速度
+	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("RotateSpeed", Item::Kind::Float, &m_fRotateSpeed));	// 回転速度
+	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("JumpPower", Item::Kind::Float, &m_fJumpPower));		// ジャンプ力
 
-	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Forward",		&m_MoveKey[E_MoveKey::FORWARD]));
-	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Back",			&m_MoveKey[E_MoveKey::BACK]));
-	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Right",		&m_MoveKey[E_MoveKey::RIGHT]));
-	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Left",			&m_MoveKey[E_MoveKey::LEFT]));
-	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Jump",			&m_MoveKey[E_MoveKey::JUMP]));
+	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Forward", &m_MoveKey[E_MoveKey::FORWARD]));
+	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Back", &m_MoveKey[E_MoveKey::BACK]));
+	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Right", &m_MoveKey[E_MoveKey::RIGHT]));
+	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Left", &m_MoveKey[E_MoveKey::LEFT]));
+	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Jump", &m_MoveKey[E_MoveKey::JUMP]));
 
 	window.AddItem(pGroupPlayerCtr);
 
@@ -403,7 +469,7 @@ DebugUI::Item* ComponentPlayerController::CreateKeyList(std::string sName, BYTE*
 	using namespace DebugUI;
 
 	// リスト作成
-	DebugUI::Item* reItem =  Item::CreateList(sName.c_str(), [this, moveKey](const void* arg)
+	DebugUI::Item* reItem = Item::CreateList(sName.c_str(), [this, moveKey](const void* arg)
 	{
 		std::string key = reinterpret_cast<const char*>(arg);
 		*moveKey = KEY_MAP.at(key);	// 入力キーを設定(BYTE)
@@ -415,17 +481,17 @@ DebugUI::Item* ComponentPlayerController::CreateKeyList(std::string sName, BYTE*
 	for (auto& key : KEY_MAP)
 	{
 		reItem->AddListItem(key.first.c_str());
-		
+
 		// 初期値と一致する文字列を探す
 		if (key.second == *moveKey)
 		{
 			reItem->SetListNo(i);
 		}
-		
+
 		i++;
 	}
 
-	
+
 
 	return reItem;
 }

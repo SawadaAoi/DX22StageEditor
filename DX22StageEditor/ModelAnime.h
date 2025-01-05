@@ -25,6 +25,7 @@
 
 #include <assimp/Importer.hpp>
 
+
 // =============== クラス定義 =====================
 class ModelAnime
 {
@@ -172,11 +173,10 @@ public:
 	// セッター
 	void SetVertexShader(VertexShader* vs);
 	void SetPixelShader(PixelShader* ps);
-	void SetWVPMatrix(const DirectX::XMFLOAT4X4* matWVP);	// ワールド行列の設定(頂点シェーダー用)
+	void SetWVPMatrix(const DirectX::XMFLOAT4X4* matWVP);										// ワールド行列の設定(頂点シェーダー用)
 	void SetLightMaterial(float fDiffuse, float fSpecular, float fAmbient, bool bUseLight);		// ライトパラメータ設定(ピクセルシェーダー用)
 	void SetCameraPos(Vector3<float> fCameraPos);												// カメラ位置設定(ピクセルシェーダー用)
 	void SetLights(std::vector<ObjectLight*> lights);											// ライト設定(ピクセルシェーダー用)
-
 
 public:
 	//--- アニメーション
@@ -187,7 +187,10 @@ public:
 	void SetParametric(AnimeNo no1, AnimeNo no2);								// 合成設定
 	void SetParametricBlend(float blendRate);									// 合成割合設定
 	void SetAnimationTime(AnimeNo no, float time);								// 現在再生時間を変更
+	void SetAnimationTimeRatio(AnimeNo no, float rate);						// 再生割合を変更
 	float GetAnimeNowTime(AnimeNo no);											// 現在再生時間を取得
+	float GetAnimeTotalTime(AnimeNo no);										// アニメーションの総再生時間を取得
+	float GetAnimePlaybackRatio(AnimeNo no);									// アニメーション再生割合を取得
 	void SetAnimationSpeed(AnimeNo no, float speed);							// 再生速度を変更
 
 	bool IsPlay(AnimeNo no);	// 再生中かどうか

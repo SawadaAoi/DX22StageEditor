@@ -21,9 +21,9 @@
 
 #define GET_MODEL_ANIME ModelAnimeManager::GetInstance().GetModelData	// インスタンス取得
 
-#define ANIME_BASE_KEY		ModelAnimeManager::E_ANIME_BASE_KEY		// アニメーションモデル取得キー省略
-#define ANIME_KEY_PLAYER	ModelAnimeManager::E_ANIME_KEY_PLAYER	// プレイヤーアニメーション種類取得キー省略
-#define ANIME_KEY_ENEMY		ModelAnimeManager::E_ANIME_KEY_ENEMY	// 敵アニメーション種類取得キー省略
+#define ANIME_BASE_KEY			ModelAnimeManager::E_ANIME_BASE_KEY		// アニメーションモデル取得キー省略
+#define ANIME_KEY_PLAYER		ModelAnimeManager::E_ANIME_KEY_PLAYER // プレイヤーアニメーション種類取得キー省略
+#define ANIME_KEY_ENEMY_MOUSE	ModelAnimeManager::E_ANIME_KEY_ENEMY_MOUSE	// 敵アニメーション種類取得キー省略
 
 class ModelAnimeManager
 {
@@ -31,10 +31,8 @@ public:
 	// モデルデータ種類
 	enum E_ANIME_BASE_KEY
 	{
-		AB_PLAYER,			// プレイヤー
-		AB_ENEMY_G1,		// 敵G1
-		AB_ENEMY_Y2,		// 敵Y2
-		AB_ENEMY_R3,		// 敵R3
+		AB_PLAYER,			// プレイヤー(猫)
+		AB_ENEMY_MOUSE,		// 敵(ネズミ)
 		AB_MAX,
 	};
 
@@ -42,20 +40,17 @@ public:
 	{
 		PLYR_IDLE,		// 待機
 		PLYR_WALK,		// 歩行
-		PLYR_SHOT,		// 射撃
-		PLYR_WALK_SHOT,	// 歩行射撃
-		PLYR_GAMECLEAR,	// ゲームクリア
-		PLYR_MAX,
+		PLYR_SHOT,		// ショット
+		PLYR_MAX,		
 	};
 
-	enum E_ANIME_KEY_ENEMY
+	enum E_ANIME_KEY_ENEMY_MOUSE
 	{
-		ENMY_IDLE,		// 待機
-		ENMY_WALK,		// 歩行
-		ENMY_NOT_ANIME,	// アニメーション無し(滑走状態)
-		ENMY_VIBRATION,	// 振動(停止状態)
-		ENMY_MAX,
+		ENMYM_IDLE,		// 待機
+		ENMYM_WALK,		// 歩行
+		ENMYM_MAX,
 	};
+
 
 public:
 	static ModelAnimeManager& GetInstance();

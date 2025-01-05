@@ -31,7 +31,6 @@ const Vector3<float>	RAY_OFFSET	= Vector3<float>(0.0f, -0.4f, 0.0f);	// レイの開
 // リジッドボディ
 const float				GROUND_DRAG = 0.9f;	// 地面摩擦
 
-#define animeOrStatic 0;
 
 /* ========================================
 	コンストラクタ関数
@@ -76,20 +75,17 @@ void ObjectPlayer::InitLocal()
 	m_pCompRigidbody->SetUseGravity(true);
 	m_pCompRigidbody->SetGroundDrag(GROUND_DRAG);
 
-	m_pCompPlayerController = AddComponent<ComponentPlayerController>();
 
-#if animeOrStatic
 	m_pCompModelAnime = AddComponent<ComponentModelAnime>();
 
 	m_pCompModelAnime->SetModel(GET_MODEL_ANIME(ANIME_BASE_KEY::AB_PLAYER));
+	m_pCompModelAnime->SetPosOffset(Vector3<float>{0.0f, -0.5f, 0.0f});
 	m_pCompModelAnime->PlayAnime(ANIME_KEY_PLAYER::PLYR_IDLE, true, 1.0f);
-#else
-	m_pCompModelStatic = AddComponent<ComponentModelStatic>();
-	m_pCompModelStatic->SetModel(GET_MODEL_STATIC(MODEL_KEY::PLAYER_CAT));
-	//m_pCompModelStatic->SetPosOffset(Vector3<float>(0.0f, 0.3f, 0.0f));
-#endif
 
-	SetLightMaterial(1.0f, 0.9f, 0.3f);
+	m_pCompPlayerController = AddComponent<ComponentPlayerController>();
+
+	SetLightMaterial(1.0f, 1.5f, 0.3f);
+
 }
 
 /* ========================================
@@ -106,6 +102,11 @@ void ObjectPlayer::UpdateLocal()
 	if (m_bInvincible)	InvincibleUpdate();
 }
 
+/* ========================================
+	ゲームクリア関数
+	-------------------------------------
+	内容：ゲームクリア時の処理
+========================================= */
 void ObjectPlayer::GameClear()
 {
 	m_pCompPlayerController->SetInputEnable(false);			// 操作を無効に
@@ -190,11 +191,8 @@ void ObjectPlayer::InvincibleUpdate()
 	{
 		m_fInvFlashCnt	= 0.0f;
 		bool bVisible	= m_pCompModelAnime->GetIsVisible();
-#if animeOrStatic
 		m_pCompModelAnime->SetIsVisible(!bVisible);			// モデルの表示切り替え
-#else
-		m_pCompModelStatic->SetIsVisible(!bVisible);			// モデルの表示切り替え
-#endif
+
 	}
 	// 無敵時間終了
 	if (m_fInvCnt >= INVINCIBLE_TIME)
@@ -202,11 +200,7 @@ void ObjectPlayer::InvincibleUpdate()
 		m_bInvincible	= false;
 		m_fInvCnt		= 0.0f;
 		m_fInvFlashCnt	= 0.0f;
-#if animeOrStatic
 		m_pCompModelAnime->SetIsVisible(true);	// モデルの表示ON
-#else
-		m_pCompModelStatic->SetIsVisible(true);	// モデルの表示ON
-#endif
 	}
 }
 

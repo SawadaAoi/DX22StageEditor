@@ -214,12 +214,12 @@ void ModelAnime::SetParametricBlend(float blendRate)
 
 
 /* ========================================
-	アニメーション再生時間変更関数
+	アニメーション再生時間位置変更関数
 	-------------------------------------
-	内容：合成元アニメーションを設定する
+	内容：指定したアニメーションの再生時間位置を変更
 	-------------------------------------
 	引数1：変更するアニメ
-	引数2：新しい再生時間
+	引数2：再生時間位置
 =========================================== */
 void ModelAnime::SetAnimationTime(AnimeNo no, float time)
 {
@@ -229,6 +229,30 @@ void ModelAnime::SetAnimationTime(AnimeNo no, float time)
 	// 再生時間変更
 	T_Animation& anime = m_AnimeList[no];
 	anime.nowTime = time;
+
+	// 再生時間がアニメーションの総時間を超えていたら、ループさせる
+	while (anime.nowTime >= anime.totalTime)
+	{
+		anime.nowTime -= anime.totalTime;
+	}
+}
+
+/* ========================================
+	アニメーション再生割合位置変更関数
+	-------------------------------------
+	内容：指定したアニメーションの再生割合位置を変更
+	-------------------------------------
+	引数1：変更するアニメ
+	引数2：再生割合位置
+=========================================== */
+void ModelAnime::SetAnimationTimeRatio(AnimeNo no, float rate)
+{
+	// アニメーションチェック
+	if (!AnimeNoCheck(no)) { return; }
+
+	// 再生時間変更
+	T_Animation& anime = m_AnimeList[no];
+	anime.nowTime = anime.totalTime * rate;
 
 	// 再生時間がアニメーションの総時間を超えていたら、ループさせる
 	while (anime.nowTime >= anime.totalTime)
@@ -254,6 +278,44 @@ float ModelAnime::GetAnimeNowTime(AnimeNo no)
 	T_Animation& anime = m_AnimeList[no];
 
 	return anime.nowTime;
+}
+
+/* ========================================
+	アニメーショントータル再生時間取得関数
+	-------------------------------------
+	内容：アニメーションのトータル再生時間を取得
+	-------------------------------------
+	引数：取得するアニメ番号
+	-------------------------------------
+	戻値：トータル時間
+=========================================== */
+float ModelAnime::GetAnimeTotalTime(AnimeNo no)
+{
+	// アニメーションチェック
+	if (!AnimeNoCheck(no)) { return 0.0f; }
+
+	T_Animation& anime = m_AnimeList[no];
+
+	return anime.totalTime;
+}
+
+/* ========================================
+	アニメーション再生割合取得関数
+	-------------------------------------
+	内容：アニメーションの再生割合を取得
+	-------------------------------------
+	引数：取得するアニメ番号
+	-------------------------------------
+	戻値：再生割合
+=========================================== */
+float ModelAnime::GetAnimePlaybackRatio(AnimeNo no)
+{
+	// アニメーションチェック
+	if (!AnimeNoCheck(no)) { return 0.0f; }
+
+	T_Animation& anime = m_AnimeList[no];
+
+	return anime.nowTime / anime.totalTime;
 }
 
 

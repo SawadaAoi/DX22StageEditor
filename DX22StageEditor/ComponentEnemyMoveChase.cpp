@@ -203,6 +203,9 @@ void ComponentEnemyMoveChase::BackToStartPos()
 		vVelocity.x = 0.0f;
 		vVelocity.z = 0.0f;
 		m_pCompRigidbody->SetVelocity(vVelocity);
+
+		// ‰Šú•ûŒü‚ðŒü‚­
+		m_pCompTransform->SetLocalRotation(m_qStartRot);
 	}
 }
 

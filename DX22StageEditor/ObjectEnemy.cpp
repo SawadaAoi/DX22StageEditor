@@ -73,11 +73,9 @@ void ObjectEnemy::InitLocal()
 	m_pCompGroundRaycast->SetRayLength(RAY_LENGTH);
 
 	m_pCompModelAnime = AddComponent<ComponentModelAnime>();
-	m_pCompModelAnime->SetModel(GET_MODEL_ANIME(ANIME_BASE_KEY::AB_ENEMY_G1));
-	m_pCompModelAnime->PlayAnime(ANIME_KEY_ENEMY::ENMY_WALK, true, 1.0f);
-
-	/*AddComponent<ComponentModelStatic>()->SetModel(GET_MODEL_STATIC(MODEL_KEY::ENEMY_MOUSE));
-	GetComponent<ComponentModelStatic>()->SetPosOffset({ 0.0f, -0.5f, 0.0f });*/
+	m_pCompModelAnime->SetPosOffset(Vector3<float>(0.0f, -0.5f, 0.0f));
+	m_pCompModelAnime->SetModel(GET_MODEL_ANIME(ANIME_BASE_KEY::AB_ENEMY_MOUSE));
+	m_pCompModelAnime->PlayAnime(ANIME_KEY_ENEMY_MOUSE::ENMYM_IDLE, true, 1.0f);
 
 	m_pCompEnemyState = AddComponent<ComponentEnemyState>();
 
