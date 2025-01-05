@@ -83,6 +83,28 @@ ModelStatic* ModelStaticManager::GetModelData(E_MODEL_KEY e_GetKey)
 }
 
 /* ========================================
+	モデルデータキー取得関数
+	-------------------------------------
+	内容：モデルデータからキーを取得
+	-------------------------------------
+	引数1：ModelStatic*	pModelData	モデルデータ
+	-------------------------------------
+	戻値：E_MODEL_KEY	モデルデータのキー
+=========================================== */
+ModelStaticManager::E_MODEL_KEY ModelStaticManager::GetModelKey(ModelStatic* pModelData)
+{
+	for (std::pair<E_MODEL_KEY, std::shared_ptr<ModelStatic>> ModelData : m_apModelDatas)
+	{
+		if (ModelData.second.get() == pModelData)
+		{
+			return ModelData.first;
+		}
+	}
+
+	return E_MODEL_KEY::MAX;
+}
+
+/* ========================================
 	ゲッター(静的モデル配列)関数
 	-------------------------------------
 	戻値：std::unordered_map<E_MODEL_KEY, std::shared_ptr<ModelStatic>>	モデルデータ配列

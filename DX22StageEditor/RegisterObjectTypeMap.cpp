@@ -14,6 +14,7 @@
 
 // ‚»‚Ì‘¼
 #include "ObjectGoal.h"
+#include "ObjectSkyBox.h"
 
 // ’nŒ`
 #include "ObjectGround.h"
@@ -60,6 +61,7 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectPlayer);
 
 	// ‚»‚Ì‘¼
+	REGISTER_OBJECT_TYPE(ObjectSkyBox);
 	REGISTER_OBJECT_TYPE(ObjectGoal);
 
 	// “GƒLƒƒƒ‰

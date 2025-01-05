@@ -17,9 +17,8 @@
 #include "ComponentPlayerController.h"
 #include "ComponentGroundRaycast.h"
 #include "ComponentModelAnime.h"
-#include "ComponentModelStatic.h"
 
-#include "ModelStaticManager.h"
+#include "ModelAnimeManager.h"
 
 // =============== 定数定義 =======================
 const int	MAX_HP				= 5;	// プレイヤーの最大HP

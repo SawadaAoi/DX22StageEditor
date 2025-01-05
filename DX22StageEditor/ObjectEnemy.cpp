@@ -13,11 +13,9 @@
 #include "ComponentEnemyState.h"
 #include "ComponentGroundRaycast.h"
 #include "ComponentModelAnime.h"
-#include "ComponentModelStatic.h"
 #include "ComponentRigidbody.h"
 #include "ComponentTransform.h"
 #include "ModelAnimeManager.h"
-#include "ModelStaticManager.h"
 
 #include "ComponentEnemyMoveLinear.h"
 

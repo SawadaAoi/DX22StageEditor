@@ -485,6 +485,9 @@
     <ClCompile Include="ObjectBlockGroundAABB.cpp">
       <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectSkyBox.cpp">
+      <Filter>ソース ファイル\App\GameObject\Other</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">
@@ -789,6 +792,9 @@
     </ClInclude>
     <ClInclude Include="ObjectBlockGroundAABB.h">
       <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectSkyBox.h">
+      <Filter>ソース ファイル\App\GameObject\Other</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -31,20 +31,23 @@ public:
 	{
 		TEST_MODEL,
 		PLAYER_CAT,
+		SKYBOX_SUNNY,
 		MAX,
 	};
 
 	const std::unordered_map < ModelStaticManager::E_MODEL_KEY, std::string > MODEL_FBX_PATH
 	{
-		{MODEL_KEY::TEST_MODEL, "Assets/Model/Static/Test/TestObject.fbx"},
-		{MODEL_KEY::PLAYER_CAT, "Assets/Model/Static/Player/Cat.fbx"},
+		{MODEL_KEY::TEST_MODEL,		"Assets/Model/Static/Test/TestObject.fbx"},
+		{MODEL_KEY::PLAYER_CAT,		"Assets/Model/Static/Player/Cat.fbx"},
+		{MODEL_KEY::SKYBOX_SUNNY,	"Assets/Model/Static/Skybox/Sunny/SkyBox_Sunny.fbx"},
 	};
 
 	// 各モデルデータ大きさ指定
 	const std::unordered_map < ModelStaticManager::E_MODEL_KEY, float > MODEL_FBX_SCALE
 	{
-		{MODEL_KEY::TEST_MODEL, 1.0f},
-		{MODEL_KEY::PLAYER_CAT, 0.6f},
+		{MODEL_KEY::TEST_MODEL,		1.0f},
+		{MODEL_KEY::PLAYER_CAT,		0.6f},
+		{MODEL_KEY::SKYBOX_SUNNY,	1.0f},
 	};
 
 public:
@@ -53,6 +56,7 @@ public:
 
 	// ゲッター
 	ModelStatic* GetModelData(E_MODEL_KEY e_GetKey);
+	E_MODEL_KEY GetModelKey(ModelStatic* pModelData);
 
 	std::unordered_map <E_MODEL_KEY, std::shared_ptr<ModelStatic>> GetModelDatas();
 	std::unordered_map <E_MODEL_KEY, std::string> GetModelPaths();

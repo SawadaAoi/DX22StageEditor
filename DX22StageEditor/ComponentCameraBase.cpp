@@ -17,11 +17,11 @@
 #include "ColorVec3.h"
 
 // =============== 定数定義 =======================
-const float CAMERA_DEFAULT_FOVY = DirectX::XMConvertToRadians(60.0f);	// 縦画角(拡大縮小)
-const float CAMERA_DEFAULT_ASPECT = WINDOW_INST.GetAspectRatio();	// アスペクト比
-const float CAMERA_DEFAULT_NEAR = 0.1f;		// 最小距離
-const float CAMERA_DEFAULT_FAR = 100.0f;	// 最大距離
-const float CAMERA_DEFAULT_ORTHO_WIDTH = 20.0f;	// 平行投影の幅
+const float CAMERA_DEFAULT_FOVY			= DirectX::XMConvertToRadians(60.0f);	// 縦画角(拡大縮小)
+const float CAMERA_DEFAULT_ASPECT		= WINDOW_INST.GetAspectRatio();			// アスペクト比
+const float CAMERA_DEFAULT_NEAR			= 0.1f;		// 最小距離
+const float CAMERA_DEFAULT_FAR			= 200.0f;	// 最大距離
+const float CAMERA_DEFAULT_ORTHO_WIDTH	= 20.0f;	// 平行投影の幅
 
 // UI用の定数
 const float SCREEN_LEFT_EDGE	= WindowConfig::SCREEN_WIDTH  / 2.0f * -1.0;	// 画面左端
