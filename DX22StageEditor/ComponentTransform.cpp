@@ -120,6 +120,50 @@ void ComponentTransform::ClearParent()
 }
 
 /* ========================================
+	ローカル座標再計算関数
+	-------------------------------------
+	内容：親オブジェクトがセットされた時に、
+		　現在のローカル座標の座標、回転、大きさを保持したまま
+		  親オブジェクトのワールド座標を考慮したローカル座標を再計算する
+=========================================== */
+void ComponentTransform::RecalculateLocalTransform()
+{
+	if (!m_pOwnerObj->GetParentObject()) return;	// 親オブジェクトがない場合は処理しない
+
+	// 回転、座標の再計算
+	// 親オブジェクトのTransformコンポーネントを取得
+	ComponentTransform* pParentTran = m_pOwnerObj->GetParentObject()->GetComponent<ComponentTransform>();
+	// 親オブジェクトのワールド行列(回転、座標)を生成
+	DirectX::XMMATRIX parentMat =
+		pParentTran->GetWorldRotation().ToDirectXMatrix() *		// 回転
+		DirectX::XMMatrixTranslation(							// 座標		
+			pParentTran->GetWorldPosition().x,
+			pParentTran->GetWorldPosition().y,
+			pParentTran->GetWorldPosition().z);
+
+	// ローカル行列(回転、座標)を生成
+	DirectX::XMMATRIX localMat =
+		m_qWorldRotation.ToDirectXMatrix() *
+		DirectX::XMMatrixTranslation(m_vWorldPosition.x, m_vWorldPosition.y, m_vWorldPosition.z);
+
+	// 親のワールド行列の逆行列を取得
+	DirectX::XMMATRIX parentMatInv = DirectX::XMMatrixInverse(nullptr, parentMat);
+
+	// ローカル行列と親の逆行列を掛け合わせてローカル行列を取得
+	DirectX::XMMATRIX localMatInv = localMat * parentMatInv;
+
+	// 作成した行列から座標、回転を取得
+	m_vLocalPosition = Vector3<float>::FromMatrix_Translation(localMatInv);	// 座標取得
+	m_qLocalRotation = Quaternion::FromDirectXMatrix(localMatInv);			// 回転取得
+
+
+	// 大きさの再計算(回転、座標と一緒に計算すると大きさが不正確になるため別で計算)
+	m_vLocalScale = m_vWorldScale / pParentTran->GetWorldScale();
+
+}
+
+
+/* ========================================
 	座標移動関数
 	-------------------------------------
 	内容：座標を移動する

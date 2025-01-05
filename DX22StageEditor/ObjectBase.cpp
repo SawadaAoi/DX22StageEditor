@@ -183,6 +183,9 @@ void ObjectBase::SetParentObject(ObjectBase* pParentObj)
 
 	m_pParentObj = pParentObj;	// 自オブジェクトの更新
 
+	// 自身のトランスフォームを再計算
+	m_pCompTransform->RecalculateLocalTransform();
+
 	// 既に親オブジェクトが更新済みかチェック
 	// ※子オブジェクト追加関数から呼び出された場合
 	for (auto& pChild : m_pParentObj->m_pChildObjs)
