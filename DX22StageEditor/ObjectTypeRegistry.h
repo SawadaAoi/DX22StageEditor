@@ -12,7 +12,7 @@
 // =============== インクルード ===================
 #include "ObjectBase.h"
 #include "SceneManager.h"
-
+#include <unordered_map>
 
 // =============== 定数定義 =======================
 #define OBJ_TYPE_REGISTRY_INST ObjectTypeRegistry::GetInstance()    // インスタンス取得用マクロ

@@ -17,6 +17,9 @@
 #include "Input.h"	
 #include "ComponentTransform.h"
 
+// オブジェクト複製用
+#include "ObjectTypeRegistry.h"
+
 /* ========================================
 	コンストラクタ関数
 	-------------------------------------
@@ -488,6 +491,16 @@ void SceneBase::InitObjectList()
 
 	}, false, true));
 
+	// オブジェクト複製ボタン
+	WIN_OBJ_LIST.AddItem(Item::CreateCallBack("Copy", Item::Kind::Command, [this](bool isWrite, void* arg)
+	{
+		// 選択されていない場合は処理しない
+		if (m_nObjectListSelectNo == -1) return;
+		// オブジェクトを複製
+		CopyObject(m_pSelectObj);
+
+	}, false, true));
+
 	Item::ConstCallback  FuncListClick = [this](const void* arg) {
 		// クリックされたオブジェクトの情報を表示
 
@@ -701,6 +714,51 @@ void SceneBase::AddObjectListChild(ObjectBase* pObject)
 	{
 		return;
 	}
+}
+
+/* ========================================
+	オブジェクト複製関数
+	-------------------------------------
+	内容：選択中のオブジェクトを複製する
+	-------------------------------------
+	引数：ObjectBase* 複製元オブジェクト
+	-------------------------------------
+	戻値：ObjectBase* 複製したオブジェクト
+=========================================== */
+ObjectBase* SceneBase::CopyObject(ObjectBase* pOriginalObj)
+{
+	// トランスフォーム情報を取得
+	ComponentTransform* pOriTrans = pOriginalObj->GetTransform();
+
+	ObjectBase* pCopyObj = OBJ_TYPE_REGISTRY_INST.CreateObject(pOriginalObj->GetObjClassName());
+	pCopyObj->Init(CreateUniqueName(pOriginalObj->GetName()));	// オブジェクト初期化(名前重複避ける)
+	ComponentTransform* pCopyTrans = pCopyObj->GetComponent<ComponentTransform>();
+	pCopyTrans->SetLocalPosition(pOriTrans->GetWorldPosition());
+	pCopyTrans->SetLocalRotation(pOriTrans->GetWorldRotation());
+	pCopyTrans->SetLocalScale(pOriTrans->GetWorldScale());
+
+
+	AddSceneObjectBase(pCopyObj);	// シーンにオブジェクトを追加
+
+	// 親子関係を再現
+	// 親オブジェクトがある場合
+	if (pOriginalObj->GetParentObject())
+	{
+		pCopyObj->SetParentObject(pOriginalObj->GetParentObject());
+	}
+
+	// 子オブジェクトがある場合
+	if (pOriginalObj->GetChildObjects().size() > 0)
+	{
+		for (auto& pChild : pOriginalObj->GetChildObjects())
+		{
+			ObjectBase* pCopyChild = CopyObject(pChild);
+			pCopyObj->AddChildObject(pCopyChild);
+		}
+	}
+
+
+	return pCopyObj;
 }
 
 
