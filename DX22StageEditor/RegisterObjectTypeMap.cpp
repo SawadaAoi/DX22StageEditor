@@ -9,11 +9,16 @@
 // =============== インクルード ===================
 #include "ObjectTypeRegistry.h"
 
-// オブジェクト
+// プレイヤー
 #include "ObjectPlayer.h"
+
+// その他
+#include "ObjectGoal.h"
+
+// 地形
 #include "ObjectGround.h"
 #include "ObjectBlock.h"
-#include "ObjectGoal.h"
+#include "ObjectBlockGroundAABB.h"
 
 // 敵キャラ
 #include "ObjectEnemy.h"
@@ -43,27 +48,38 @@
 =========================================== */
 void ObjectTypeRegistry::RegisterAllObjectTypes()
 {
+	// 全オブジェクトの基底クラス
 	REGISTER_OBJECT_TYPE(ObjectBase);
 
-	REGISTER_OBJECT_TYPE(ObjectPlayer);
+	// 地形
 	REGISTER_OBJECT_TYPE(ObjectGround);
 	REGISTER_OBJECT_TYPE(ObjectBlock);
+	REGISTER_OBJECT_TYPE(ObjectBlockGroundAABB);
+
+	// プレイヤー
+	REGISTER_OBJECT_TYPE(ObjectPlayer);
+
+	// その他
 	REGISTER_OBJECT_TYPE(ObjectGoal);
 
+	// 敵キャラ
 	REGISTER_OBJECT_TYPE(ObjectEnemy);
 	REGISTER_OBJECT_TYPE(ObjectEnemyLinear);
 	REGISTER_OBJECT_TYPE(ObjectEnemyChase);
 	REGISTER_OBJECT_TYPE(ObjectEnemyRandom);
 
+	// カメラ
 	REGISTER_OBJECT_TYPE(ObjectCamera);
 	REGISTER_OBJECT_TYPE(ObjectCameraDebug);
 	REGISTER_OBJECT_TYPE(ObjectCameraPlayer);
 
+	// ライト
 	REGISTER_OBJECT_TYPE(ObjectLight);
 	REGISTER_OBJECT_TYPE(ObjectLightDirectional);
 	REGISTER_OBJECT_TYPE(ObjectLightPoint);
 	REGISTER_OBJECT_TYPE(ObjectLightSpot);
 
+	// システム
 	REGISTER_OBJECT_TYPE(ObjectGameStateManager);
 
 

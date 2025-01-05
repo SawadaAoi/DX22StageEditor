@@ -110,8 +110,11 @@ void ObjectPlayer::UpdateLocal()
 void ObjectPlayer::GameClear()
 {
 	m_pCompPlayerController->SetInputEnable(false);			// 操作を無効に
-	m_pCompTransform->LookAt(-Vector3<float>::Forward());	// プレイヤーの向きを-Z方向に
 	m_pCompRigidbody->SetVelocity(Vector3<float>::Zero());	// 移動速度を0に
+
+	// プレイヤーの向きを-Z軸方向に
+	float fRad = MathUtils::ToRadian(180.0f);
+	m_pCompTransform->SetLocalRotationEuler(Vector3<float>(0.0f, fRad, 0.0f));
 }
 
 /* ========================================

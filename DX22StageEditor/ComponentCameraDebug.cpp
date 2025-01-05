@@ -25,7 +25,7 @@ const float LIMIT_PITCH = 90.0f;	// ècâÒì]êßå¿
 =========================================== */
 ComponentCameraDebug::ComponentCameraDebug(ObjectBase* pObject)
 	: ComponentBase(pObject, OrderCameraDebug)
-	, m_fMoveSpeed(2.0f)
+	, m_fMoveSpeed(5.0f)
 	, m_fRotSpeed(50.0f)
 	, m_pCameraBase(nullptr)
 	, m_vMouseMove(0.0f, 0.0f)

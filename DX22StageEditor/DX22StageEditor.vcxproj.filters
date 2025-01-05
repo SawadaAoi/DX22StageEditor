@@ -192,6 +192,9 @@
     <Filter Include="ソース ファイル\App\GameObject\Enemy\0_Super">
       <UniqueIdentifier>{3d24bb22-85bd-446c-8f44-f63ad61dc483}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\StageObject\Block\0_Super">
+      <UniqueIdentifier>{3c44e17c-feed-4b43-b059-c0143a0fa14c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -386,9 +389,6 @@
     <ClCompile Include="FileManager.cpp">
       <Filter>ソース ファイル\System\DataInOut</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectBlock.cpp">
-      <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectGround.cpp">
       <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
     </ClCompile>
@@ -478,6 +478,12 @@
     </ClCompile>
     <ClCompile Include="ObjectCameraGameClear.cpp">
       <Filter>ソース ファイル\App\GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectBlock.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Block\0_Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectBlockGroundAABB.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -691,9 +697,6 @@
     <ClInclude Include="SceneStageSaves.h">
       <Filter>ソース ファイル\App\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectBlock.h">
-      <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectGround.h">
       <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
     </ClInclude>
@@ -780,6 +783,12 @@
     </ClInclude>
     <ClInclude Include="ObjectCameraGameClear.h">
       <Filter>ソース ファイル\App\GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectBlock.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Block\0_Super</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectBlockGroundAABB.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

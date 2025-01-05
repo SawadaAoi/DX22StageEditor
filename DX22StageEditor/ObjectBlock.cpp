@@ -1,7 +1,7 @@
 /* ========================================
-	DX22Base/
+	CatRobotGame/
 	------------------------------------
-	ブロック用cpp
+	ブロックオブジェクト用cpp
 	------------------------------------
 	ObjectBlock.cpp
 ========================================== */
@@ -9,7 +9,9 @@
 // =============== インクルード ===================
 #include "ObjectBlock.h"
 #include "ComponentGeometry.h"
+#include "ComponentCollisionBase.h"
 #include "ComponentCollisionOBB.h"
+#include "ComponentCollisionAABB.h"
 #include "TextureManager.h"
 
 /* ========================================
@@ -22,9 +24,9 @@
 ObjectBlock::ObjectBlock(SceneBase* pScene)
 	: ObjectBase(pScene)
 	, m_pCompGeometry(nullptr)
-	, m_pCompColObb(nullptr)
+	, m_pCompColBase(nullptr)
+	, m_eColType(E_COL_TYPE::COL_OBB)
 {
-
 }
 
 /* ========================================
@@ -39,7 +41,11 @@ void ObjectBlock::InitLocal()
 	m_pCompGeometry->SetIsTex(true);
 	m_pCompGeometry->SetTexture(GET_TEXTURE_DATA(TextureManager::E_TEX_KEY::BLOCK_SIMPLE));
 
-	m_pCompColObb = AddComponent<ComponentCollisionOBB>();
+	// 衝突判定形状によってコンポーネントを追加
+	if (m_eColType == E_COL_TYPE::COL_AABB)
+		m_pCompColBase = AddComponent<ComponentCollisionAABB>();
+	else if (m_eColType == E_COL_TYPE::COL_OBB)
+		m_pCompColBase = AddComponent<ComponentCollisionOBB>();
 
 }
 
@@ -57,7 +63,9 @@ void ObjectBlock::OutPutLocalData(std::ofstream& file)
 	// テクスチャID
 	data.nTextureID = TEXTURE_MNG_INST.GetTextureKey(m_pCompGeometry->GetTexture());
 	// テクスチャ使用フラグ
-	data.bUseTex = m_pCompGeometry->GetIsTex();
+	data.bUseTex	= m_pCompGeometry->GetIsTex();
+	// 衝突判定形状
+	data.eColType	= m_eColType;
 
 	// ファイルに書き込む
 	file.write((char*)&data, sizeof(S_SaveData));
@@ -81,4 +89,6 @@ void ObjectBlock::InputLocalData(std::ifstream& file)
 	m_pCompGeometry->SetTexture(GET_TEXTURE_DATA((TextureManager::E_TEX_KEY)data.nTextureID));
 	// テクスチャ使用フラグ
 	m_pCompGeometry->SetIsTex(data.bUseTex);
+	// 衝突判定形状
+	m_eColType = data.eColType;
 }
