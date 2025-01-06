@@ -27,9 +27,9 @@
 // ComponentRigidbody::E_ForceModeを省略
 using E_ForceMode = ComponentRigidbody::E_ForceMode;
 
-const float DEFAULT_MOVE_SPEED = 5.0f;		// 移動速度
-const float DEFAULT_ROTATE_SPEED = 15.0f;	// 回転速度
-const float DEFAULT_JUMP_POWER = 5.0f;		// ジャンプ力
+const float DEFAULT_MOVE_SPEED		= 5.0f;		// 移動速度
+const float DEFAULT_ROTATE_SPEED	= 15.0f;	// 回転速度
+const float DEFAULT_JUMP_POWER		= 5.0f;		// ジャンプ力
 
 
 // アニメーション
@@ -148,7 +148,7 @@ void ComponentPlayerController::Update()
 	}
 
 	// 入力無効
-	if (!m_bIsInputEnable) return;
+	if (!m_bIsInputEnable) return;	
 	// シフトキーを押している間は移動なし
 	if (Input::IsKeyPress(VK_SHIFT)) return;
 
@@ -171,7 +171,7 @@ void ComponentPlayerController::Move()
 
 	// キーボード入力
 	moveDir = MoveKeybord();
-
+	
 	m_pCompRigidbody->AddForce(moveDir * m_fMoveSpeed);
 
 	RotateToMoveDir(moveDir);	// 移動方向に回転
@@ -307,9 +307,9 @@ void ComponentPlayerController::RotateToMoveDir(Vector3<float> moveDir)
 
 	moveDir.Normalize();	// 正規化
 
-	float targetRad = atan2(moveDir.x, moveDir.z);								// 目標角度
-	Quaternion qTargetRot = Quaternion::FromEulerAngle({ 0.0f, targetRad, 0.0f });	// 目標回転
-	Quaternion qSelfRot = m_pCompTran->GetLocalRotation();							// 自身回転
+	float targetRad			= atan2(moveDir.x, moveDir.z);								// 目標角度
+	Quaternion qTargetRot	= Quaternion::FromEulerAngle({ 0.0f, targetRad, 0.0f });	// 目標回転
+	Quaternion qSelfRot		= m_pCompTran->GetLocalRotation();							// 自身回転
 
 	// 回転が遠回りにならないように調整
 	// ※クォータニオン同士の内積が負の場合は最短距離で回転しないため、回転方向を逆にする
@@ -333,8 +333,12 @@ void ComponentPlayerController::RotateToMoveDir(Vector3<float> moveDir)
 =========================================== */
 void ComponentPlayerController::MoveAnime(Vector3<float> vMoveDir)
 {
+	// ゲームクリア、ゲームオーバーアニメ再生中は処理しない
+	if (m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_GAMECLEAR) ||
+		m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_GAMEOVER)) return;
+
 	// ショットアニメが再生されている場合、移動アニメは再生しない
-	if (m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_SHOT)) return;
+	if (m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_SHOT))		return;
 
 	// 移動している場合
 	if (std::abs(vMoveDir.x) > 0.0f || std::abs(vMoveDir.z) > 0.0f)
@@ -440,15 +444,15 @@ void ComponentPlayerController::Debug(DebugUI::Window& window)
 
 	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("IsInputEnable", Item::Kind::Bool, &m_bIsInputEnable));	// 入力有効フラグ
 
-	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("MoveSpeed", Item::Kind::Float, &m_fMoveSpeed));		// 移動速度
-	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("RotateSpeed", Item::Kind::Float, &m_fRotateSpeed));	// 回転速度
-	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("JumpPower", Item::Kind::Float, &m_fJumpPower));		// ジャンプ力
+	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("MoveSpeed",		Item::Kind::Float, &m_fMoveSpeed));		// 移動速度
+	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("RotateSpeed",	Item::Kind::Float, &m_fRotateSpeed));	// 回転速度
+	pGroupPlayerCtr->AddGroupItem(Item::CreateBind("JumpPower",		Item::Kind::Float, &m_fJumpPower));		// ジャンプ力
 
-	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Forward", &m_MoveKey[E_MoveKey::FORWARD]));
-	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Back", &m_MoveKey[E_MoveKey::BACK]));
-	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Right", &m_MoveKey[E_MoveKey::RIGHT]));
-	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Left", &m_MoveKey[E_MoveKey::LEFT]));
-	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Jump", &m_MoveKey[E_MoveKey::JUMP]));
+	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Forward",		&m_MoveKey[E_MoveKey::FORWARD]));
+	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Back",			&m_MoveKey[E_MoveKey::BACK]));
+	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Right",		&m_MoveKey[E_MoveKey::RIGHT]));
+	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Left",			&m_MoveKey[E_MoveKey::LEFT]));
+	pGroupPlayerCtr->AddGroupItem(CreateKeyList("MoveKey_Jump",			&m_MoveKey[E_MoveKey::JUMP]));
 
 	window.AddItem(pGroupPlayerCtr);
 
@@ -469,7 +473,7 @@ DebugUI::Item* ComponentPlayerController::CreateKeyList(std::string sName, BYTE*
 	using namespace DebugUI;
 
 	// リスト作成
-	DebugUI::Item* reItem = Item::CreateList(sName.c_str(), [this, moveKey](const void* arg)
+	DebugUI::Item* reItem =  Item::CreateList(sName.c_str(), [this, moveKey](const void* arg)
 	{
 		std::string key = reinterpret_cast<const char*>(arg);
 		*moveKey = KEY_MAP.at(key);	// 入力キーを設定(BYTE)
@@ -481,17 +485,17 @@ DebugUI::Item* ComponentPlayerController::CreateKeyList(std::string sName, BYTE*
 	for (auto& key : KEY_MAP)
 	{
 		reItem->AddListItem(key.first.c_str());
-
+		
 		// 初期値と一致する文字列を探す
 		if (key.second == *moveKey)
 		{
 			reItem->SetListNo(i);
 		}
-
+		
 		i++;
 	}
 
-
+	
 
 	return reItem;
 }

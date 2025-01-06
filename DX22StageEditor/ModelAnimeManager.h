@@ -41,6 +41,9 @@ public:
 		PLYR_IDLE,		// 待機
 		PLYR_WALK,		// 歩行
 		PLYR_SHOT,		// ショット
+		PLYR_DIE,		// 死亡
+		PLYR_GAMECLEAR,	// ゲームクリア
+		PLYR_GAMEOVER,	// ゲームオーバー
 		PLYR_MAX,		
 	};
 

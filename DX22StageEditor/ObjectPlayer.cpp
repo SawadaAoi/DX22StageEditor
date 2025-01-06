@@ -114,6 +114,9 @@ void ObjectPlayer::GameClear()
 	// プレイヤーの向きを-Z軸方向に
 	float fRad = MathUtils::ToRadian(180.0f);
 	m_pCompTransform->SetLocalRotationEuler(Vector3<float>(0.0f, fRad, 0.0f));
+
+	// ゲームクリアアニメーション再生
+	m_pCompModelAnime->PlayAnime(ANIME_KEY_PLAYER::PLYR_GAMECLEAR, false, 1.0f);
 }
 
 /* ========================================
@@ -173,7 +176,11 @@ void ObjectPlayer::Damage()
 
 	if (m_nHp <= 0)
 	{
-		// 死亡
+		m_pCompPlayerController->SetInputEnable(false);			// 操作を無効に
+		m_pCompRigidbody->SetVelocity(Vector3<float>::Zero());	// 移動速度を0に
+
+		// 死亡アニメーション
+		m_pCompModelAnime->PlayAnime(ANIME_KEY_PLAYER::PLYR_DIE, false, 1.0f);
 	}
 }
 

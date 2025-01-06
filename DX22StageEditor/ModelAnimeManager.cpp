@@ -32,6 +32,9 @@ const std::unordered_map < int, std::string > ANIME_DATA_PLAYER_CAT_PATH
 	{ANIME_KEY_PLAYER::PLYR_IDLE		, "Assets/Model/Anime/Player/Player_Idle.fbx" },	// 待機
 	{ANIME_KEY_PLAYER::PLYR_WALK		, "Assets/Model/Anime/Player/Player_Walk.fbx" },	// 歩行
 	{ANIME_KEY_PLAYER::PLYR_SHOT		, "Assets/Model/Anime/Player/Player_Shot.fbx" },	// ショット
+	{ANIME_KEY_PLAYER::PLYR_DIE			, "Assets/Model/Anime/Player/Player_Die.fbx" },	// 死亡
+	{ANIME_KEY_PLAYER::PLYR_GAMECLEAR	, "Assets/Model/Anime/Player/Player_GameClear.fbx" },	// ゲームクリア
+	{ANIME_KEY_PLAYER::PLYR_GAMEOVER	, "Assets/Model/Anime/Player/Player_GameOver.fbx" },	// ゲームオーバー
 };
 
 
