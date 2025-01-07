@@ -61,7 +61,7 @@ void ObjectEnemy::InitLocal()
 {
 	m_pCompColSphere = AddComponent<ComponentCollisionSphere>();
 	m_pCompColSphere->SetRadius(1.0f);
-	m_pCompColSphere->SetTrigger(true);
+	m_pCompColSphere->SetTrigger(false);
 
 	m_pCompRigidbody = AddComponent<ComponentRigidbody>();
 	m_pCompRigidbody->SetGroundDrag(GROUND_DRAG);

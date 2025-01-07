@@ -58,6 +58,9 @@ void ObjectEnemyRandom::OutPutLocalData(std::ofstream& file)
 	// ターゲット切り替え時間
 	data.fTargetSwitchTime = m_pCompEnemyMoveRandom->GetTargetSwitchTime();
 
+	// 移動範囲中心座標
+	data.vMoveLimitCenter = m_pCompEnemyMoveRandom->GetMoveLimitRectCenter();
+
 	// 移動範囲
 	std::vector<Vector3<float>> vMoveLimit = m_pCompEnemyMoveRandom->GetMoveLimitRect();
 	data.vMoveLimitRF = vMoveLimit[0];
@@ -91,6 +94,9 @@ void ObjectEnemyRandom::InputLocalData(std::ifstream& file)
 	// ターゲット切り替え時間
 	m_pCompEnemyMoveRandom->SetTargetSwitchTime(data.fTargetSwitchTime);
 
+	// 移動範囲中心座標
+	m_pCompEnemyMoveRandom->SetMoveLimitRectCenter(data.vMoveLimitCenter);
+
 	// 移動範囲
 	std::vector<Vector3<float>> vMoveLimit;
 	vMoveLimit.push_back(data.vMoveLimitRF);
@@ -100,7 +106,6 @@ void ObjectEnemyRandom::InputLocalData(std::ifstream& file)
 
 	m_pCompEnemyMoveRandom->SetMoveLimitRect(vMoveLimit);
 
-	// 移動範囲座標Y
-	m_pCompEnemyMoveRandom->SetMoveLimitRectPosY(data.vMoveLimitRF.y);
+	m_pCompEnemyMoveRandom->InitTargetPos();
 
 }

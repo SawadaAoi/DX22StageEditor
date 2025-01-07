@@ -25,6 +25,7 @@ public:
 	{
 		float fMoveSpeed;				// 移動速度
 		float fTargetSwitchTime;		// ターゲット切り替え時間
+		Vector3<float> vMoveLimitCenter;	// 移動範囲中心座標
 		Vector3<float> vMoveLimitRF;	// 移動範囲(右上)
 		Vector3<float> vMoveLimitLF;	// 移動範囲(左上)
 		Vector3<float> vMoveLimitLB;	// 移動範囲(左下)

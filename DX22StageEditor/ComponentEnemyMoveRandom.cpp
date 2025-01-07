@@ -16,15 +16,17 @@
 #include "ShapeLine.h"
 #include "ShapeSphere.h"
 #include <format>
+#include "ColorVec3.h"
 
 // =============== 定数定義 =======================
-const float DEFAULT_TARGET_SWITCH_TIME	= 2.0f;			// 目的座標切り替え時間
-const float DEFAULT_MOVE_RECT_SIZE		= 5.0f;			// 移動範囲のサイズ
-const float LIMIT_DISTANCE_SQ			= 0.5f * 0.5f;	// 移動先に到達する距離の2乗
+const float DEFAULT_TARGET_SWITCH_TIME = 2.0f;			// 目的座標切り替え時間
+const float DEFAULT_MOVE_RECT_SIZE = 5.0f;			// 移動範囲のサイズ
+const float LIMIT_DISTANCE_SQ = 0.5f * 0.5f;	// 移動先に到達する距離の2乗
+const int	LIMIT_RECT_POINT_NUM = 4;			// 移動範囲の頂点数
 
 // 目的座標描画
-const Vector3<float> TARGET_COLOR			= ColorVec3::BLUE;
-const Vector3<float> TARGET_SPHERE_SCALE	= { 0.2f, 0.2f, 0.2f };
+const Vector3<float> TARGET_COLOR = ColorVec3::BLUE;
+const Vector3<float> TARGET_SPHERE_SCALE = { 0.2f, 0.2f, 0.2f };
 
 /* ========================================
 	コンストラクタ関数
@@ -40,11 +42,13 @@ ComponentEnemyMoveRandom::ComponentEnemyMoveRandom(ObjectBase* pOwner)
 	, m_fTargetSwitchCnt(0.0f)
 #ifdef _DEBUG
 	, m_bDispMoveLimitRect(true)
+	, m_bMoveStop(false)
 #else
 	, m_bDispMoveLimitRect(false)
 #endif // _DEBUG
-	, m_vtMoveLimitRect()
-	, m_fMoveLimitRectPosY(0.0f)
+	, m_vRectCenter()
+	, m_vtMoveLimitRectLocal()
+	, m_vtMoveLimitRectWorld()
 	, m_pRectLine(nullptr)
 {
 }
@@ -64,12 +68,8 @@ void ComponentEnemyMoveRandom::Init()
 	// 移動範囲描画用のラインを生成
 	m_pRectLine = std::make_unique<ShapeLine>(4);
 
-	// 初期目的座標を設定
-	m_vTargetPos = GetRandomPoint(
-		m_vtMoveLimitRect[0], m_vtMoveLimitRect[1], m_vtMoveLimitRect[2], m_vtMoveLimitRect[3]);
-
+	// 目的座標描画用の球を生成
 	m_pTargetSphere = std::make_unique<ShapeSphere>();
-	m_pTargetSphere->SetPosition(m_vTargetPos);
 	m_pTargetSphere->SetScale(TARGET_SPHERE_SCALE);
 	m_pTargetSphere->SetColor(TARGET_COLOR);
 	m_pTargetSphere->SetDrawMode(ShapeSphere::E_DrawMode::DRAW_NORMAL);
@@ -82,6 +82,10 @@ void ComponentEnemyMoveRandom::Init()
 ======================================= */
 void ComponentEnemyMoveRandom::Update()
 {
+#ifdef _DEBUG
+	if (m_bMoveStop) return;
+#endif // _DEBUG
+
 	// 目的座標切り替え時間をカウント
 	m_fTargetSwitchCnt += DELTA_TIME;
 
@@ -94,12 +98,9 @@ void ComponentEnemyMoveRandom::Update()
 	// 移動処理
 	Move();
 
-	// 座標範囲線の更新
-	for (int i = 0; i < m_vtMoveLimitRect.size(); i++)
-	{
-		int nNextIndex = (i + 1) % m_vtMoveLimitRect.size();
-		m_pRectLine->UpdateLine(i + 1, m_vtMoveLimitRect[i], m_vtMoveLimitRect[nNextIndex], Vector3<float>(0.0f, 0.0f, 1.0f));
-	}
+	// 移動範囲座標の更新
+	UpdateMoveLimitRectWorldPos();
+
 }
 
 /* ========================================
@@ -114,6 +115,24 @@ void ComponentEnemyMoveRandom::Draw()
 		m_pRectLine->Draw();
 		m_pTargetSphere->Draw();
 	}
+}
+
+/* ========================================
+	目的座標初期化関数
+	-------------------------------------
+	内容：目的座標を初期化
+======================================= */
+void ComponentEnemyMoveRandom::InitTargetPos()
+{
+	// 移動範囲座標(ワールド)の更新
+	UpdateMoveLimitRectWorldPos();
+
+	// 初期目的座標を設定
+	m_vTargetPos = GetRandomPoint(
+		m_vtMoveLimitRectWorld[0], m_vtMoveLimitRectWorld[1], m_vtMoveLimitRectWorld[2], m_vtMoveLimitRectWorld[3]);
+
+	// 目的座標描画用の球座標を設定
+	m_pTargetSphere->SetPosition(m_vTargetPos);
 }
 
 /* ========================================
@@ -155,7 +174,7 @@ void ComponentEnemyMoveRandom::SwitchTargetPos()
 
 	// 移動範囲内のランダムな座標を目的座標に設定
 	m_vTargetPos = GetRandomPoint(
-		m_vtMoveLimitRect[0], m_vtMoveLimitRect[1], m_vtMoveLimitRect[2], m_vtMoveLimitRect[3]);
+		m_vtMoveLimitRectWorld[0], m_vtMoveLimitRectWorld[1], m_vtMoveLimitRectWorld[2], m_vtMoveLimitRectWorld[3]);
 
 	m_pTargetSphere->SetPosition(m_vTargetPos);
 
@@ -241,12 +260,35 @@ Vector3<float> ComponentEnemyMoveRandom::GetRandomPointInTriangle(const Vector3<
 float ComponentEnemyMoveRandom::GetTriangleArea(const Vector3<float>& P1, const Vector3<float>& P2, const Vector3<float>& P3)
 {
 	// 行列式を利用した公式
-	return 0.5f * 
+	return 0.5f *
 		std::abs(
-			P1.x * (P2.z - P3.z) + 
-			P2.x * (P3.z - P1.z) + 
+			P1.x * (P2.z - P3.z) +
+			P2.x * (P3.z - P1.z) +
 			P3.x * (P1.z - P2.z)
 		);
+}
+
+/* ========================================
+	移動範囲座標(ワールド)更新関数
+	-------------------------------------
+	内容：移動範囲座標を更新
+======================================= */
+void ComponentEnemyMoveRandom::UpdateMoveLimitRectWorldPos()
+{
+	// 移動範囲座標(ワールド)を更新
+	m_vtMoveLimitRectWorld.clear();
+	for (int i = 0; i < m_vtMoveLimitRectLocal.size(); i++)
+	{
+		Vector3<float> vRectWorld = m_vtMoveLimitRectLocal[i] + m_vRectCenter;
+		m_vtMoveLimitRectWorld.push_back(vRectWorld);
+	}
+
+	// 座標範囲線の更新
+	for (int i = 0; i < LIMIT_RECT_POINT_NUM; i++)
+	{
+		int nNextIndex = (i + 1) % LIMIT_RECT_POINT_NUM;
+		m_pRectLine->UpdateLine(i + 1, m_vtMoveLimitRectWorld[i], m_vtMoveLimitRectWorld[nNextIndex], ColorVec3::BLUE);
+	}
 }
 
 /* ========================================
@@ -276,7 +318,17 @@ float ComponentEnemyMoveRandom::GetTargetSwitchTime() const
 =========================================== */
 std::vector<Vector3<float>>& ComponentEnemyMoveRandom::GetMoveLimitRect()
 {
-	return m_vtMoveLimitRect;
+	return m_vtMoveLimitRectLocal;
+}
+
+/* ========================================
+	ゲッター(移動範囲中心座標)関数
+	-------------------------------------
+	戻値：Vector3<float>	移動範囲中心座標
+=========================================== */
+Vector3<float> ComponentEnemyMoveRandom::GetMoveLimitRectCenter()
+{
+	return m_vRectCenter;
 }
 
 /* ========================================
@@ -290,64 +342,50 @@ void ComponentEnemyMoveRandom::SetTargetSwitchTime(float fTime)
 }
 
 /* ========================================
-	セッター(移動範囲座標)関数
+	セッター(移動範囲座標(ローカル))関数
 	-------------------------------------
 	引数：std::vector<Vector3<float>>	移動範囲座標
 =========================================== */
 void ComponentEnemyMoveRandom::SetMoveLimitRect(const std::vector<Vector3<float>>& vtRect)
 {
-	m_vtMoveLimitRect = vtRect;
+	m_vtMoveLimitRectLocal = vtRect;
 }
 
 /* ========================================
-	移動範囲設定関数(正方形)関数
+	移動範囲座標(ローカル)設定関数(正方形)関数
 	-------------------------------------
 	引数：float	一辺の長さ
 =========================================== */
 void ComponentEnemyMoveRandom::SetMoveLimitRectSquare(float fSize)
 {
-	m_vtMoveLimitRect.clear();
+	m_vtMoveLimitRectLocal.clear();
 
 	float fHalfSize = fSize * 0.5f;
 
-	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfSize, m_fMoveLimitRectPosY, fHalfSize));	// 右上
-	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfSize, m_fMoveLimitRectPosY, fHalfSize));	// 左上
-	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfSize, m_fMoveLimitRectPosY, -fHalfSize));	// 左下
-	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfSize, m_fMoveLimitRectPosY, -fHalfSize));	// 右下
+	m_vtMoveLimitRectLocal.push_back(Vector3<float>(fHalfSize, 0.0f, fHalfSize));	// 右上
+	m_vtMoveLimitRectLocal.push_back(Vector3<float>(-fHalfSize, 0.0f, fHalfSize));	// 左上
+	m_vtMoveLimitRectLocal.push_back(Vector3<float>(-fHalfSize, 0.0f, -fHalfSize));	// 左下
+	m_vtMoveLimitRectLocal.push_back(Vector3<float>(fHalfSize, 0.0f, -fHalfSize));	// 右下
 }
 
 /* ========================================
-	移動範囲設定関数(XZ平面)関数
+	移動範囲座標(ローカル)設定関数(XZ平面)関数
 	-------------------------------------
 	引数：Vector2<float>	XZ平面のサイズ
 =========================================== */
 void ComponentEnemyMoveRandom::SetMoveLimitRectXZ(const Vector2<float>& vSize)
 {
-	m_vtMoveLimitRect.clear();
+	m_vtMoveLimitRectLocal.clear();
 
 	float fHalfX = vSize.x * 0.5f;
 	float fHalfZ = vSize.y * 0.5f;
 
-	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfX, m_fMoveLimitRectPosY, fHalfZ));		// 右上
-	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfX, m_fMoveLimitRectPosY, fHalfZ));		// 左上
-	m_vtMoveLimitRect.push_back(Vector3<float>(-fHalfX, m_fMoveLimitRectPosY, -fHalfZ));	// 左下
-	m_vtMoveLimitRect.push_back(Vector3<float>(fHalfX, m_fMoveLimitRectPosY, -fHalfZ));		// 右下
+	m_vtMoveLimitRectLocal.push_back(Vector3<float>(fHalfX, 0.0f, fHalfZ));		// 右上
+	m_vtMoveLimitRectLocal.push_back(Vector3<float>(-fHalfX, 0.0f, fHalfZ));		// 左上
+	m_vtMoveLimitRectLocal.push_back(Vector3<float>(-fHalfX, 0.0f, -fHalfZ));	// 左下
+	m_vtMoveLimitRectLocal.push_back(Vector3<float>(fHalfX, 0.0f, -fHalfZ));		// 右下
 }
 
-/* ========================================
-	移動範囲設定関数(Y座標)関数
-	-------------------------------------
-	引数：float	Y座標
-=========================================== */
-void ComponentEnemyMoveRandom::SetMoveLimitRectPosY(float fPosY)
-{
-	m_fMoveLimitRectPosY = fPosY;
-
-	for (int i = 0; i < m_vtMoveLimitRect.size(); i++)
-	{
-		m_vtMoveLimitRect[i].y = fPosY;
-	}
-}
 
 /* ========================================
 	移動範囲表示フラグ設定関数
@@ -357,6 +395,16 @@ void ComponentEnemyMoveRandom::SetMoveLimitRectPosY(float fPosY)
 void ComponentEnemyMoveRandom::SetDispMoveLimitRect(bool bDisp)
 {
 	m_bDispMoveLimitRect = bDisp;
+}
+
+/* ========================================
+	移動範囲中心座標設定関数
+	-------------------------------------
+	引数：Vector3<float>	移動範囲中心座標
+=========================================== */
+void ComponentEnemyMoveRandom::SetMoveLimitRectCenter(const Vector3<float>& vCenter)
+{
+	m_vRectCenter = vCenter;
 }
 
 
@@ -374,17 +422,26 @@ void ComponentEnemyMoveRandom::Debug(DebugUI::Window& window)
 
 	Item* EnemyMoveRandom = Item::CreateGroup("EnemyMoveRandom");
 
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveStop", Item::Kind::Bool, &m_bMoveStop));
 	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveSpeed", Item::Kind::Float, &m_fMoveSpeed));
 	EnemyMoveRandom->AddGroupItem(Item::CreateValue("TargetPos", Item::Kind::Text));
 	EnemyMoveRandom->AddGroupItem(Item::CreateBind("SwitchTime", Item::Kind::Float, &m_fTargetSwitchTime));
 	EnemyMoveRandom->AddGroupItem(Item::CreateBind("SwitchCnt", Item::Kind::Float, &m_fTargetSwitchCnt));
 	EnemyMoveRandom->AddGroupItem(Item::CreateBind("DispMoveLimitRect", Item::Kind::Bool, &m_bDispMoveLimitRect));
 
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("RectCenter", Item::Kind::Vector, &m_vRectCenter));
+
+	// 移動範囲再設定
+	EnemyMoveRandom->AddGroupItem(Item::CreateCallBack("ResetRect", Item::Kind::Command, [this](bool isWrite, void* arg)
+	{
+		m_vRectCenter = m_pCompTransform->GetWorldPosition();
+		InitTargetPos();
+	}));
 	// 移動範囲リスト
-	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_1", Item::Kind::Vector, &m_vtMoveLimitRect[0]));	// 右上
-	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_2", Item::Kind::Vector, &m_vtMoveLimitRect[1]));	// 左上
-	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_3", Item::Kind::Vector, &m_vtMoveLimitRect[2]));	// 左下
-	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_4", Item::Kind::Vector, &m_vtMoveLimitRect[3]));	// 右下
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_1", Item::Kind::Vector, &m_vtMoveLimitRectLocal[0]));	// 右上
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_2", Item::Kind::Vector, &m_vtMoveLimitRectLocal[1]));	// 左上
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_3", Item::Kind::Vector, &m_vtMoveLimitRectLocal[2]));	// 左下
+	EnemyMoveRandom->AddGroupItem(Item::CreateBind("MoveLimitRect_4", Item::Kind::Vector, &m_vtMoveLimitRectLocal[3]));	// 右下
 
 	window.AddItem(EnemyMoveRandom);
 
