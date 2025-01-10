@@ -15,6 +15,7 @@ enum E_ObjectTag
 	None,			// デフォルト
 	Player,			// プレイヤー
 	PlayerBullet,	// プレイヤーの弾
+	PlayerStart,	// プレイヤーの開始地点
 	Enemy,			// 敵
 	Ground,			// 地面
 	Camera,			// カメラ

@@ -202,6 +202,7 @@
     <ClCompile Include="ObjectLightDirectional.cpp" />
     <ClCompile Include="ObjectLightPoint.cpp" />
     <ClCompile Include="ObjectLightSpot.cpp" />
+    <ClCompile Include="ObjectPlayerStart.cpp" />
     <ClCompile Include="ObjectSkyBox.cpp" />
     <ClCompile Include="ObjectTypeRegistry.cpp" />
     <ClCompile Include="ModelAnimeManager.cpp" />
@@ -303,6 +304,7 @@
     <ClInclude Include="ObjectLightDirectional.h" />
     <ClInclude Include="ObjectLightPoint.h" />
     <ClInclude Include="ObjectLightSpot.h" />
+    <ClInclude Include="ObjectPlayerStart.h" />
     <ClInclude Include="ObjectSkyBox.h" />
     <ClInclude Include="ObjectTypeRegistry.h" />
     <ClInclude Include="ModelAnimeManager.h" />

@@ -11,6 +11,7 @@
 
 // プレイヤー
 #include "ObjectPlayer.h"
+#include "ObjectPlayerStart.h"
 
 // その他
 #include "ObjectGoal.h"
@@ -61,6 +62,7 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 
 	// プレイヤー
 	REGISTER_OBJECT_TYPE(ObjectPlayer);
+	REGISTER_OBJECT_TYPE(ObjectPlayerStart);
 
 	// その他
 	REGISTER_OBJECT_TYPE(ObjectSkyBox);
