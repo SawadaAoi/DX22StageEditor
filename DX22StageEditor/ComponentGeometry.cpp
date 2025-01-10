@@ -17,8 +17,6 @@
 #include "LightManager.h"
 #include "CameraManager.h"
 
-// =============== 定数定義 =======================
-
 
 
 /* ========================================
@@ -35,6 +33,9 @@ ComponentGeometry::ComponentGeometry(ObjectBase* pOwner)
 	, m_pTransform(nullptr)
 	, m_pTexture(nullptr)
 	, m_bIsTex(false)
+	, m_bIsCulling(true)
+	, m_fUvScale(1.0f, 1.0f)
+	, m_fUvOffset(0.0f, 0.0f)
 {
 	m_pTransform = m_pOwnerObj->GetComponent<ComponentTransform>();
 	m_pTexture = GET_TEXTURE_DATA(TextureManager::E_TEX_KEY::TEST);	// デフォルトテクスチャ
@@ -71,6 +72,9 @@ void ComponentGeometry::Update()
 	// テクスチャ設定
 	m_pShape->SetTexture(m_pTexture);
 	m_pShape->SetUseTexture(m_bIsTex);
+	m_pShape->SetIsCulling(m_bIsCulling);
+	m_pShape->SetUvScale(m_fUvScale);
+	m_pShape->SetUvOffset(m_fUvOffset);
 }
 
 /* ========================================
@@ -84,8 +88,8 @@ void ComponentGeometry::Draw()
 	if (m_pShape)
 	{
 		ObjectBase::T_LightParam lightParam = m_pOwnerObj->GetLightMaterial();
-		m_pShape->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, lightParam.bLightUse);	// ライトパラメータ
-		m_pShape->SetLights(LIGHT_MNG_INST.GetLightList());																	// ライト設定
+		m_pShape->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, lightParam.bLightUse);					// ライトパラメー
+		m_pShape->SetLights(LIGHT_MNG_INST.GetLightList());	// ライト設定
 		m_pShape->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetWorldPosition());	// カメラ位置設定
 
 		m_pShape->Draw();
@@ -127,7 +131,6 @@ void ComponentGeometry::CreateShape()
 	}
 }
 
-
 /* ========================================
 	ゲッター(図形種類)関数
 	-------------------------------------
@@ -159,6 +162,36 @@ bool ComponentGeometry::GetIsTex() const
 }
 
 /* ========================================
+	ゲッター(カリング設定)関数
+	-------------------------------------
+	戻り値：カリング設定
+=========================================== */
+bool ComponentGeometry::GetCulling() const
+{
+	return m_bIsCulling;
+}
+
+/* ========================================
+	ゲッター(テクスチャオフセット)関数
+	-------------------------------------
+	戻り値：テクスチャオフセット
+=========================================== */
+Vector2<float> ComponentGeometry::GetUvScale() const
+{
+	return m_fUvScale;
+}
+
+/* ========================================
+	ゲッター(テクスチャスケール)関数
+	-------------------------------------
+	戻り値：テクスチャスケール
+=========================================== */
+Vector2<float> ComponentGeometry::GetUvOffset() const
+{
+	return m_fUvOffset;
+}
+
+/* ========================================
 	セッター(図形種類)関数
 	-------------------------------------
 	引数：図形の種類
@@ -169,6 +202,7 @@ void ComponentGeometry::SetShapeType(E_ShapeType eType)
 	CreateShape();	// 設定した値で図形オブジェクトを生成
 
 }
+
 /* ========================================
 	セッター(テクスチャ)関数
 	-------------------------------------
@@ -189,6 +223,35 @@ void ComponentGeometry::SetIsTex(bool bIsTex)
 	m_bIsTex = bIsTex;
 }
 
+/* ========================================
+	セッター(カリング設定)関数
+	-------------------------------------
+	引数：カリング設定
+=========================================== */
+void ComponentGeometry::SetCulling(bool bIsCulling)
+{
+	m_bIsCulling = bIsCulling;
+}
+
+/* ========================================
+	セッター(テクスチャオフセット)関数
+	-------------------------------------
+	引数：テクスチャオフセット
+=========================================== */
+void ComponentGeometry::SetUvScale(const Vector2<float>& scale)
+{
+	m_fUvScale = scale;
+}
+
+/* ========================================
+	セッター(テクスチャスケール)関数
+	-------------------------------------
+	引数：テクスチャスケール
+=========================================== */
+void ComponentGeometry::SetUvOffset(const Vector2<float>& offset)
+{
+	m_fUvOffset = offset;
+}
 
 #ifdef _DEBUG
 /* ========================================
@@ -230,6 +293,13 @@ void ComponentGeometry::Debug(DebugUI::Window& window)
 	}));	// テクスチャ使用フラグ
 	// テクスチャリスト
 	pGroupGeometry->AddGroupItem(InitTextureList());
+
+	// カリング設定
+	pGroupGeometry->AddGroupItem(Item::CreateBind("Culling", Item::Kind::Bool, &m_bIsCulling));
+	// テクスチャスケール
+	pGroupGeometry->AddGroupItem(Item::CreateBind("UvScale", Item::Kind::Vector2, &m_fUvScale));
+	// テクスチャオフセット
+	pGroupGeometry->AddGroupItem(Item::CreateBind("UvOffset", Item::Kind::Vector2, &m_fUvOffset));
 
 	window.AddItem(pGroupGeometry);
 

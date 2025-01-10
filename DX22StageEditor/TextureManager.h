@@ -36,6 +36,7 @@ public:
 		PLAYER_HP,		// プレイヤーHP
 		PLAYER_BULLET,	// プレイヤー弾
 		STAGE_GOAL,		// ゴール
+		WALL_FENCE,		// 壁(フェンス)
 		MAX,
 	};
 
@@ -51,6 +52,7 @@ public:
 		{TEX_KEY::PLAYER_HP,	"Assets/Texture/Player_Hp.png"			},
 		{TEX_KEY::PLAYER_BULLET,"Assets/Texture/Player_Bullet.png"		},
 		{TEX_KEY::STAGE_GOAL,	"Assets/Texture/Stage_Goal.png"			},
+		{TEX_KEY::WALL_FENCE,	"Assets/Texture/Wall_Fence.png"			},
 
 	};
 

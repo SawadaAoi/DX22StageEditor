@@ -34,6 +34,13 @@ cbuffer bufMat : register(b0)
     float4x4 proj;  // プロジェクション変換行列
 };
 
+// uv座標のスケールとオフセット
+cbuffer bufUV : register(b1)
+{
+    float2 uvScale; // UVスケール
+    float2 uvOffset; // UVオフセット
+};
+
 // メイン関数
 VS_OUT main(VS_IN vin)
 {
@@ -46,6 +53,9 @@ VS_OUT main(VS_IN vin)
     
     vout.normal = mul(vin.normal, (float3x3)world);
     vout.uv     = vin.uv;
+    
+    vout.uv    *= uvScale;
+    vout.uv    += uvOffset;
     
     return vout;
 }

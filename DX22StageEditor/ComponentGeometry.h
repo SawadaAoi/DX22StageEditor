@@ -39,11 +39,17 @@ public:
 	E_ShapeType GetShapeType() const;	// 図形の種類を取得
 	Texture* GetTexture() const;		// テクスチャを取得
 	bool GetIsTex() const;				// テクスチャ使用フラグを取得
-
+	bool GetCulling() const;			// カリングフラグを取得
+	Vector2<float> GetUvScale() const;	// テクスチャスケールを取得
+	Vector2<float> GetUvOffset() const;	// テクスチャオフセットを取得
+	
 	// セッター
 	void SetShapeType(E_ShapeType eType);	// 図形の種類を設定	
 	void SetTexture(Texture* pTexture);		// テクスチャを設定
 	void SetIsTex(bool bIsTex);				// テクスチャ使用フラグを設定
+	void SetCulling(bool bIsCulling);		// カリング設定
+	void SetUvScale(const Vector2<float>& scale);	// テクスチャスケールを設定
+	void SetUvOffset(const Vector2<float>& offset);	// テクスチャオフセットを設定
 
 	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数
 
@@ -60,6 +66,10 @@ private:
 
 	Texture*	m_pTexture;	// テクスチャ
 	bool		m_bIsTex;	// テクスチャ使用フラグ
+	bool		m_bIsCulling;	// カリングフラグ
+
+	Vector2<float> m_fUvScale;	// テクスチャスケール
+	Vector2<float> m_fUvOffset;	// テクスチャオフセット
 
 	E_ShapeType m_eType;	// 図形の種類
 

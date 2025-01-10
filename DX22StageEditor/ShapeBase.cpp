@@ -33,13 +33,15 @@ ShapeBase::ShapeBase()
 	, m_eDrawMode(E_DrawMode::DRAW_NORMAL)
 	, m_pTexture(nullptr)
 	, m_bIsTex(false)
+	, m_bIsCulling(true)
+	, m_fUvScale(1.0f, 1.0f)
+	, m_fUvOffset(0.0f, 0.0f)
 {
 	// 頂点シェーダー読み込み
 	m_pVS = GET_VS_DATA(VS_KEY::VS_SHAPE);
 	// ピクセルシェーダー読み込み
 	m_pPS = GET_PS_DATA(PS_KEY::PS_SHAPE);
 
-	//m_pTexture = GET_TEXTURE_DATA(TEX_KEY::TEST);	// デフォルトテクスチャ
 }
 
 /* ========================================
@@ -68,6 +70,11 @@ void ShapeBase::Draw()
 	// 定数バッファ(ワールド、ビュー、プロジェクション行列)の書き込み
 	m_pVS->WriteBuffer(0, m_WVP);
 
+	// Uvスケール、オフセットの設定
+	DirectX::XMFLOAT4 fUvBuf = { m_fUvScale.x, m_fUvScale.y, m_fUvOffset.x, m_fUvOffset.y };
+	m_pVS->WriteBuffer(1, &fUvBuf);
+
+
 	// 定数バッファ(色、表示モード、テクスチャ使用フラグ)の書き込み
 	float	fData[3] = { m_fColor.x, m_fColor.y, m_fColor.z };	// 色
 	int		nData[2] = { m_eDrawMode, m_bIsTex };				// 表示モード、テクスチャ使用フラグ
@@ -79,8 +86,16 @@ void ShapeBase::Draw()
 	m_pVS->Bind();
 	m_pPS->Bind();
 	
+	if (m_bIsCulling)
+		DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_BACK);	// カリング有効
+	else
+		DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_NONE);	// カリング無効
+
 	// 頂点バッファ、インデックスバッファをGPUに設定し、描画
 	m_pMeshBuffer[m_eDrawMode]->Draw();
+
+	// カリングを元に戻す
+	DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_BACK);	// カリング有効
 }
 
 
@@ -155,6 +170,45 @@ ShapeBase::E_DrawMode ShapeBase::GetDrawMode()
 	return m_eDrawMode;
 }
 
+/* ========================================
+	ゲッター(テクスチャ使用フラグ)関数
+	-------------------------------------
+	戻値：bool m_bIsTex
+=========================================== */
+bool ShapeBase::GetIsTexture()
+{
+	return m_bIsTex;
+}
+
+/* ========================================
+	ゲッター(カリング設定)関数
+	-------------------------------------
+	戻値：bool m_bIsCulling
+=========================================== */
+bool ShapeBase::GetIsCulling()
+{
+	return m_bIsCulling;
+}
+
+/* ========================================
+	ゲッター(Uvスケール)関数
+	-------------------------------------
+	戻値：Vector2<float> m_vUvScale
+=========================================== */
+Vector2<float> ShapeBase::GetUvScale()
+{
+	return m_fUvScale;
+}
+
+/* ========================================
+	ゲッター(Uvスケール)関数
+	-------------------------------------
+	戻値：Vector2<float> m_vUvScale
+=========================================== */
+Vector2<float> ShapeBase::GetUvOffset()
+{
+	return m_fUvOffset;
+}
 
 
 /* ========================================
@@ -227,6 +281,7 @@ void ShapeBase::SetUseTexture(int bIsTex)
 	m_bIsTex = bIsTex;
 }
 
+
 /* ========================================
 	セッター(ライト設定(マテリアル))関数
 	-------------------------------------
@@ -288,4 +343,34 @@ void ShapeBase::SetLights(std::vector<ObjectLight*> lights)
 	}
 
 	m_pPS->WriteBuffer(4, param);
+}
+
+/* ========================================
+	セッター(カリング設定)関数
+	-------------------------------------
+	引数：bool bCulling
+=========================================== */
+void ShapeBase::SetIsCulling(bool bCulling)
+{
+	m_bIsCulling = bCulling;
+}
+
+/* ========================================
+	セッター(Uvオフセット)関数
+	-------------------------------------
+	引数：Vector2<float> fOffset
+=========================================== */
+void ShapeBase::SetUvScale(Vector2<float> fScale)
+{
+	m_fUvScale = fScale;
+}
+
+/* ========================================
+	セッター(Uvオフセット)関数
+	-------------------------------------
+	引数：Vector2<float> fOffset
+=========================================== */
+void ShapeBase::SetUvOffset(Vector2<float> fOffset)
+{
+	m_fUvOffset = fOffset;
 }

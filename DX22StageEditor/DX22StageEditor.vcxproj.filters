@@ -488,6 +488,9 @@
     <ClCompile Include="ObjectSkyBox.cpp">
       <Filter>ソース ファイル\App\GameObject\Other</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectWall.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">
@@ -795,6 +798,9 @@
     </ClInclude>
     <ClInclude Include="ObjectSkyBox.h">
       <Filter>ソース ファイル\App\GameObject\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectWall.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Plane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

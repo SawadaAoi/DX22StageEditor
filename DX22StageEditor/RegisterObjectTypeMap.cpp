@@ -20,6 +20,7 @@
 #include "ObjectGround.h"
 #include "ObjectBlock.h"
 #include "ObjectBlockGroundAABB.h"
+#include "ObjectWall.h"
 
 // 敵キャラ
 #include "ObjectEnemy.h"
@@ -56,6 +57,7 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectGround);
 	REGISTER_OBJECT_TYPE(ObjectBlock);
 	REGISTER_OBJECT_TYPE(ObjectBlockGroundAABB);
+	REGISTER_OBJECT_TYPE(ObjectWall);
 
 	// プレイヤー
 	REGISTER_OBJECT_TYPE(ObjectPlayer);

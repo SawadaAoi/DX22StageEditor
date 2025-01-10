@@ -242,6 +242,7 @@
     <ClCompile Include="ObjectCamera.cpp" />
     <ClCompile Include="ObjectGround.cpp" />
     <ClCompile Include="ObjectPlayer.cpp" />
+    <ClCompile Include="ObjectWall.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="RegisterObjectTypeMap.cpp" />
     <ClCompile Include="SceneBase.cpp" />
@@ -345,6 +346,7 @@
     <ClInclude Include="ObjectGround.h" />
     <ClInclude Include="ObjectPlayer.h" />
     <ClInclude Include="ObjectTag.h" />
+    <ClInclude Include="ObjectWall.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneManager.h" />
