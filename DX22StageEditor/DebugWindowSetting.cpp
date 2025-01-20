@@ -156,7 +156,7 @@ namespace DebugUI
 			// 選択したらシーン変更
 			std::string sSceneName = reinterpret_cast<const char*>(arg);	// リスト項目名
 			SCENE_MAP.at(sSceneName)();	// シーン変更
-		},true, false);
+		}, true, true);
 
 		// シーン名をリストに追加
 		for (auto& scene : SCENE_MAP)
@@ -230,36 +230,31 @@ namespace DebugUI
 	{
 		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateValue("CreatePos", Item::Kind::Vector));
 
-		// オブジェクトタイプ一覧
-		Item* pObjectTypeList = Item::CreateList("ObjectTypes", [](const void* arg)
-		{
-			// 選択したらそのタイプのオブジェクトを生成
-			std::string sObjTypeName = reinterpret_cast<const char*>(arg);	// リスト項目名
+		// リストを選択したときの実行処理
+		DebugUI::Item::ConstCallback Clickfunc = [](const void* arg) {ClickObjectTypeList(arg); };
 
-			// オブジェクト生成
-			ObjectBase* pObject = OBJ_TYPE_REGISTRY_INST.CreateObject(sObjTypeName);
-			if (pObject)
-			{
-				SceneBase* pScene = SceneManager::GetScene();			// シーン取得
-				pObject->Init(pScene->CreateUniqueName(sObjTypeName));	// オブジェクト初期化(名前重複避ける)
+		// 各オブジェクト種類のグループ作成(見やすさの為)
+		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Empty"));
+		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Player"));
+		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Enemy"));
+		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Terrain"));
+		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Camera"));
+		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Light"));
+		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("System"));
+		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Other"));
 
-				Vector3<float> vPos;
-				vPos = WIN_OBJ_TYPE_LIST["CreatePos"].GetVector();
-				pObject->GetTransform()->SetLocalPosition(vPos);
+		// グループにリストを追加(各グループに1リスト。最後の数字は表示行数)
+		WIN_OBJ_TYPE_LIST["Empty"].AddGroupItem(Item::CreateList("EmptyList",		Clickfunc, false, false, false, 1));
+		WIN_OBJ_TYPE_LIST["Player"].AddGroupItem(Item::CreateList("PlayerList",		Clickfunc, false, false, false, 3));
+		WIN_OBJ_TYPE_LIST["Enemy"].AddGroupItem(Item::CreateList("EnemyList",		Clickfunc, false, false, false, 5));
+		WIN_OBJ_TYPE_LIST["Terrain"].AddGroupItem(Item::CreateList("TerrainList",	Clickfunc, false, false, false, 5));
+		WIN_OBJ_TYPE_LIST["Camera"].AddGroupItem(Item::CreateList("CameraList",		Clickfunc, false, false, false, 3));
+		WIN_OBJ_TYPE_LIST["Light"].AddGroupItem(Item::CreateList("LightList",		Clickfunc, false, false, false, 5));
+		WIN_OBJ_TYPE_LIST["System"].AddGroupItem(Item::CreateList("SystemList",		Clickfunc, false, false, false, 1));
+		WIN_OBJ_TYPE_LIST["Other"].AddGroupItem(Item::CreateList("OtherList",		Clickfunc, false, false, false, 3));
 
-				pScene->AddSceneObjectBase(pObject);					// シーンに追加
-			}
-
-		}, false);
-
-		// リスト初期化
-		std::unordered_map<std::string, ObjectTypeRegistry::CreateFunction*> objectTypeMap = OBJ_TYPE_REGISTRY_INST.GetObjectTypeMap();
-		for (auto& objectType : objectTypeMap)
-		{
-			pObjectTypeList->AddListItem(objectType.first.c_str());
-		}
-
-		WIN_OBJ_TYPE_LIST.AddItem(pObjectTypeList);
+		// リストに中身を追加
+		CreateObjectTypeList();
 	}
 
 	/* ========================================
@@ -294,6 +289,81 @@ namespace DebugUI
 		WIN_TRANSFORM_EDIT["ValuePos"].SetFloat(1.0f);
 		WIN_TRANSFORM_EDIT["ValueRot"].SetFloat(10.0f);
 		WIN_TRANSFORM_EDIT["ValueScale"].SetFloat(1.0f);
+	}
+
+	/* ========================================
+		オブジェクトタイプ一覧クリック関数
+		-------------------------------------
+		内容：オブジェクトタイプ一覧のクリック処理
+		-------------------------------------
+		引数：arg	選択した項目の表示内容
+	=========================================== */
+	void ClickObjectTypeList(const void* arg)
+	{
+		// 選択したらそのタイプのオブジェクトを生成
+		std::string sObjTypeName = reinterpret_cast<const char*>(arg);	// リスト項目名
+
+		// オブジェクト生成
+		ObjectBase* pObject = OBJ_TYPE_REGISTRY_INST.CreateObject(sObjTypeName);
+		if (pObject)
+		{
+			SceneBase* pScene = SceneManager::GetScene();			// シーン取得
+			pObject->Init(pScene->CreateUniqueName(sObjTypeName));	// オブジェクト初期化(名前重複避ける)
+
+			Vector3<float> vPos;
+			vPos = WIN_OBJ_TYPE_LIST["CreatePos"].GetVector();
+			pObject->GetTransform()->SetLocalPosition(vPos);
+
+			pScene->AddSceneObjectBase(pObject);					// シーンに追加
+		}
+	}
+
+	/* ========================================
+		オブジェクトタイプリスト作成関数
+		-------------------------------------
+		内容：オブジェクトタイプリストを作成する
+			　種類別分グループを作成する
+	=========================================== */
+	void CreateObjectTypeList()
+	{
+		// オブジェクトクラスマップ取得
+		std::unordered_map<std::string, ObjectTypeRegistry::CreateFunction*>	objectTypeMap		= OBJ_TYPE_REGISTRY_INST.GetObjectTypeMap();
+		// オブジェクトカテゴリマップ取得
+		std::unordered_map<std::string, ObjectTypeRegistry::ObjectCategoryType> objectCategoryMap	= OBJ_TYPE_REGISTRY_INST.GetObjectCategoryMap();
+		
+		// オブジェクトクラス一覧
+		for (auto& objectType : objectTypeMap)
+		{
+			// カテゴリ取得
+			ObjectTypeRegistry::ObjectCategoryType category = objectCategoryMap.at(objectType.first);
+
+			// 空
+			if (category == ObjectTypeRegistry::ObjectCategoryType::OCT_EMPTY)
+				WIN_OBJ_TYPE_LIST["Empty"]["EmptyList"].AddListItem(objectType.first.c_str());
+			// プレイヤー
+			else if (category == ObjectTypeRegistry::ObjectCategoryType::OCT_PLAYER)
+				WIN_OBJ_TYPE_LIST["Player"]["PlayerList"].AddListItem(objectType.first.c_str());
+			// 敵
+			else if (category == ObjectTypeRegistry::ObjectCategoryType::OCT_ENEMY)
+				WIN_OBJ_TYPE_LIST["Enemy"]["EnemyList"].AddListItem(objectType.first.c_str());
+			// 地形
+			else if (category == ObjectTypeRegistry::ObjectCategoryType::OCT_TERRAIN)
+				WIN_OBJ_TYPE_LIST["Terrain"]["TerrainList"].AddListItem(objectType.first.c_str());
+			// カメラ
+			else if (category == ObjectTypeRegistry::ObjectCategoryType::OCT_CAMERA)
+				WIN_OBJ_TYPE_LIST["Camera"]["CameraList"].AddListItem(objectType.first.c_str());
+			// ライト
+			else if (category == ObjectTypeRegistry::ObjectCategoryType::OCT_LIGHT)
+				WIN_OBJ_TYPE_LIST["Light"]["LightList"].AddListItem(objectType.first.c_str());
+			// システム
+			else if (category == ObjectTypeRegistry::ObjectCategoryType::OCT_SYSTEM)
+				WIN_OBJ_TYPE_LIST["System"]["SystemList"].AddListItem(objectType.first.c_str());
+			// その他
+			else
+				WIN_OBJ_TYPE_LIST["Other"]["OtherList"].AddListItem(objectType.first.c_str());
+
+		}
+		
 	}
 
 }

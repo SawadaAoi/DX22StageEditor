@@ -75,7 +75,8 @@ public:
 	static Item* CreateBind(const char* name, Kind kind, void* ptr, bool isSave = false, bool isSameLine = false);
 	static Item* CreateCallBack(const char* name, Kind kind, Callback func, bool isSave = false, bool isSameLine = false);
 	static Item* CreateGroup(const char* name);
-	static Item* CreateList(const char* name, ConstCallback func = nullptr, bool isSave = false, bool bIsDropDown = false, bool isSameLine = false);
+	static Item* CreateList(const char* name, ConstCallback func = nullptr, 
+		bool isSave = false, bool bIsDropDown = false, bool isSameLine = false, int nDispLineNum = 5);
 
 public:
 
@@ -111,6 +112,7 @@ public:
 	std::list<std::string> GetList() const;
 	std::string GetListText(int num) const;
 	std::string GetText() const;
+	int GetDispLineNum() const;
 
 	// セッター
 	void SetBool(bool value);
@@ -122,6 +124,7 @@ public:
 	void SetPath(std::string value);
 	void SetText(std::string value);
 	void SetListNo(int value);
+	void SetDispLineNum(int value);
 
 public:
 	static inline Item* dummy;			// 指定データが取得できなかった場合のダミー
@@ -191,12 +194,13 @@ public:
 class ItemList : public Item
 {
 public:
-	ItemList() : m_sItemList(), m_bIsDropDown(false), m_CallbackFunc(nullptr) { m_sItemList.clear(); }
+	ItemList() : m_sItemList(), m_bIsDropDown(false), m_CallbackFunc(nullptr), m_nDispLineNum(5) { m_sItemList.clear(); }
 	~ItemList() {}
 public:
 	std::list<std::string>	m_sItemList;		// アイテム一覧
 	ConstCallback			m_CallbackFunc;		// 項目選択時のコールバック
-	bool					m_bIsDropDown;			// コンボボックスか
+	bool					m_bIsDropDown;		// コンボボックスか
+	int						m_nDispLineNum;		// 表示行数
 };
 }
 #endif

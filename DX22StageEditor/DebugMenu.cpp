@@ -10,6 +10,8 @@
 
 // =============== インクルード ===================
 #include "DebugMenu.h"
+#include "SettingWindowAPI.h"
+#include "DebugItem.h"		// 表示アイテム
 
 // imgui
 #include <ImGui/imgui.h>
@@ -19,9 +21,13 @@
 #include "Input.h"
 #include "DirectXManager.h"
 
-// =============== 定数定義 =======================
-const char* SAVE_DATA_PATH = "Assets/DebugMenu.csv";
 
+
+// =============== 定数定義 =======================
+const char* SAVE_DATA_PATH	= "Assets/DebugMenu.csv";
+const char* FONT_FILE_PATH	= "Assets/Font/SmartFontUI.otf";
+const float	FONT_SIZE		= 10.0f;
+const int	LIST_WIDTH		= 200;
 
 // =============== 名前空間 ===================
 namespace DebugUI {
@@ -67,7 +73,7 @@ void Menu::Init()
 	ImGui_ImplWin32_Init(GetActiveWindow());
 	ImGui_ImplDX11_Init(DirectXManager::GetDevice(), DirectXManager::GetContext());
 
-	io.Fonts->AddFontFromFileTTF("Assets/Font/SmartFontUI.otf ", 12.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+	io.Fonts->AddFontFromFileTTF(FONT_FILE_PATH, FONT_SIZE, nullptr, io.Fonts->GetGlyphRangesJapanese());
 
 	// Dummyデータ初期化
 	Item::dummy = Item::CreateValue("None", Item::Label);
@@ -221,8 +227,8 @@ void Menu::Draw()
 		if (windowIt->enable)
 		{
 			// ウィンドウ内の描画開始-------------------------------------
-			//ImGui::Begin(windowIt->name.c_str());
-			ImGui::Begin(windowIt->name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);	// 大きさ、位置固定
+			ImGui::Begin(windowIt->name.c_str());
+			//ImGui::Begin(windowIt->name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);	// 大きさ、位置固定
 			// アイテムごとに描画
 			auto itemIt = windowIt->items.begin();
 			while (itemIt != windowIt->items.end())
@@ -509,8 +515,10 @@ void Menu::DrawImgui(Item* item)
 			// リストボックス
 			if (!ptr->m_bIsDropDown)
 			{
+				// 幅の設定
+				ImGui::SetNextItemWidth(LIST_WIDTH);
 				// 表示
-				if (ImGui::ListBox(item->GetName(), &ptr->m_uValue.nValue, pList, static_cast<int>(ptr->m_sItemList.size())))
+				if (ImGui::ListBox(item->GetName(), &ptr->m_uValue.nValue, pList, static_cast<int>(ptr->m_sItemList.size()), item->GetDispLineNum()))
 				{
 					// 関数があれば選択時処理を実行
 					if (ptr->m_CallbackFunc && ptr->m_uValue.nValue >= 0)

@@ -27,7 +27,6 @@
 #include <string>
 #include <vector>
 
-#include "DebugItem.h"		// 表示アイテム
 #include "DebugWindow.h"	// デバッグ用ウィンドウ
 #include "DebugWindowSetting.h"
 

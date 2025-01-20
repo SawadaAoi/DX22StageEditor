@@ -80,7 +80,7 @@ HRESULT WindowAPI::InitWindow(HINSTANCE hInstance)
 
 
 	RECT	rect = { 0, 0, WindowConfig::SCREEN_WIDTH, WindowConfig::SCREEN_HEIGHT };	// ウィンドウのサイズを設定
-	DWORD	style = WS_CAPTION | WS_SYSMENU | WS_OVERLAPPEDWINDOW;					// ウィンドウスタイル(タイトルバーとシステムメニューのみ)
+	DWORD	style = WS_CAPTION | WS_SYSMENU /*| WS_OVERLAPPEDWINDOW*/;					// ウィンドウスタイル(タイトルバーとシステムメニューのみ)
 	DWORD	exStyle = WS_EX_OVERLAPPEDWINDOW;					// 拡張ウィンドウスタイル
 
 	AdjustWindowRectEx(&rect, style, false, exStyle);	// ウィンドウのサイズを調整(ウィンドウの枠を含めたサイズに変換)

@@ -73,6 +73,8 @@ namespace DebugUI
 	void InitObjectTypeList();
 	void InitTransformEdit();
 
+	void ClickObjectTypeList(const void* arg);
+	void CreateObjectTypeList();
 }
 
 #endif // _DEBUG

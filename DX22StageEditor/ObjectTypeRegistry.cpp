@@ -54,6 +54,13 @@ ObjectBase* ObjectTypeRegistry::CreateObject(const std::string& sClassName)
 	return nullptr;
 }
 
+
+void ObjectTypeRegistry::RegisterCategory(const std::string& sClassName, ObjectCategoryType cateNum)
+{
+	m_ObjectCategoryMap[sClassName] = cateNum;
+}
+
+
 /* ========================================
 	ゲッター(オブジェクトマップ)関数
 	-------------------------------------
@@ -62,4 +69,9 @@ ObjectBase* ObjectTypeRegistry::CreateObject(const std::string& sClassName)
 std::unordered_map<std::string, ObjectTypeRegistry::CreateFunction*>& ObjectTypeRegistry::GetObjectTypeMap()
 {
 	return m_ObjectTypeMap;
+}
+
+std::unordered_map<std::string, ObjectTypeRegistry::ObjectCategoryType>& ObjectTypeRegistry::GetObjectCategoryMap()
+{
+	return m_ObjectCategoryMap;
 }

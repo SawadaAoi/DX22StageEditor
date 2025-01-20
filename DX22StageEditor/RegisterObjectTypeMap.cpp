@@ -13,10 +13,11 @@
 #include "ObjectPlayer.h"
 #include "ObjectPlayerStart.h"
 
-// その他
-#include "ObjectGoal.h"
-#include "ObjectSkyBox.h"
-#include "ObjectRespawn.h"
+// 敵キャラ
+#include "ObjectEnemy.h"
+#include "ObjectEnemyLinear.h"
+#include "ObjectEnemyChase.h"
+#include "ObjectEnemyRandom.h"
 
 // 地形
 #include "ObjectGround.h"
@@ -24,11 +25,6 @@
 #include "ObjectBlockGroundAABB.h"
 #include "ObjectWall.h"
 
-// 敵キャラ
-#include "ObjectEnemy.h"
-#include "ObjectEnemyLinear.h"
-#include "ObjectEnemyChase.h"
-#include "ObjectEnemyRandom.h"
 
 // カメラ
 #include "ObjectCamera.h"
@@ -44,6 +40,11 @@
 // システム
 #include "ObjectGameStateManager.h"
 
+// その他
+#include "ObjectGoal.h"
+#include "ObjectSkyBox.h"
+#include "ObjectRespawn.h"
+
 
 /* ========================================
 	全オブジェクト登録関数
@@ -53,42 +54,44 @@
 void ObjectTypeRegistry::RegisterAllObjectTypes()
 {
 	// 全オブジェクトの基底クラス
-	REGISTER_OBJECT_TYPE(ObjectBase);
-
-	// 地形
-	REGISTER_OBJECT_TYPE(ObjectGround);
-	REGISTER_OBJECT_TYPE(ObjectBlock);
-	REGISTER_OBJECT_TYPE(ObjectBlockGroundAABB);
-	REGISTER_OBJECT_TYPE(ObjectWall);
+	REGISTER_OBJECT_TYPE(ObjectBase, OCT_EMPTY);
 
 	// プレイヤー
-	REGISTER_OBJECT_TYPE(ObjectPlayer);
-	REGISTER_OBJECT_TYPE(ObjectPlayerStart);
-
-	// その他
-	REGISTER_OBJECT_TYPE(ObjectSkyBox);
-	REGISTER_OBJECT_TYPE(ObjectGoal);
-	REGISTER_OBJECT_TYPE(ObjectRespawn);
+	REGISTER_OBJECT_TYPE(ObjectPlayer, OCT_PLAYER);
+	REGISTER_OBJECT_TYPE(ObjectPlayerStart, OCT_PLAYER);
 
 	// 敵キャラ
-	REGISTER_OBJECT_TYPE(ObjectEnemy);
-	REGISTER_OBJECT_TYPE(ObjectEnemyLinear);
-	REGISTER_OBJECT_TYPE(ObjectEnemyChase);
-	REGISTER_OBJECT_TYPE(ObjectEnemyRandom);
+	REGISTER_OBJECT_TYPE(ObjectEnemy, OCT_ENEMY);
+	REGISTER_OBJECT_TYPE(ObjectEnemyLinear, OCT_ENEMY);
+	REGISTER_OBJECT_TYPE(ObjectEnemyChase, OCT_ENEMY);
+	REGISTER_OBJECT_TYPE(ObjectEnemyRandom, OCT_ENEMY);
+
+
+	// 地形
+	REGISTER_OBJECT_TYPE(ObjectGround, OCT_TERRAIN);
+	REGISTER_OBJECT_TYPE(ObjectBlock, OCT_TERRAIN);
+	REGISTER_OBJECT_TYPE(ObjectBlockGroundAABB, OCT_TERRAIN);
+	REGISTER_OBJECT_TYPE(ObjectWall, OCT_TERRAIN);
 
 	// カメラ
-	REGISTER_OBJECT_TYPE(ObjectCamera);
-	REGISTER_OBJECT_TYPE(ObjectCameraDebug);
-	REGISTER_OBJECT_TYPE(ObjectCameraPlayer);
+	REGISTER_OBJECT_TYPE(ObjectCamera, OCT_CAMERA);
+	REGISTER_OBJECT_TYPE(ObjectCameraDebug, OCT_CAMERA);
+	REGISTER_OBJECT_TYPE(ObjectCameraPlayer, OCT_CAMERA);
 
 	// ライト
-	REGISTER_OBJECT_TYPE(ObjectLight);
-	REGISTER_OBJECT_TYPE(ObjectLightDirectional);
-	REGISTER_OBJECT_TYPE(ObjectLightPoint);
-	REGISTER_OBJECT_TYPE(ObjectLightSpot);
+	REGISTER_OBJECT_TYPE(ObjectLight, OCT_LIGHT);
+	REGISTER_OBJECT_TYPE(ObjectLightDirectional, OCT_LIGHT);
+	REGISTER_OBJECT_TYPE(ObjectLightPoint, OCT_LIGHT);
+	REGISTER_OBJECT_TYPE(ObjectLightSpot, OCT_LIGHT);
 
 	// システム
-	REGISTER_OBJECT_TYPE(ObjectGameStateManager);
+	REGISTER_OBJECT_TYPE(ObjectGameStateManager, OCT_SYSTEM);
+
+	// その他
+	REGISTER_OBJECT_TYPE(ObjectSkyBox, OCT_OTHER);
+	REGISTER_OBJECT_TYPE(ObjectGoal, OCT_OTHER);
+	REGISTER_OBJECT_TYPE(ObjectRespawn, OCT_OTHER);
 
 
 }
+
