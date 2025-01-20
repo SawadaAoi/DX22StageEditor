@@ -26,6 +26,9 @@ public:
 	template<typename T>
 	static void ChangeScene();
 
+	// シーン再読み込み
+	static void ReloadScene();
+
 	// シーン取得
 	static SceneBase* GetScene();
 

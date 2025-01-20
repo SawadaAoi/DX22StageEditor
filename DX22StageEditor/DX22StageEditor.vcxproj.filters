@@ -494,6 +494,9 @@
     <ClCompile Include="ObjectPlayerStart.cpp">
       <Filter>ソース ファイル\App\GameObject\Player</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectRespawn.cpp">
+      <Filter>ソース ファイル\App\GameObject\Other</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">
@@ -807,6 +810,9 @@
     </ClInclude>
     <ClInclude Include="ObjectPlayerStart.h">
       <Filter>ソース ファイル\App\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectRespawn.h">
+      <Filter>ソース ファイル\App\GameObject\Other</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

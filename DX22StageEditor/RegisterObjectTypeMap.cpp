@@ -16,6 +16,7 @@
 // ‚»‚Ì‘¼
 #include "ObjectGoal.h"
 #include "ObjectSkyBox.h"
+#include "ObjectRespawn.h"
 
 // ’nŒ`
 #include "ObjectGround.h"
@@ -67,6 +68,7 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	// ‚»‚Ì‘¼
 	REGISTER_OBJECT_TYPE(ObjectSkyBox);
 	REGISTER_OBJECT_TYPE(ObjectGoal);
+	REGISTER_OBJECT_TYPE(ObjectRespawn);
 
 	// “GƒLƒƒƒ‰
 	REGISTER_OBJECT_TYPE(ObjectEnemy);

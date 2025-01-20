@@ -52,6 +52,7 @@ void SceneBase::Init()
 	// クリア
 	m_pObjects.clear();			// シーンに所属するオブジェクト一覧
 	m_pStandbyObjects.clear();	// オブジェクトを一時的に保存しておく配列
+	m_bIsUpdating = false;		// 更新中フラグを初期化
 	InitLocal();				// 個別初期化処理
 
 	CAMERA_MNG_INST.Init(this);	// シーンのカメラを初期化
