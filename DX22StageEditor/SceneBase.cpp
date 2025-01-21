@@ -20,6 +20,10 @@
 // オブジェクト複製用
 #include "ObjectTypeRegistry.h"
 
+
+// =============== 定数定義 =======================
+const int OBJECT_LIST_LINE_NUM = 17;	// オブジェクトリストの行数
+
 /* ========================================
 	コンストラクタ関数
 	-------------------------------------
@@ -512,8 +516,8 @@ void SceneBase::InitObjectList()
 		InitObjectInfo(sObjName);
 	};
 
-	Item* pList = Item::CreateList(ITEM_OBJ_LIST_NAME.c_str(), FuncListClick, false, false, false, 10);
-	WIN_OBJ_LIST.AddItem(pList);
+	// オブジェクトリストを作成
+	WIN_OBJ_LIST.AddItem(Item::CreateList(ITEM_OBJ_LIST_NAME.c_str(), FuncListClick, false, false, false, OBJECT_LIST_LINE_NUM));
 }
 
 /* ========================================

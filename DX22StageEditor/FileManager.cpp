@@ -44,16 +44,17 @@ void FileManager::StageObjectOutput(std::string sPath)
 		return;
 	}
 
-	// カメラ、ライトの出力設定
-	bool bOutputCamera = WIN_DATA_INOUT["OutputCamera"].GetBool();
-	bool bOutputLight = WIN_DATA_INOUT["OutputLight"].GetBool();
+	// データ入出力時のオプション
+	bool bCamera	= WIN_DATA_INOUT["Camera"].GetBool();				// カメラの出力設定
+	bool bLight		= WIN_DATA_INOUT["Light"].GetBool();				// ライトの出力設定
+	bool bTransOnly = WIN_DATA_INOUT["TransformOnly"].GetBool();	// 位置、回転、拡大のみの出力設定
 
 	// シーンに存在するオブジェクトを取得
 	for (auto& object : SceneManager::GetScene()->GetAllSceneObjects())
 	{
 		// カメラ、ライトの除外チェック
-		if (object->GetTag() == E_ObjectTag::Camera && !bOutputCamera) continue;
-		if (object->GetTag() == E_ObjectTag::Light && !bOutputLight) continue;
+		if (object->GetTag() == E_ObjectTag::Camera && !bCamera) continue;
+		if (object->GetTag() == E_ObjectTag::Light && !bLight) continue;
 
 		if (!object->GetIsSave()) continue;	// 保存フラグが立っていない場合はスキップ
 
@@ -89,6 +90,9 @@ void FileManager::StageObjectOutput(std::string sPath)
 
 		// ファイルに書き込み
 		file.write((char*)&data, sizeof(S_SaveDataObject));
+
+		// 位置、回転、拡大のみの出力の場合はスキップ
+		if (bTransOnly) continue;	
 		// オブジェクト個別のデータ出力
 		object->OutPutLocalData(file);
 	}
@@ -124,6 +128,11 @@ void FileManager::StageObjectInput(std::string sPath)
 
 	SceneBase* pScene = SceneManager::GetScene();	// シーン取得
 
+	// データ入出力時のオプション
+	bool bCamera	= WIN_DATA_INOUT["Camera"].GetBool();			// カメラの出力設定
+	bool bLight		= WIN_DATA_INOUT["Light"].GetBool();			// ライトの出力設定
+	bool bTransOnly = WIN_DATA_INOUT["TransformOnly"].GetBool();	// 位置、回転、拡大のみの出力設定
+
 	// ファイルの終端まで読み込む
 	while (!file.eof())
 	{
@@ -142,7 +151,11 @@ void FileManager::StageObjectInput(std::string sPath)
 		if (pObject)
 		{
 			pObject->Init(pScene->CreateUniqueName(data.cObjectName));	// オブジェクト初期化(名前重複避ける)
-			
+
+			// カメラ、ライトの除外チェック
+			if (pObject->GetTag() == E_ObjectTag::Camera && !bCamera) continue;
+			if (pObject->GetTag() == E_ObjectTag::Light && !bLight) continue;
+
 			// 位置、回転、拡大の設定
 			ComponentTransform* pTransform = pObject->GetComponent<ComponentTransform>();
 			pTransform->SetLocalPosition(data.vPos);
@@ -151,10 +164,12 @@ void FileManager::StageObjectInput(std::string sPath)
 
 			// シーンに追加
 			pScene->AddSceneObjectBase(pObject);
+			// 親オブジェクトマップに追加
+			mapObjectParent[pObject] = data.cParentName;
+
+			if (bTransOnly) continue;	// 位置、回転、拡大のみの出力の場合はスキップ
 			// オブジェクト個別のデータ入力
 			pObject->InputLocalData(file);
-			// 親オブジェクトマップに追加
-			mapObjectParent[pObject] = data.cParentName;	
 		}
  	}
 

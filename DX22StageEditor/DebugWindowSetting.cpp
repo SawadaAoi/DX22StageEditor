@@ -70,8 +70,8 @@ namespace DebugUI
 
 		InitBasicSettings();
 		InitCameraInfo();
+		InitDataInOut();	// カメラ、ライトの読込フラグを先に設定するため
 		InitSceneList();
-		InitDataInOut();
 		InitObjectTypeList();
 		InitTransformEdit();
 
@@ -193,7 +193,7 @@ namespace DebugUI
 		WIN_DATA_INOUT["Extension"].AddListItem(".txt");
 
 		// ファイル出力
-		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("OutPut", Item::Kind::Command,[](bool isWrite, void* arg) 
+		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("OUT", Item::Kind::Command,[](bool isWrite, void* arg) 
 		{
 			std::string sPath		=  WIN_DATA_INOUT["SavePath"].GetPath();
 			std::string sFileName	= WIN_DATA_INOUT["FileName"].GetPath();
@@ -202,7 +202,7 @@ namespace DebugUI
 		}));
 
 		// ファイル入力
-		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("InPut", Item::Kind::Command, [](bool isWrite, void* arg) 
+		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("IN", Item::Kind::Command, [](bool isWrite, void* arg) 
 		{
 			std::string sPath		= WIN_DATA_INOUT["SavePath"].GetPath();
 			std::string sFileName	= WIN_DATA_INOUT["FileName"].GetPath();
@@ -210,12 +210,14 @@ namespace DebugUI
 			FileManager::StageObjectInput(sPath + "/" + sFileName + sExtension);
 		}, false, true));
 
-		// データ入出力
-		WIN_DATA_INOUT.AddItem(Item::CreateValue("OutputCamera", Item::Kind::Bool, true, true));
-		WIN_DATA_INOUT.AddItem(Item::CreateValue("OutputLight", Item::Kind::Bool, true, true));
+		// データ入出力時のオプション
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("Camera", Item::Kind::Bool, true, true));			// カメラオブジェクトを含むか
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("Light", Item::Kind::Bool, true, true));			// ライトオブジェクトを含むか
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("TransformOnly", Item::Kind::Bool, true, true));	// トランスフォーム情報のみ(オブジェクト個々のデータは含まない)
 
-		WIN_DATA_INOUT.AddItem(Item::CreateValue("InputResult ", Item::Kind::Text, false));	// 読込結果表示
-		WIN_DATA_INOUT.AddItem(Item::CreateValue("OutputResult", Item::Kind::Text, false));	// 出力結果表示
+		// 結果表示
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("InputResult ", Item::Kind::Text, false));	// 読込
+		WIN_DATA_INOUT.AddItem(Item::CreateValue("OutputResult", Item::Kind::Text, false));	// 出力
 
 		// 初期値
 		WIN_DATA_INOUT["SavePath"].SetPath(DEFAULT_SAVE_PATH);
