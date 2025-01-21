@@ -689,8 +689,15 @@ void SceneBase::ReloadDebugObjectList()
 	// オブジェクト一覧をクリア
 	ITEM_OBJ_LIST.RemoveListItemAll();
 
-	// シーンに所属する全てのオブジェクトを取得
-	for (const auto& pObject : m_pObjects)
+	// オブジェクトを名前の昇順にソートする(オブジェクト一覧を見やすくするため)
+	std::vector<ObjectBase*> pSortObjects = GetAllSceneObjects();	// シーンに所属する全てのオブジェクトを取得
+	std::sort(pSortObjects.begin(), pSortObjects.end(), [](const ObjectBase* a, const ObjectBase* b)
+	{
+		return a->GetName() < b->GetName();
+	});
+
+	// 全てのオブジェクトをリストに追加
+	for (const auto& pObject : pSortObjects)
 	{
 		if (pObject->GetParentObject()) continue;	// 親オブジェクトがある場合は飛ばす
 		// オブジェクト一覧に追加
@@ -698,8 +705,9 @@ void SceneBase::ReloadDebugObjectList()
 
 		// 折りたたみ状態ではない場合は子オブジェクトを表示する
 		if(!pObject->GetIsFold())
-			AddObjectListChild(pObject.get());
+			AddObjectListChild(pObject);
 	}
+
 }
 
 
@@ -718,7 +726,15 @@ void SceneBase::AddObjectListChild(ObjectBase* pObject)
 	{
 		if (pObject->GetIsFold()) return;	// 折りたたみ状態の場合は追加しない
 
-		for (auto& pChild : pObject->GetChildObjects())
+		// 子オブジェクトを名前の昇順にソートする(オブジェクト一覧を見やすくするため)
+		std::vector<ObjectBase*> pSortChildObjects = pObject->GetChildObjects();	// 子オブジェクトを取得
+		std::sort(pSortChildObjects.begin(), pSortChildObjects.end(), [](const ObjectBase* a, const ObjectBase* b)
+		{
+			return a->GetName() > b->GetName();
+		});
+
+		// 全ての子オブジェクトをリストに追加
+		for (auto& pChild : pSortChildObjects)
 		{
 			// 挿入位置
 			int nInsertNo = ITEM_OBJ_LIST.GetListNo(pObject->GetListName().c_str());
