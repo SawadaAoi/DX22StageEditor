@@ -42,9 +42,9 @@ const std::string ITEM_OBJ_LIST_NAME = "Objects";
 // =============== 名前空間 ===================
 namespace DebugUI
 {
-	const std::string CHILD_HEAD_TEXT = "L ";	// 子要素の先頭に表示する文字
-	const std::string CHILD_HEAD_SPACE = " ";	// 子要素の先頭に表示するスペース
-
+	const std::string PARENT_END_TEXT = UTF8(" ＊");	// 親要素の末尾に表示する文字
+	const std::string CHILD_HEAD_TEXT = "L ";			// 子要素の先頭に表示する文字
+	const std::string CHILD_HEAD_SPACE = " ";			// 子要素の先頭に表示するスペース
 
 	// ウィンドウ種別
 	enum E_WinType

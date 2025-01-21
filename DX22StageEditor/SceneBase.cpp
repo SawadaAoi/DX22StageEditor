@@ -502,25 +502,17 @@ void SceneBase::InitObjectList()
 
 	}, false, true));
 
-	Item::ConstCallback  FuncListClick = [this](const void* arg) {
+	// オブジェクト選択時のコールバック関数
+	Item::ConstCallback  FuncListClick = [this](const void* arg) 
+	{
 		// クリックされたオブジェクトの情報を表示
-
 		std::string sObjName = reinterpret_cast<const char*>(arg);
 		m_nObjectListSelectNo = ITEM_OBJ_LIST.GetListNo(sObjName.c_str());	// 選択番号を取得
 
-		// 名前に"L"が含まれている場合(子オブジェクトの場合)
-		if (sObjName.find(CHILD_HEAD_TEXT) != std::string::npos)
-		{
-			// "L"を除去した名前に変換
-			int nHeadTextCnt = sObjName.find(CHILD_HEAD_TEXT);
-			sObjName = sObjName.substr(nHeadTextCnt + CHILD_HEAD_TEXT.size());
-		}
-
 		InitObjectInfo(sObjName);
-
 	};
 
-	Item* pList = Item::CreateList(ITEM_OBJ_LIST_NAME.c_str(), FuncListClick, false);
+	Item* pList = Item::CreateList(ITEM_OBJ_LIST_NAME.c_str(), FuncListClick, false, false, false, 10);
 	WIN_OBJ_LIST.AddItem(pList);
 }
 
@@ -538,6 +530,22 @@ void SceneBase::InitObjectInfo(std::string sName)
 
 	WIN_OBJ_INFO.Clear();	// 表示リセット
 
+	// 名前に"L"が含まれている場合(子オブジェクトの場合)
+	if (sName.find(CHILD_HEAD_TEXT) != std::string::npos)
+	{
+		// "L"を除去した名前に変換
+		int nHeadTextCnt	= sName.find(CHILD_HEAD_TEXT);							// Lが含まれる位置を取得
+		sName				= sName.substr(nHeadTextCnt + CHILD_HEAD_TEXT.size());	// L以降の文字列を取得
+	}
+
+	// 名前に"*"が含まれている場合(親オブジェクトの場合)
+	if (sName.find(PARENT_END_TEXT) != std::string::npos)
+	{
+		// "*"を除去した名前に変換
+		int nEndTextCnt = sName.find(PARENT_END_TEXT);	// *が含まれる位置を取得
+		sName			= sName.substr(0, nEndTextCnt);	// *以前の文字列を取得
+	}
+
 	// 名前が一致するオブジェクトを検索
 	for (auto& pObject : m_pObjects)
 	{
@@ -546,6 +554,10 @@ void SceneBase::InitObjectInfo(std::string sName)
 			// オブジェクト情報を表示
 			pObject->Debug();
 			m_pSelectObj = pObject.get();	// 選択中のオブジェクトを保持
+
+			bool bIsFold = pObject->GetIsFold() ? false : true;
+			pObject->SetIsFold(bIsFold);	// 折りたたみ状態を変更
+
 			break;
 		}
 	}
@@ -682,8 +694,11 @@ void SceneBase::ReloadDebugObjectList()
 	{
 		if (pObject->GetParentObject()) continue;	// 親オブジェクトがある場合は飛ばす
 		// オブジェクト一覧に追加
-		ITEM_OBJ_LIST.AddListItem(pObject->GetName().c_str());
-		AddObjectListChild(pObject.get());
+		ITEM_OBJ_LIST.AddListItem(pObject->GetListName().c_str());
+
+		// 折りたたみ状態ではない場合は子オブジェクトを表示する
+		if(!pObject->GetIsFold())
+			AddObjectListChild(pObject.get());
 	}
 }
 
@@ -701,6 +716,8 @@ void SceneBase::AddObjectListChild(ObjectBase* pObject)
 	// 子オブジェクトがある場合
 	if (pObject->GetChildObjects().size() > 0)
 	{
+		if (pObject->GetIsFold()) return;	// 折りたたみ状態の場合は追加しない
+
 		for (auto& pChild : pObject->GetChildObjects())
 		{
 			// 挿入位置

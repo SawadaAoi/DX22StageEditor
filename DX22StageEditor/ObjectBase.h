@@ -110,16 +110,18 @@ public:
 	E_ObjectTag GetTag() const;							// タグの取得
 	std::string GetName() const;						// オブジェクト名の取得
 	T_LightParam GetLightMaterial() const;				// ライトパラメータの取得
+	bool GetIsSave() const;								// セーブするかどうかの取得
+	bool GetIsFold() const;								// オブジェクト一覧折りたたみフラグの取得
 
-	bool GetIsSave() const;							// セーブするかどうかの取得
 	// セッター
 	void SetState(E_State eState);		// 状態の設定
 	void SetTag(E_ObjectTag eTag);		// タグの設定
 	void SetName(std::string sName);	// オブジェクト名の設定
 	void SetLightMaterial(float fDiffuse = 1.0f, float fSpecular = 0.0f, float fAmbient = 0.3f);	// ライトパラメータの設定
 	void SetLightUse(bool bUse);		// ライト使用の設定
-
 	void SetIsSave(bool bIsSave);		// セーブするかどうかの設定
+	void SetIsFold(bool bIsFold);		// オブジェクト一覧折りたたみフラグの設定
+
 #ifdef _DEBUG
 	void Debug();					// デバッグ用の処理(オブジェクト情報ウィンドウに表示)
 	virtual void DebugLocal(DebugUI::Window& window) {};	// 個別デバッグ処理
@@ -164,6 +166,9 @@ protected:
 
 	// セーブするかどうか(実行中に自身の子クラスを作成したオブジェクトの保存時に、子クラスを保存しないようにするため)
 	bool m_bIsSave;	
+
+	// オブジェクト一覧折りたたみフラグ(true:折りたたむ, false:展開)
+	bool m_bIsFold;
 };
 
 #include "ObjectBase.inl"

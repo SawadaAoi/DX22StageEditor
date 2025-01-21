@@ -139,7 +139,7 @@ namespace DebugUI
 			int nCameraNum = WIN_CAMERA_INFO["CameraList"].GetListNo(sCameraName.c_str());	// ƒJƒƒ‰”Ô†‚ğæ“¾
 
 			CAMERA_MNG_INST.SwitchCamera(nCameraNum);	// ƒJƒƒ‰Ø‚è‘Ö‚¦
-		}));
+		}, false, false, false, 3));
 
 	}
 
