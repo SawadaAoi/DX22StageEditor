@@ -33,6 +33,7 @@ ObjectWall::ObjectWall(SceneBase* pScene)
 	, m_pCompColOBB(nullptr)
 	, m_pCompGeometry(nullptr)
 {
+	SetTag(E_ObjectTag::Wall);
 }
 
 /* ========================================

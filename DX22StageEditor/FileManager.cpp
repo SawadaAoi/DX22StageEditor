@@ -45,39 +45,45 @@ void FileManager::StageObjectOutput(std::string sPath)
 	}
 
 	// データ入出力時のオプション
-	bool bCamera	= WIN_DATA_INOUT["Camera"].GetBool();				// カメラの出力設定
-	bool bLight		= WIN_DATA_INOUT["Light"].GetBool();				// ライトの出力設定
+	bool bCamera	= WIN_DATA_INOUT["Camera"].GetBool();			// カメラの出力設定
+	bool bLight		= WIN_DATA_INOUT["Light"].GetBool();			// ライトの出力設定
+	bool bTerrain	= WIN_DATA_INOUT["Terrain"].GetBool();			// 地形の出力設定
+	bool bEnemy		= WIN_DATA_INOUT["Enemy"].GetBool();			// 敵キャラの出力設定
 	bool bTransOnly = WIN_DATA_INOUT["TransformOnly"].GetBool();	// 位置、回転、拡大のみの出力設定
 
 	// シーンに存在するオブジェクトを取得
-	for (auto& object : SceneManager::GetScene()->GetAllSceneObjects())
+	for (auto& pObject : SceneManager::GetScene()->GetAllSceneObjects())
 	{
-		// カメラ、ライトの除外チェック
-		if (object->GetTag() == E_ObjectTag::Camera && !bCamera) continue;
-		if (object->GetTag() == E_ObjectTag::Light && !bLight) continue;
+		// 除外チェック
+		if (pObject->GetTag() == E_ObjectTag::Camera && !bCamera) continue;
+		if (pObject->GetTag() == E_ObjectTag::Light && !bLight) continue;
+		if (pObject->GetTag() == E_ObjectTag::Ground && !bTerrain) continue;
+		if (pObject->GetTag() == E_ObjectTag::Goal && !bTerrain) continue;
+		if (pObject->GetTag() == E_ObjectTag::Wall && !bTerrain) continue;
+		if (pObject->GetTag() == E_ObjectTag::Enemy && !bEnemy) continue;
 
-		if (!object->GetIsSave()) continue;	// 保存フラグが立っていない場合はスキップ
+		if (!pObject->GetIsSave()) continue;	// 保存フラグが立っていない場合はスキップ
 
 		// オブジェクトの情報を格納する構造体
 		S_SaveDataObject data;
 
 		// オブジェクトの情報を取得 ---------------------------------
 		// クラス名
-		strncpy(data.cClassType, object->GetObjClassName().c_str(), sizeof(data.cClassType) - 1);
+		strncpy(data.cClassType, pObject->GetObjClassName().c_str(), sizeof(data.cClassType) - 1);
 		data.cClassType[sizeof(data.cClassType) - 1] = '\0';
 
 		// 位置、回転、拡大
-		ComponentTransform* pTransform = object->GetComponent<ComponentTransform>();
+		ComponentTransform* pTransform = pObject->GetComponent<ComponentTransform>();
 		data.vPos	= pTransform->GetWorldPosition();
 		data.qRot	= pTransform->GetWorldRotation();
 		data.vScale = pTransform->GetWorldScale();
 
 		// オブジェクト名
-		strncpy(data.cObjectName, object->GetName().c_str(), sizeof(data.cObjectName) - 1);
+		strncpy(data.cObjectName, pObject->GetName().c_str(), sizeof(data.cObjectName) - 1);
 		data.cObjectName[sizeof(data.cObjectName) - 1] = '\0';
 
 		// 親オブジェクト名
-		ObjectBase* pParent = object->GetParentObject();
+		ObjectBase* pParent = pObject->GetParentObject();
 		if (pParent)
 		{
 			strncpy(data.cParentName, pParent->GetName().c_str(), sizeof(data.cParentName) - 1);
@@ -94,7 +100,7 @@ void FileManager::StageObjectOutput(std::string sPath)
 		// 位置、回転、拡大のみの出力の場合はスキップ
 		if (bTransOnly) continue;	
 		// オブジェクト個別のデータ出力
-		object->OutPutLocalData(file);
+		pObject->OutPutLocalData(file);
 	}
 
 	// メッセージ表示(成功)
@@ -131,6 +137,8 @@ void FileManager::StageObjectInput(std::string sPath)
 	// データ入出力時のオプション
 	bool bCamera	= WIN_DATA_INOUT["Camera"].GetBool();			// カメラの出力設定
 	bool bLight		= WIN_DATA_INOUT["Light"].GetBool();			// ライトの出力設定
+	bool bTerrain	= WIN_DATA_INOUT["Terrain"].GetBool();			// 地形の出力設定
+	bool bEnemy		= WIN_DATA_INOUT["Enemy"].GetBool();			// 敵キャラの出力設定
 	bool bTransOnly = WIN_DATA_INOUT["TransformOnly"].GetBool();	// 位置、回転、拡大のみの出力設定
 
 	// ファイルの終端まで読み込む
@@ -152,9 +160,13 @@ void FileManager::StageObjectInput(std::string sPath)
 		{
 			pObject->Init(pScene->CreateUniqueName(data.cObjectName));	// オブジェクト初期化(名前重複避ける)
 
-			// カメラ、ライトの除外チェック
+			// 除外チェック
 			if (pObject->GetTag() == E_ObjectTag::Camera && !bCamera) continue;
 			if (pObject->GetTag() == E_ObjectTag::Light && !bLight) continue;
+			if (pObject->GetTag() == E_ObjectTag::Ground && !bTerrain) continue;
+			if (pObject->GetTag() == E_ObjectTag::Goal && !bTerrain) continue;
+			if (pObject->GetTag() == E_ObjectTag::Wall && !bTerrain) continue;
+			if (pObject->GetTag() == E_ObjectTag::Enemy && !bEnemy) continue;
 
 			// 位置、回転、拡大の設定
 			ComponentTransform* pTransform = pObject->GetComponent<ComponentTransform>();

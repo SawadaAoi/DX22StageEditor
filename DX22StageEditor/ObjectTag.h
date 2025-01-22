@@ -18,6 +18,7 @@ enum E_ObjectTag
 	PlayerStart,	// プレイヤーの開始地点
 	Enemy,			// 敵
 	Ground,			// 地面
+	Wall,			// 壁
 	Camera,			// カメラ
 	Light,			// ライト
 	Goal,			// ゴール
