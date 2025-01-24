@@ -83,6 +83,7 @@ public:
 	// グループの設定
 	void AddGroupItem(Item* item);
 	Item& operator[](const char* name);
+	void RemoveGroupItem(const char* name);
 
 	// 一覧表示の設定
 	void AddListItem(const char* name);

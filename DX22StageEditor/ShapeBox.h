@@ -19,7 +19,8 @@ class ShapeBox :
 public:
 	ShapeBox();
 	ShapeBox(Vector3<float> fPos, Vector3<float> fSize, Vector3<float> fColor, E_DrawMode eMode);
-	~ShapeBox();
+	~ShapeBox() {};
+	void Draw() override;
 	void MakeMesh() override;
 
 private:

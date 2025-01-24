@@ -18,6 +18,17 @@
 #include "CameraManager.h"
 
 
+// =============== 定数定義 =======================
+const int MAX_TEXTURE_NUM	= 6;	// テクスチャ最大数
+const int MAX_UV_NUM		= 3;	// uv最大数(Z,X,Y)
+
+// デバッグ用のUVの配列番号と軸名
+static std::unordered_map<int, std::string> mapUvName =
+{
+	{ 0, "Z" },
+	{ 1, "X" },
+	{ 2, "Y" },
+};
 
 /* ========================================
 	コンストラクタ関数
@@ -31,14 +42,25 @@ ComponentGeometry::ComponentGeometry(ObjectBase* pOwner)
 	, m_eType(TYPE_NONE)
 	, m_pShape(nullptr)
 	, m_pTransform(nullptr)
-	, m_pTexture(nullptr)
+	, m_pTextures()
 	, m_bIsTex(false)
 	, m_bIsCulling(true)
-	, m_fUvScale(1.0f, 1.0f)
-	, m_fUvOffset(0.0f, 0.0f)
+	, m_fUvScale()
+	, m_fUvOffset()
 {
 	m_pTransform = m_pOwnerObj->GetComponent<ComponentTransform>();
-	m_pTexture = GET_TEXTURE_DATA(TextureManager::E_TEX_KEY::TEST);	// デフォルトテクスチャ
+
+	m_pTextures.resize(MAX_TEXTURE_NUM);
+	for (auto& tex : m_pTextures)
+		tex = GET_TEXTURE_DATA(TextureManager::E_TEX_KEY::TEST);
+
+	m_fUvOffset.resize(MAX_UV_NUM);
+	for (auto& uv : m_fUvOffset)
+		uv = { 0.0f, 0.0f };
+
+	m_fUvScale.resize(MAX_UV_NUM);
+	for (auto& scale : m_fUvScale)
+		scale = { 1.0f, 1.0f };
 }
 
 /* ========================================
@@ -70,11 +92,28 @@ void ComponentGeometry::Update()
 	}
 
 	// テクスチャ設定
-	m_pShape->SetTexture(m_pTexture);
+	// 立方体の場合は6面分のテクスチャを設定
+	if (m_eType == TYPE_BOX)
+	{
+		for (int i = 0; i < MAX_TEXTURE_NUM; i++)
+		{
+			m_pShape->SetTexture(m_pTextures[i], i);
+		}
+		for (int i = 0; i < MAX_UV_NUM; i++)
+		{
+			m_pShape->SetUvScale(m_fUvScale[i], i);
+			m_pShape->SetUvOffset(m_fUvOffset[i], i);
+		}
+	}
+	// 球、平面の場合は1つのテクスチャを設定
+	else
+	{
+		m_pShape->SetTexture(m_pTextures[0]);
+		m_pShape->SetUvScale(m_fUvScale[0]);
+		m_pShape->SetUvOffset(m_fUvOffset[0]);
+	}
 	m_pShape->SetUseTexture(m_bIsTex);
 	m_pShape->SetIsCulling(m_bIsCulling);
-	m_pShape->SetUvScale(m_fUvScale);
-	m_pShape->SetUvOffset(m_fUvOffset);
 }
 
 /* ========================================
@@ -144,11 +183,25 @@ ComponentGeometry::E_ShapeType ComponentGeometry::GetShapeType() const
 /* ========================================
 	ゲッター(テクスチャ)関数
 	-------------------------------------
+	引数：int 配列番号
+	-------------------------------------
 	戻り値：テクスチャ
 =========================================== */
-Texture* ComponentGeometry::GetTexture() const
+Texture* ComponentGeometry::GetTexture(int nIndex) const
 {
-	return m_pTexture;
+	// 立方体の場合は6面分のテクスチャを返す
+	if (m_eType == TYPE_BOX)
+	{
+		// インデックスが範囲内の場合はテクスチャを返す
+		if (nIndex >= 0 && nIndex < MAX_TEXTURE_NUM)
+			return m_pTextures[nIndex];
+		else
+			return m_pTextures[0];
+	}
+	else
+	{
+		return m_pTextures[0];
+	}
 }
 
 /* ========================================
@@ -174,21 +227,49 @@ bool ComponentGeometry::GetCulling() const
 /* ========================================
 	ゲッター(テクスチャオフセット)関数
 	-------------------------------------
+	引数：int 配列番号
+	-------------------------------------
 	戻り値：テクスチャオフセット
 =========================================== */
-Vector2<float> ComponentGeometry::GetUvScale() const
+Vector2<float> ComponentGeometry::GetUvScale(int nIndex) const
 {
-	return m_fUvScale;
+	// 立方体の場合はZ,X,Yのテクスチャオフセット返す
+	if (m_eType == TYPE_BOX)
+	{
+		// インデックスが範囲内の場合はテクスチャオフセット返す
+		if (nIndex >= 0 && nIndex < MAX_UV_NUM)
+			return m_fUvScale[nIndex];
+		else
+			return m_fUvScale[0];
+	}
+	else
+	{
+		return m_fUvScale[0];
+	}
 }
 
 /* ========================================
 	ゲッター(テクスチャスケール)関数
 	-------------------------------------
+	引数：int 配列番号
+	-------------------------------------
 	戻り値：テクスチャスケール
 =========================================== */
-Vector2<float> ComponentGeometry::GetUvOffset() const
+Vector2<float> ComponentGeometry::GetUvOffset(int nIndex) const
 {
-	return m_fUvOffset;
+	// 立方体の場合はZ,X,Yのテクスチャスケール返す
+	if (m_eType == TYPE_BOX)
+	{
+		// インデックスが範囲内の場合はテクスチャスケール返す
+		if (nIndex >= 0 && nIndex < MAX_UV_NUM)
+			return m_fUvOffset[nIndex];
+		else
+			return m_fUvOffset[0];
+	}
+	else
+	{
+		return m_fUvOffset[0];
+	}
 }
 
 /* ========================================
@@ -206,11 +287,24 @@ void ComponentGeometry::SetShapeType(E_ShapeType eType)
 /* ========================================
 	セッター(テクスチャ)関数
 	-------------------------------------
-	引数：テクスチャ
+	引数1：テクスチャ
+	引数2：int 配列番号
 =========================================== */
-void ComponentGeometry::SetTexture(Texture* pTexture)
+void ComponentGeometry::SetTexture(Texture* pTexture, int nIndex)
 {
-	m_pTexture = pTexture;
+	// 立方体の場合は6面分のテクスチャを設定
+	if (m_eType == TYPE_BOX)
+	{
+		// インデックスが範囲内の場合はテクスチャを設定
+		if (nIndex >= 0 && nIndex < MAX_TEXTURE_NUM)
+			m_pTextures[nIndex] = pTexture;
+		else
+			m_pTextures[0] = pTexture;
+	}
+	else
+	{
+		m_pTextures[0] = pTexture;
+	}
 }
 
 /* ========================================
@@ -236,21 +330,47 @@ void ComponentGeometry::SetCulling(bool bIsCulling)
 /* ========================================
 	セッター(テクスチャオフセット)関数
 	-------------------------------------
-	引数：テクスチャオフセット
+	引数1：テクスチャオフセット
+	引数2：int 配列番号
 =========================================== */
-void ComponentGeometry::SetUvScale(const Vector2<float>& scale)
+void ComponentGeometry::SetUvScale(const Vector2<float>& scale, int nIndex)
 {
-	m_fUvScale = scale;
+	// 立方体の場合はZ,X,Yのテクスチャオフセット設定
+	if (m_eType == TYPE_BOX)
+	{
+		// インデックスが範囲内の場合はテクスチャオフセット設定
+		if (nIndex >= 0 && nIndex < MAX_UV_NUM)
+			m_fUvScale[nIndex] = scale;
+		else
+			m_fUvScale[0] = scale;
+	}
+	else
+	{
+		m_fUvScale[0] = scale;
+	}
 }
 
 /* ========================================
 	セッター(テクスチャスケール)関数
 	-------------------------------------
-	引数：テクスチャスケール
+	引数1：テクスチャスケール
+	引数2：int 配列番号
 =========================================== */
-void ComponentGeometry::SetUvOffset(const Vector2<float>& offset)
+void ComponentGeometry::SetUvOffset(const Vector2<float>& offset, int nIndex)
 {
-	m_fUvOffset = offset;
+	// 立方体の場合はZ,X,Yのテクスチャスケール設定
+	if (m_eType == TYPE_BOX)
+	{
+		// インデックスが範囲内の場合はテクスチャスケール設定
+		if (nIndex >= 0 && nIndex < MAX_UV_NUM)
+			m_fUvOffset[nIndex] = offset;
+		else
+			m_fUvOffset[0] = offset;
+	}
+	else
+	{
+		m_fUvOffset[0] = offset;
+	}
 }
 
 #ifdef _DEBUG
@@ -269,39 +389,23 @@ void ComponentGeometry::Debug(DebugUI::Window& window)
 	// 図形種類リスト
 	pGroupGeometry->AddGroupItem(InitShapeTypeList());	
 	// テクスチャ使用フラグ
-	pGroupGeometry->AddGroupItem(Item::CreateCallBack("UseTexture", Item::Kind::Bool, [this](bool isWrite, void* arg)
-	{
-		bool* pIsTex = reinterpret_cast<bool*>(arg);
-		if (isWrite)
-			m_bIsTex = *pIsTex;
-		else
-			*pIsTex = m_bIsTex;
+	pGroupGeometry->AddGroupItem(InitUseTexture());	// テクスチャ使用フラグ
 
-		// テクスチャ使用フラグがONの場合のみテクスチャリストを表示
-		if (!m_bIsTex)
-		{
-			WIN_OBJ_INFO["Geometry"]["Texture"].RemoveListItemAll();	// リストをクリア
-		}
-		else
-		{	// テクスチャリストに登録されている画像をリストに追加
-			std::unordered_map < TextureManager::E_TEX_KEY, std::string > texPathMap = TEXTURE_MNG_INST.GetTexturePaths();
-			for (auto& texPath : texPathMap)
-			{
-				WIN_OBJ_INFO["Geometry"]["Texture"].AddListItem(texPath.second.c_str());
-			}
-		}
-	}));	// テクスチャ使用フラグ
+	// 0番目のテクスチャを全コピー
+	pGroupGeometry->AddGroupItem(InitTexAllCopy());	// テクスチャ全コピー
+
 	// テクスチャリスト
-	pGroupGeometry->AddGroupItem(InitTextureList());
+	int nTexNum = (m_eType == TYPE_BOX) ? MAX_TEXTURE_NUM : 1;	// 立方体の場合は6面分のテクスチャリストを表示
+	for (int i = 0; i < nTexNum; i++)
+		pGroupGeometry->AddGroupItem(InitTextureList(i));
 
 	// カリング設定
 	pGroupGeometry->AddGroupItem(Item::CreateBind("Culling", Item::Kind::Bool, &m_bIsCulling));
-	// テクスチャスケール
-	pGroupGeometry->AddGroupItem(Item::CreateBind("UvScale", Item::Kind::Vector2, &m_fUvScale));
-	// テクスチャオフセット
-	pGroupGeometry->AddGroupItem(Item::CreateBind("UvOffset", Item::Kind::Vector2, &m_fUvOffset));
 
 	window.AddItem(pGroupGeometry);
+
+	// Uvオフセット,スケール
+	InitUv();
 
 	
 }
@@ -332,6 +436,36 @@ DebugUI::Item* ComponentGeometry::InitShapeTypeList()
 	{	// 項目クリックで図形変更
 		std::string sType = reinterpret_cast<const char*>(arg);
 		SetShapeType(mapShapeType.at(sType));
+
+		// テクスチャ使用フラグがONの場合のみテクスチャリストを表示
+		if (m_bIsTex)
+		{
+			// リストをクリア
+			for (int i = 0; i < MAX_TEXTURE_NUM; i++)
+			{
+				std::string sTexName = "Texture_" + std::to_string(i);
+				WIN_OBJ_INFO["Geometry"][sTexName.c_str()].RemoveListItemAll();
+			}
+
+			// 立方体の場合は6面分のテクスチャリストを表示
+			int nTexNum = (m_eType == TYPE_BOX) ? MAX_TEXTURE_NUM : 1;
+			// テクスチャリストに登録されている画像をリストに追加
+			std::unordered_map < TextureManager::E_TEX_KEY, std::string > texPathMap = TEXTURE_MNG_INST.GetTexturePaths();
+			for (int i = 0; i < nTexNum; i++)
+			{
+				std::string sTexName = "Texture_" + std::to_string(i);
+				for (auto& texPath : texPathMap)
+				{
+					WIN_OBJ_INFO["Geometry"][sTexName.c_str()].AddListItem(texPath.second.c_str());
+				}
+			}
+
+			RemoveUv();	// Uvオフセット,スケールを削除
+			InitUv();	// Uvオフセット,スケールを初期化
+
+		}
+
+
 	}, false, true);
 
 	// リスト項目追加
@@ -352,12 +486,12 @@ DebugUI::Item* ComponentGeometry::InitShapeTypeList()
 	-------------------------------------
 	戻り値：DebugUI::Item*	リスト項目
 =========================================== */
-DebugUI::Item* ComponentGeometry::InitTextureList()
+DebugUI::Item* ComponentGeometry::InitTextureList(int nIdx)
 {
 	using namespace DebugUI;
 
 	// テクスチャリスト
-	Item* pTextureList = Item::CreateList("Texture", [this](const void* arg)
+	Item* pTextureList = Item::CreateList(("Texture_" + std::to_string(nIdx)).c_str(), [this, nIdx](const void* arg)
 	{
 		// リストの表示項目(画像パス)から画像キーを取得
 		std::string sTexName = reinterpret_cast<const char*>(arg);
@@ -374,7 +508,7 @@ DebugUI::Item* ComponentGeometry::InitTextureList()
 		}
 		// 画像キーからテクスチャを取得
 		std::unordered_map<TextureManager::E_TEX_KEY, std::shared_ptr<Texture>> texMap = TEXTURE_MNG_INST.GetTextureDatas();
-		m_pTexture = texMap.find(eKey)->second.get();
+		m_pTextures[nIdx] = texMap.find(eKey)->second.get();
 
 	}, false, true);	// プルダウン
 
@@ -389,7 +523,7 @@ DebugUI::Item* ComponentGeometry::InitTextureList()
 	std::unordered_map<TextureManager::E_TEX_KEY, std::shared_ptr<Texture>> texMap = TEXTURE_MNG_INST.GetTextureDatas();
 	for (auto& tex : texMap)
 	{
-		if (tex.second.get() == m_pTexture)
+		if (tex.second.get() == m_pTextures[nIdx])
 		{
 			pTextureList->SetListNo(tex.first);
 			break;
@@ -397,6 +531,161 @@ DebugUI::Item* ComponentGeometry::InitTextureList()
 	}
 	
 	return pTextureList;
+}
+
+/* ========================================
+	テクスチャ使用フラグ初期化関数
+	-------------------------------------
+	内容：テクスチャ使用フラグの初期化
+	-------------------------------------
+	戻り値：DebugUI::Item*	リスト項目
+=========================================== */
+DebugUI::Item* ComponentGeometry::InitUseTexture()
+{
+	using namespace DebugUI;
+
+	Item* pUseTexture = Item::CreateCallBack("UseTexture", Item::Kind::Bool, [this](bool isWrite, void* arg)
+	{
+		bool* pIsTex = reinterpret_cast<bool*>(arg);
+		if (isWrite)
+		{
+			m_bIsTex = *pIsTex;
+			// OFFの場合はテクスチャリスト、カリング設定、Uvオフセット,スケールを非表示
+			if (!m_bIsTex)
+			{
+				// テクスチャリストをクリア
+				int nTexNum = (m_eType == TYPE_BOX) ? MAX_TEXTURE_NUM : 1;
+				for (int i = 0; i < nTexNum; i++)
+				{
+					std::string sTexName = "Texture_" + std::to_string(i);
+					WIN_OBJ_INFO["Geometry"][sTexName.c_str()].RemoveListItemAll();
+				}
+				// カリング設定を削除
+				WIN_OBJ_INFO["Geometry"].RemoveGroupItem("Culling");	
+				// Uvオフセット,スケールを削除
+				RemoveUv();	
+
+			}
+			// テクスチャ使用フラグがONの場合テクスチャリスト、カリング設定、Uvオフセット,スケールを表示
+			else
+			{
+				// テクスチャリストの表示
+				int nTexNum = (m_eType == TYPE_BOX) ? MAX_TEXTURE_NUM : 1;
+				// テクスチャリストに登録されている画像をリストに追加
+				std::unordered_map < TextureManager::E_TEX_KEY, std::string > texPathMap = TEXTURE_MNG_INST.GetTexturePaths();
+				for (int i = 0; i < nTexNum; i++)
+				{
+					std::string sTexName = "Texture_" + std::to_string(i);
+					for (auto& texPath : texPathMap)
+					{
+						WIN_OBJ_INFO["Geometry"][sTexName.c_str()].AddListItem(texPath.second.c_str());
+					}
+				}
+				// カリング設定
+				WIN_OBJ_INFO["Geometry"].AddGroupItem(Item::CreateBind("Culling", Item::Kind::Bool, &m_bIsCulling));
+				// Uvオフセット,スケールを初期化
+				InitUv();	
+			}
+		}
+		else
+		{
+			*pIsTex = m_bIsTex;
+		}
+	});
+
+	return pUseTexture;
+}
+
+/* ========================================
+	テクスチャ全コピー初期化関数
+	-------------------------------------
+	内容：テクスチャ全コピーの初期化
+	-------------------------------------
+	戻り値：DebugUI::Item*	リスト項目
+=========================================== */
+DebugUI::Item* ComponentGeometry::InitTexAllCopy()
+{
+	using namespace DebugUI;
+
+	Item* pInitTexAllCopy = Item::CreateCallBack("TexAllCopy_0", Item::Kind::Command, [this](bool isWrite, void* arg)
+	{
+		// 現在設定されている画像からリストの表示項目を設定
+		std::unordered_map<TextureManager::E_TEX_KEY, std::shared_ptr<Texture>> texMap = TEXTURE_MNG_INST.GetTextureDatas();
+		for (int i = 0; i < MAX_TEXTURE_NUM; i++)
+		{
+			m_pTextures[i] = m_pTextures[0];
+
+			// 現在設定されている画像からリストの表示項目を設定
+			std::string sTexName = "Texture_" + std::to_string(i);	// 項目名を取得
+			for (auto& tex : texMap)
+			{
+				if (tex.second.get() == m_pTextures[i])
+				{
+					WIN_OBJ_INFO["Geometry"][sTexName.c_str()].SetListNo(tex.first);
+					break;
+				}
+			}
+		}
+	}, false, true);
+
+		
+	return pInitTexAllCopy;
+}
+
+/* ========================================
+	Uvオフセット,スケール初期化関数
+	-------------------------------------
+	内容：Uvオフセット,スケールの初期化
+=========================================== */
+void ComponentGeometry::InitUv()
+{
+	using namespace DebugUI;
+
+	// 立方体の場合(6面分のテクスチャオフセット、スケールを設定)
+	if (m_eType == TYPE_BOX)
+	{
+		for (int i = 0; i < MAX_UV_NUM; i++)
+		{
+			std::string sUvScaleName = "UvScale_" + mapUvName[i];
+			std::string sUvOffsetName = "UvOffset_" + mapUvName[i];
+			// テクスチャスケール
+			WIN_OBJ_INFO["Geometry"].AddGroupItem(Item::CreateBind(sUvScaleName.c_str(), Item::Kind::Vector2, &m_fUvScale[i]));
+			// テクスチャオフセット
+			WIN_OBJ_INFO["Geometry"].AddGroupItem(Item::CreateBind(sUvOffsetName.c_str(), Item::Kind::Vector2, &m_fUvOffset[i]));
+		}
+	}
+	// 球、平面の場合(1つのテクスチャオフセット、スケールを設定)
+	else
+	{
+		// テクスチャスケール
+		WIN_OBJ_INFO["Geometry"].AddGroupItem(Item::CreateBind("UvScale", Item::Kind::Vector2, &m_fUvScale[0]));
+		// テクスチャオフセット
+		WIN_OBJ_INFO["Geometry"].AddGroupItem(Item::CreateBind("UvOffset", Item::Kind::Vector2, &m_fUvOffset[0]));
+	}
+}
+
+/* ========================================
+	Uvオフセット,スケール削除関数
+	-------------------------------------
+	内容：Uvオフセット,スケールの削除
+=========================================== */
+void ComponentGeometry::RemoveUv()
+{
+	using namespace DebugUI;
+
+	// 立方体の場合(6面分)と球、平面の場(1面)の両パターンの項目を削除
+	for (int i = 0; i < MAX_UV_NUM; i++)
+	{
+		std::string sUvScaleName = "UvScale_" + mapUvName[i];
+		std::string sUvOffsetName = "UvOffset_" + mapUvName[i];
+		WIN_OBJ_INFO["Geometry"].RemoveGroupItem(sUvScaleName.c_str());
+		WIN_OBJ_INFO["Geometry"].RemoveGroupItem(sUvOffsetName.c_str());
+	}
+
+	// テクスチャスケール
+	WIN_OBJ_INFO["Geometry"].RemoveGroupItem("UvScale");
+	// テクスチャオフセット
+	WIN_OBJ_INFO["Geometry"].RemoveGroupItem("UvOffset");
 }
 
 #endif // _DEBUG

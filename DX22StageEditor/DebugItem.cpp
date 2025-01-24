@@ -310,6 +310,33 @@ Item& Item::operator[](const char* name)
 	return *dummy;
 }
 
+/* ========================================
+	グループ項目削除関数
+	-------------------------------------
+	内容：グループから表示項目を削除
+	-------------------------------------
+	引数1：const char* name		項目名
+=========================================== */
+void Item::RemoveGroupItem(const char* name)
+{
+	// グループ以外の取得はダミーを返却
+	if (m_eKind != Group) return;
+
+	// グループ内のアイテム一覧を取得
+	ItemGroup* pGroup = static_cast<ItemGroup*>(this);
+	auto it = std::find_if(pGroup->m_pItemGroup.begin(), pGroup->m_pItemGroup.end(),
+		[&name](const Item* obj) {
+		return strcmp(obj->GetName(), name) == 0;
+	});
+
+	// 見つかったアイテムの削除
+	if (it != pGroup->m_pItemGroup.end())
+	{
+		delete* it;
+		pGroup->m_pItemGroup.erase(it);
+	}
+}
+
 
 /* ========================================
 	変換(文字列→項目種別)関数

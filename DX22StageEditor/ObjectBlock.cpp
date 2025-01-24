@@ -39,7 +39,8 @@ void ObjectBlock::InitLocal()
 	m_pCompGeometry = AddComponent<ComponentGeometry>();
 	m_pCompGeometry->SetShapeType(ComponentGeometry::TYPE_BOX);
 	m_pCompGeometry->SetIsTex(true);
-	m_pCompGeometry->SetTexture(GET_TEXTURE_DATA(TextureManager::E_TEX_KEY::BLOCK_SIMPLE));
+	for (int i = 0; i < 6; i++)
+		m_pCompGeometry->SetTexture(GET_TEXTURE_DATA(TextureManager::E_TEX_KEY::BLOCK_SIMPLE), i);
 
 	// 衝突判定形状によってコンポーネントを追加
 	if (m_eColType == E_COL_TYPE::COL_AABB)
@@ -61,11 +62,20 @@ void ObjectBlock::OutPutLocalData(std::ofstream& file)
 	S_SaveData data;
 
 	// テクスチャID
-	data.nTextureID = TEXTURE_MNG_INST.GetTextureKey(m_pCompGeometry->GetTexture());
+	for (int i = 0; i < 6; i++)
+		data.nTextureID[i] = TEXTURE_MNG_INST.GetTextureKey(m_pCompGeometry->GetTexture(i));
+
 	// テクスチャ使用フラグ
 	data.bUseTex	= m_pCompGeometry->GetIsTex();
 	// 衝突判定形状
 	data.eColType	= m_eColType;
+
+	// テクスチャスケール
+	for (int i = 0; i < 3; i++)
+		data.vUvScale[i] = m_pCompGeometry->GetUvScale(i);
+	// テクスチャオフセット
+	for (int i = 0; i < 3; i++)
+		data.vUvOffset[i] = m_pCompGeometry->GetUvOffset(i);
 
 	// ファイルに書き込む
 	file.write((char*)&data, sizeof(S_SaveData));
@@ -86,9 +96,16 @@ void ObjectBlock::InputLocalData(std::ifstream& file)
 	file.read((char*)&data, sizeof(S_SaveData));
 
 	// テクスチャ設定
-	m_pCompGeometry->SetTexture(GET_TEXTURE_DATA((TextureManager::E_TEX_KEY)data.nTextureID));
+	for (int i = 0; i < 6; i++)
+		m_pCompGeometry->SetTexture(GET_TEXTURE_DATA((TextureManager::E_TEX_KEY)data.nTextureID[i]), i);
 	// テクスチャ使用フラグ
 	m_pCompGeometry->SetIsTex(data.bUseTex);
 	// 衝突判定形状
 	m_eColType = data.eColType;
+	// テクスチャスケール
+	for (int i = 0; i < 3; i++)
+		m_pCompGeometry->SetUvScale(data.vUvScale[i], i);
+	// テクスチャオフセット
+	for (int i = 0; i < 3; i++)
+		m_pCompGeometry->SetUvOffset(data.vUvOffset[i], i);
 }

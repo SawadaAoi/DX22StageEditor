@@ -37,7 +37,7 @@ public:
 	// コピーコンストラクタ
 	MeshBuffer(const MeshBuffer& other);
 
-	void Draw(int count = 0);
+	void Draw(int count = 0, int start = 0);
 	HRESULT WriteVertexData(void* pVtx);
 
 	// メッシュデータの取得

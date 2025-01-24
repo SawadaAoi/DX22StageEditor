@@ -42,7 +42,7 @@ public:
 public:
 	ShapeBase();
 	~ShapeBase();
-	void Draw();
+	virtual void Draw();
 	virtual void MakeMesh() = 0;	// 図形作成
  
 
@@ -56,8 +56,8 @@ public:
 
 	bool GetIsTexture();
 	bool GetIsCulling();
-	Vector2<float> GetUvScale(); 
-	Vector2<float> GetUvOffset();
+	Vector2<float> GetUvScale(int nIndex = 0);
+	Vector2<float> GetUvOffset(int nIndex = 0);
 	
 
 	// セッター
@@ -68,7 +68,7 @@ public:
 	void SetColor(Vector3<float> fColor);
 	void SetDrawMode(E_DrawMode eMode);
 
-	void SetTexture(Texture* pTexture);
+	void SetTexture(Texture* pTexture, int nIndex = 0);
 	void SetUseTexture(int bIsTex);
 
 	void SetLightMaterial(float fDiffuse, float fSpecular, float fAmbient, bool bUseLight);		// ライトパラメータ設定(ピクセルシェーダー用)
@@ -77,34 +77,34 @@ public:
 
 	void SetIsCulling(bool bCulling);	// カリング設定
 
-	void SetUvScale(Vector2<float> fScale);
-	void SetUvOffset(Vector2<float> fOffset);
+	void SetUvScale(Vector2<float> fScale, int nIndex = 0);
+	void SetUvOffset(Vector2<float> fOffset, int nIndex = 0);
 
-private:
+protected:
 	void SetWVPMatrix();
 
 protected:
 	MeshBuffer*		m_pMeshBuffer[DRAW_MAX];	// メッシュバッファ(頂点、インデックス)
-	E_DrawMode		m_eDrawMode;	// 表示モード
+	E_DrawMode		m_eDrawMode;				// 表示モード
 
 	VertexShader*	m_pVS;			// 頂点シェーダ
 	PixelShader*	m_pPS;			// ピクセルシェーダ
 
-	Vector3<float>	m_vPosition;			// 座標
+	Vector3<float>	m_vPosition;	// 座標
 	Quaternion		m_qRotation;	// 回転(クォータニオン)
 	Vector3<float>	m_vScale;		// サイズ
 
 
-	Texture*		m_pTexture;		// テクスチャ
-	int				m_bIsTex;		// テクスチャ使用フラグ
-	bool			m_bIsCulling;	// カリングフラグ(カリングするかどうか)
+	std::vector<Texture*>	m_pTextures;	// テクスチャ配列
+	int						m_bIsTex;		// テクスチャ使用フラグ
+	bool					m_bIsCulling;	// カリングフラグ(カリングするかどうか)
 
-	Vector2<float>	m_fUvScale;		// テクスチャ座標スケール
-	Vector2<float>	m_fUvOffset;	// テクスチャ座標オフセット
+	std::vector<Vector2<float>>	m_fUvScale;		// テクスチャ座標スケール
+	std::vector<Vector2<float>>	m_fUvOffset;	// テクスチャ座標オフセット
+		
+	Vector3<float>			 m_fColor;		// 色	
 
-	Vector3<float> m_fColor;		// 色	
-
-	DirectX::XMFLOAT4X4 m_WVP[3];	// ワールド、ビュー、プロジェクション行列
+	DirectX::XMFLOAT4X4		m_WVP[3];		// ワールド、ビュー、プロジェクション行列
 
 };
 

@@ -9,14 +9,23 @@
 // =============== インクルード ===================
 #include "ShapeBox.h"
 
+// =============== 定数定義 =======================
+const int MAX_TEXTURE_NUM = 6;	// テクスチャ最大数
+const int MAX_UV_NUM = 3;		// uv最大数(Z,X,Y)
+
 /* ========================================
 	コンストラクタ関数
 	-------------------------------------
 	内容：初期化
 =========================================== */
 ShapeBox::ShapeBox()
+	: ShapeBase()
 {
 	MakeMesh();	// メッシュの作成
+
+	m_pTextures.resize(MAX_TEXTURE_NUM);	// テクスチャの数を設定
+	m_fUvOffset.resize(MAX_UV_NUM);	// uvオフセットの数を設定
+	m_fUvScale.resize(MAX_UV_NUM);	// uvスケールの数を設定
 }
 
 /* ========================================
@@ -30,23 +39,60 @@ ShapeBox::ShapeBox()
 	引数4：eMode	描画モード
 =========================================== */
 ShapeBox::ShapeBox(Vector3<float> fPos, Vector3<float> fSize, Vector3<float> fColor, E_DrawMode eMode)
+	: ShapeBox()
 {
 	SetPosition(fPos);
 	SetScale(fSize);
 	SetColor(fColor);
 	SetDrawMode(eMode);
-
-	MakeMesh();	// メッシュの作成
 }
 
 /* ========================================
-	デストラクタ関数
+	描画関数
 	-------------------------------------
-	内容：解放処理
+	内容：描画を行う
 =========================================== */
-ShapeBox::~ShapeBox()
+void ShapeBox::Draw()
 {
+	DirectXManager::OnOffDepthStencilView(true);	// 深度バッファの有効化
 
+	SetWVPMatrix();	// WVP行列の設定
+
+	// 定数バッファ(ワールド、ビュー、プロジェクション行列)の書き込み
+	m_pVS->WriteBuffer(0, m_WVP);
+
+
+
+	// 定数バッファ(色、表示モード、テクスチャ使用フラグ)の書き込み
+	float	fData[3] = { m_fColor.x, m_fColor.y, m_fColor.z };	// 色
+	int		nData[2] = { m_eDrawMode, m_bIsTex };				// 表示モード、テクスチャ使用フラグ
+	m_pPS->WriteBuffer(0, fData);
+	m_pPS->WriteBuffer(1, nData);
+
+	// シェーダーのバインド(シェーダーの設定を GPU に送る)
+	m_pVS->Bind();
+	m_pPS->Bind();
+
+	if (m_bIsCulling)
+		DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_BACK);	// カリング有効
+	else
+		DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_NONE);	// カリング無効
+
+	// テクスチャ(インデックスを区切って描画する)
+	for (int i = 0; i < m_pTextures.size(); ++i)
+	{
+		int nIdx = i / 2;	// 0,1,2,3,4,5 -> 0,0,1,1,2,2
+		// Uvスケール、オフセットの設定
+		DirectX::XMFLOAT4 fUvBuf = { m_fUvScale[nIdx].x, m_fUvScale[nIdx].y, m_fUvOffset[nIdx].x, m_fUvOffset[nIdx].y };
+		m_pVS->WriteBuffer(1, &fUvBuf);
+
+		m_pPS->SetTexture(0, m_pTextures[i]);		// テクスチャの設定
+		m_pMeshBuffer[m_eDrawMode]->Draw(6, i * 6);	// 頂点バッファ、インデックスバッファをGPUに設定し、描画
+
+	}
+
+	// カリングを元に戻す
+	DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_BACK);	// カリング有効
 }
 
 /* ========================================

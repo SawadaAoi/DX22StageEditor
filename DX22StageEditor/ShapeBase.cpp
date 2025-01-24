@@ -14,6 +14,7 @@
 #include "TextureManager.h"	
 #include "LightManager.h"
 
+
 /* ========================================
 	コンストラクタ関数
 	-------------------------------------
@@ -31,17 +32,20 @@ ShapeBase::ShapeBase()
 	, m_qRotation({0.0f,0.0f,0.0f}, 1.0f)
 	, m_fColor(1.0f, 1.0f, 1.0f)
 	, m_eDrawMode(E_DrawMode::DRAW_NORMAL)
-	, m_pTexture(nullptr)
+	, m_pTextures()
 	, m_bIsTex(false)
 	, m_bIsCulling(true)
-	, m_fUvScale(1.0f, 1.0f)
-	, m_fUvOffset(0.0f, 0.0f)
+	, m_fUvScale()
+	, m_fUvOffset()
 {
 	// 頂点シェーダー読み込み
 	m_pVS = GET_VS_DATA(VS_KEY::VS_SHAPE);
 	// ピクセルシェーダー読み込み
 	m_pPS = GET_PS_DATA(PS_KEY::PS_SHAPE);
 
+	m_pTextures.resize(1);
+	m_fUvScale.resize(1);
+	m_fUvOffset.resize(1);
 }
 
 /* ========================================
@@ -71,7 +75,7 @@ void ShapeBase::Draw()
 	m_pVS->WriteBuffer(0, m_WVP);
 
 	// Uvスケール、オフセットの設定
-	DirectX::XMFLOAT4 fUvBuf = { m_fUvScale.x, m_fUvScale.y, m_fUvOffset.x, m_fUvOffset.y };
+	DirectX::XMFLOAT4 fUvBuf = { m_fUvScale[0].x, m_fUvScale[0].y, m_fUvOffset[0].x, m_fUvOffset[0].y};
 	m_pVS->WriteBuffer(1, &fUvBuf);
 
 
@@ -80,7 +84,7 @@ void ShapeBase::Draw()
 	int		nData[2] = { m_eDrawMode, m_bIsTex };				// 表示モード、テクスチャ使用フラグ
 	m_pPS->WriteBuffer(0, fData);
 	m_pPS->WriteBuffer(1, nData);
-	m_pPS->SetTexture(0, m_pTexture);
+	m_pPS->SetTexture(0, m_pTextures[0]);	// テクスチャの設定
 
 	// シェーダーのバインド(シェーダーの設定を GPU に送る)
 	m_pVS->Bind();
@@ -92,8 +96,7 @@ void ShapeBase::Draw()
 		DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_NONE);	// カリング無効
 
 	// 頂点バッファ、インデックスバッファをGPUに設定し、描画
-	m_pMeshBuffer[m_eDrawMode]->Draw();
-
+	m_pMeshBuffer[m_eDrawMode]->Draw();	
 	// カリングを元に戻す
 	DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_BACK);	// カリング有効
 }
@@ -193,21 +196,37 @@ bool ShapeBase::GetIsCulling()
 /* ========================================
 	ゲッター(Uvスケール)関数
 	-------------------------------------
+	引数：int 配列番号
+	-------------------------------------
 	戻値：Vector2<float> m_vUvScale
 =========================================== */
-Vector2<float> ShapeBase::GetUvScale()
+Vector2<float> ShapeBase::GetUvScale(int nIndex)
 {
-	return m_fUvScale;
+	// インデックスがテクスチャ配列のサイズを超えていたら0にセット
+	if (nIndex >= m_pTextures.size() || nIndex < 0)
+	{
+		nIndex = 0;
+	}
+
+	return m_fUvScale.at(nIndex);
 }
 
 /* ========================================
 	ゲッター(Uvスケール)関数
 	-------------------------------------
+	引数：int 配列番号
+	-------------------------------------
 	戻値：Vector2<float> m_vUvScale
 =========================================== */
-Vector2<float> ShapeBase::GetUvOffset()
+Vector2<float> ShapeBase::GetUvOffset(int nIndex)
 {
-	return m_fUvOffset;
+	// インデックスがテクスチャ配列のサイズを超えていたら0にセット
+	if (nIndex >= m_pTextures.size() || nIndex < 0)
+	{
+		nIndex = 0;
+	}
+
+	return m_fUvOffset.at(nIndex);
 }
 
 
@@ -265,10 +284,17 @@ void ShapeBase::SetDrawMode(E_DrawMode eMode)
 	セッター(テクスチャ)関数
 	-------------------------------------
 	引数：Texture* pTexture
+	引数：int nIndex
 =========================================== */
-void ShapeBase::SetTexture(Texture* pTexture)
+void ShapeBase::SetTexture(Texture* pTexture, int nIndex)
 {
-	m_pTexture = pTexture;
+	// インデックスがテクスチャ配列のサイズを超えていたら0にセット
+	if (nIndex >= m_pTextures.size() || nIndex < 0)
+	{
+		nIndex = 0;
+	}
+		
+	m_pTextures[nIndex] = pTexture;
 }
 
 /* ========================================
@@ -358,19 +384,33 @@ void ShapeBase::SetIsCulling(bool bCulling)
 /* ========================================
 	セッター(Uvオフセット)関数
 	-------------------------------------
-	引数：Vector2<float> fOffset
+	引数1：Vector2<float> fOffset
+	引数2：int nIndex
 =========================================== */
-void ShapeBase::SetUvScale(Vector2<float> fScale)
+void ShapeBase::SetUvScale(Vector2<float> fScale, int nIndex)
 {
-	m_fUvScale = fScale;
+	// インデックスがテクスチャ配列のサイズを超えていたら0にセット
+	if (nIndex >= m_pTextures.size() || nIndex < 0)
+	{
+		nIndex = 0;
+	}
+
+	m_fUvScale.at(nIndex) = fScale;
 }
 
 /* ========================================
 	セッター(Uvオフセット)関数
 	-------------------------------------
-	引数：Vector2<float> fOffset
+	引数1：Vector2<float> fOffset
+	引数2：int nIndex
 =========================================== */
-void ShapeBase::SetUvOffset(Vector2<float> fOffset)
+void ShapeBase::SetUvOffset(Vector2<float> fOffset, int nIndex)
 {
-	m_fUvOffset = fOffset;
+	// インデックスがテクスチャ配列のサイズを超えていたら0にセット
+	if (nIndex >= m_pTextures.size() || nIndex < 0)
+	{
+		nIndex = 0;
+	}
+
+	m_fUvOffset.at(nIndex) = fOffset;
 }

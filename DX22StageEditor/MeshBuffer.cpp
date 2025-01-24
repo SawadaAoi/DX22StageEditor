@@ -216,8 +216,9 @@ HRESULT MeshBuffer::CreateIndexBuffer(const void* pIdx, UINT size, UINT count)
 	内容：頂点バッファとインデックスバッファを使って描画
 	-------------------------------------
 	引数1：count	描画する頂点数(0の場合は全ての頂点を描画)
+	引数2：start	描画を開始する頂点のインデックス
 =========================================== */
-void MeshBuffer::Draw(int count)
+void MeshBuffer::Draw(int count, int start)
 {
 	// デバイスコンテキストを取得
 	ID3D11DeviceContext* pContext = DirectXManager::GetContext();	
@@ -243,7 +244,7 @@ void MeshBuffer::Draw(int count)
 		}
 		// インデックスバッファをセット
 		pContext->IASetIndexBuffer(m_pIdxBuffer, format, 0);
-		pContext->DrawIndexed(count ? count : m_tMeshDesc.idxCount, 0, 0);  // 指定された数か、全てのインデックスを描画
+		pContext->DrawIndexed(count ? count : m_tMeshDesc.idxCount, start, 0);  // 指定された数か、全てのインデックスを描画
 	}
 	else
 	{
