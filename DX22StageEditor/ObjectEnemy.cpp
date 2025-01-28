@@ -121,7 +121,7 @@ void ObjectEnemy::CheckGround()
 		// 地面に設置している位置にプレイヤーを設定
 		Vector3<float> vPos = m_pCompTransform->GetWorldPosition();
 		vPos.y = m_pCompGroundRaycast->GetHitPos().y + 0.5f;
-		m_pCompTransform->SetLocalPosition(vPos);
+		m_pCompTransform->SetPosition(vPos);
 
 	}
 }
