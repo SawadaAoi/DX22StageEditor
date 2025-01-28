@@ -97,12 +97,6 @@ void ObjectBase::Update()
 	}
 
 	UpdateLocal();	// 個別更新処理
-
-	// 子オブジェクトの更新
-	for (auto pChildObj : m_pChildObjs)
-	{
-		pChildObj->Update();
-	}
 }
 
 /* ========================================

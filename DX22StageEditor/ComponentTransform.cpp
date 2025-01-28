@@ -402,7 +402,7 @@ void ComponentTransform::ScaleZ(float z)
 void ComponentTransform::LookAt(const Vector3<float>& target, const Vector3<float>& up)
 {
 	// 自オブジェクトからターゲットへのベクトル
-	Vector3<float> forward = target - this->m_vLocalPosition;
+	Vector3<float> forward = target - m_vWorldPosition;
 	forward.Normalize();	// 正規化
 
 	// 右方向ベクトル
@@ -422,7 +422,7 @@ void ComponentTransform::LookAt(const Vector3<float>& target, const Vector3<floa
 	);
 
 	// 回転行列からクォータニオンを生成
-	SetLocalRotation(Quaternion::FromDirectXMatrix(rotationMatrix));
+	SetRotation(Quaternion::FromDirectXMatrix(rotationMatrix));
 
 }
 
@@ -436,11 +436,11 @@ void ComponentTransform::LookAt(const Vector3<float>& target, const Vector3<floa
 =========================================== */
 void ComponentTransform::MoveTo(const Vector3<float>& target, float fTime)
 {
-	m_bMoveTo			= true;			// 移動中フラグを立てる
-	m_vMoveStartPos		= m_vLocalPosition;	// 移動開始座標を現在座標に
-	m_vMoveEndPos		= target;		// 移動終了座標を目標座標に
-	m_fMoveTime			= fTime;		// 移動時間を設定
-	m_fMoveCurrentTime	= 0.0f;			// 現在の移動時間を初期化
+	m_bMoveTo			= true;				// 移動中フラグを立てる
+	m_vMoveStartPos		= m_vWorldPosition;	// 移動開始座標を現在座標に
+	m_vMoveEndPos		= target;			// 移動終了座標を目標座標に
+	m_fMoveTime			= fTime;			// 移動時間を設定
+	m_fMoveCurrentTime	= 0.0f;				// 現在の移動時間を初期化
 }
 
 
@@ -455,7 +455,7 @@ void ComponentTransform::MoveTo(const Vector3<float>& target, float fTime)
 =========================================== */
 void ComponentTransform::MoveToward(const Vector3<float>& target,  float fSpeed, float fDistance)
 {
-	Vector3<float> fDirVec	= target - m_vLocalPosition;	// 目標までのベクトル
+	Vector3<float> fDirVec	= target - m_vWorldPosition;	// 目標までのベクトル
 	float fLength			= fDirVec.Length();				// ベクトルの長さ
 
 	// 到達していない場合
@@ -515,17 +515,16 @@ Vector3<float> ComponentTransform::GetUpVector() const
 =========================================== */
 void ComponentTransform::UpdateMoveTo()
 {
-
 	// 経過時間を加算
 	m_fMoveCurrentTime += DELTA_TIME;	// 経過時間を加算
 
 	// 現在の座標を更新
-	m_vLocalPosition = Vector3<float>::Lerp(m_vMoveStartPos, m_vMoveEndPos, m_fMoveCurrentTime / m_fMoveTime);
+	SetPosition(Vector3<float>::Lerp(m_vMoveStartPos, m_vMoveEndPos, m_fMoveCurrentTime / m_fMoveTime));
 
 	// 移動終了
 	if (m_fMoveCurrentTime >= m_fMoveTime)
 	{
-		m_vLocalPosition = m_vMoveEndPos;	// 目標座標に合わせる
+		SetPosition(m_vMoveEndPos);	// 目標座標に合わせる
 		m_bMoveTo	= false;			// 移動中フラグを下げる
 	}
 }
@@ -659,6 +658,134 @@ DirectX::XMFLOAT4X4 ComponentTransform::GetWorldMatrixOffset(const Vector3<float
 	return mat;
 }
 
+/* ========================================
+	セッター(座標)関数
+	-------------------------------------
+	内容：座標を設定
+		　親オブジェクトがある場合は、親オブジェクトの座標を考慮して設定
+	-------------------------------------
+	引数1：座標	Vector3<float>
+=========================================== */
+void ComponentTransform::SetPosition(const Vector3<float>& position)
+{
+	if (m_pOwnerObj->GetParentObject())
+	{
+		// 親オブジェクトのTransformコンポーネントを取得
+		ComponentTransform* pParentTran = m_pOwnerObj->GetParentObject()->GetTransform();
+		// 親オブジェクトのワールド行列(座標)を生成
+		DirectX::XMMATRIX parentMat = DirectX::XMMatrixTranslation(	
+			pParentTran->GetWorldPosition().x,	pParentTran->GetWorldPosition().y,pParentTran->GetWorldPosition().z);
+
+		// ローカル行列(座標)を生成
+		DirectX::XMMATRIX localMat = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+
+		// 親のワールド行列の逆行列を取得
+		DirectX::XMMATRIX parentMatInv = DirectX::XMMatrixInverse(nullptr, parentMat);
+
+		// ローカル行列と親の逆行列を掛け合わせてローカル行列を取得
+		DirectX::XMMATRIX localMatInv = localMat * parentMatInv;
+
+		// 作成した行列から座標を取得
+		m_vLocalPosition = Vector3<float>::FromMatrix_Translation(localMatInv);
+
+		// ワールド座標の更新
+		UpdateWorldTransform();
+	}
+	else
+	{
+		m_vLocalPosition = position;
+	}
+}
+
+/* ========================================
+	セッター(回転)関数
+	-------------------------------------
+	内容：回転を設定
+		　親オブジェクトがある場合は、親オブジェクトの回転を考慮して設定
+	-------------------------------------
+	引数1：回転	Quaternion
+=========================================== */
+void ComponentTransform::SetRotation(const Quaternion& rotation)
+{
+	if (m_pOwnerObj->GetParentObject())
+	{
+		// 回転、座標の再計算
+		// 親オブジェクトのTransformコンポーネントを取得
+		ComponentTransform* pParentTran = m_pOwnerObj->GetParentObject()->GetComponent<ComponentTransform>();
+		// 親オブジェクトのワールド行列(回転)を生成
+		DirectX::XMMATRIX parentMat = pParentTran->GetWorldRotation().ToDirectXMatrix();		// 回転
+
+		// ローカル行列(回転)を生成
+		DirectX::XMMATRIX localMat = rotation.ToDirectXMatrix();
+
+		// 親のワールド行列の逆行列を取得
+		DirectX::XMMATRIX parentMatInv = DirectX::XMMatrixInverse(nullptr, parentMat);
+
+		// ローカル行列と親の逆行列を掛け合わせてローカル行列を取得
+		DirectX::XMMATRIX localMatInv = localMat * parentMatInv;
+
+		// 作成した行列から回転を取得
+		m_qLocalRotation = Quaternion::FromDirectXMatrix(localMatInv);
+
+		// ワールド座標の更新
+		UpdateWorldTransform();	
+	}
+	else
+	{
+		m_qLocalRotation = rotation;
+	}
+}
+
+
+/* ========================================
+	セッター(回転)関数
+	-------------------------------------
+	内容：回転を設定
+	-------------------------------------
+	引数1：回転軸	Vector3<float>
+	引数2：回転量(ラジアン float
+=========================================== */
+void ComponentTransform::SetRotation(const Vector3<float> axis, float angle)
+{
+	SetRotation(Quaternion::FromAxisAngleNormalized(axis, angle));
+}
+
+/* ========================================
+	セッター(回転)関数
+	-------------------------------------
+	内容：回転を設定
+	-------------------------------------
+	引数1：回転	Vector3<float>
+=========================================== */
+void ComponentTransform::SetRotationEuler(const Vector3<float>& angles)
+{
+	SetRotation(Quaternion::FromEulerAngle(angles));
+}
+
+/* ========================================
+	セッター(スケール)関数
+	-------------------------------------
+	内容：スケールを設定
+		　親オブジェクトがある場合は、親オブジェクトのスケールを考慮して設定
+	-------------------------------------
+	引数1：スケール	Vector3<float>
+=========================================== */
+void ComponentTransform::SetScale(const Vector3<float>& scale)
+{
+	if (m_pOwnerObj->GetParentObject())
+	{
+		// 親オブジェクトのTransformコンポーネントを取得
+		ComponentTransform* pParentTran = m_pOwnerObj->GetParentObject()->GetComponent<ComponentTransform>();
+		// ワールドスケールを計算
+		m_vLocalScale = scale / pParentTran->GetWorldScale();
+		// ワールド座標の更新
+		UpdateWorldTransform();
+	}
+	else
+	{
+		m_vLocalScale = scale;
+	}
+}
 
 /* ========================================
 	セッター(座標)関数

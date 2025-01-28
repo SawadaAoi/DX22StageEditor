@@ -28,7 +28,6 @@ public:
 	void ClearParent();					// 親オブジェクトを削除
 	void RecalculateLocalTransform();	// ローカル変数の再計算
 
-
 	// 座標変換
 	void Translate(const Vector3<float>& translation);
 	void Translate(float x, float y, float z);
@@ -79,6 +78,12 @@ public:
 	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数
 
 	// セッター
+	void SetPosition(const Vector3<float>& position);
+	void SetRotation(const Quaternion& rotation);
+	void SetRotation(const Vector3<float> axis, float angle);
+	void SetRotationEuler(const Vector3<float>& angles);
+	void SetScale(const Vector3<float>& scale);
+
 	void SetLocalPosition(const Vector3<float>& position);
 	void SetLocalRotation(const Quaternion& rotation);
 	void SetLocalRotation(const Vector3<float> axis, float angle);
