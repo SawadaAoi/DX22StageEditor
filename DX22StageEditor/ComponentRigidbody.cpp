@@ -193,23 +193,26 @@ void ComponentRigidbody::ResolveOverlapCollision()
 	// オブジェクト数分ループ
 	for (const T_MTV& mtv : mtvs)
 	{
-		// 衝突している場合 && トリガーでない場合
-		if (mtv.bIsCol && !mtv.bIsTrigger && !m_pCompCollisionBase->GetTrigger())
+		if (!mtv.bIsCol) continue;										// 衝突していない場合は次のオブジェクトへ
+		if (mtv.bIsTrigger) continue;									// トリガーの場合は次のオブジェクトへ
+		if (m_pCompCollisionBase->GetTrigger()) continue;				// トリガーの場合は次のオブジェクトへ
+		// レイ衝突地面は無視
+		// ※地面ブロックが斜めの場合に、めり込み解消があると、滑り落ちるのを防ぐため
+		if (mtv.sName == m_pCompGroundRay->GetHitObjName()) continue;	
+
+		// めり込み方向
+		Vector3<float> vReturnDir	= mtv.vAxis * -1.0f;	// 衝突軸の反対方向
+		float fOverlapDis			= mtv.fOverlap;			// 重なり量
+
+		m_pCompTransform->Translate(vReturnDir * fOverlapDis);
+
+		// 衝突軸に沿った速度の減衰
+		float fDot = m_vVelocity.Dot(vReturnDir);	// 移動方向がどれだけめり込み方向に沿っているか
+
+		// 移動方向とめり込み方向が逆の場合
+		if (fDot < 0.0f)
 		{
-			// めり込み方向
-			Vector3<float> vReturnDir	= mtv.vAxis * -1.0f;	// 衝突軸の反対方向
-			float fOverlapDis			= mtv.fOverlap;			// 重なり量
-
-			m_pCompTransform->Translate(vReturnDir * fOverlapDis);
-
-			// 衝突軸に沿った速度の減衰
-			float fDot = m_vVelocity.Dot(vReturnDir);	// 移動方向がどれだけめり込み方向に沿っているか
-
-			// 移動方向とめり込み方向が逆の場合
-			if (fDot < 0.0f)
-			{
-				m_vVelocity -= (vReturnDir * fDot);	// めり込み方向に対する速度の成分を減算
-			}
+			m_vVelocity -= (vReturnDir * fDot);	// めり込み方向に対する速度の成分を減算
 		}
 	}
 }

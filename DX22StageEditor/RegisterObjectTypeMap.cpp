@@ -23,6 +23,7 @@
 #include "ObjectGround.h"
 #include "ObjectBlock.h"
 #include "ObjectBlockGroundAABB.h"
+#include "ObjectBlockGroundOBB.h"
 #include "ObjectWall.h"
 
 
@@ -71,6 +72,7 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectGround, OCT_TERRAIN);
 	REGISTER_OBJECT_TYPE(ObjectBlock, OCT_TERRAIN);
 	REGISTER_OBJECT_TYPE(ObjectBlockGroundAABB, OCT_TERRAIN);
+	REGISTER_OBJECT_TYPE(ObjectBlockGroundOBB, OCT_TERRAIN);
 	REGISTER_OBJECT_TYPE(ObjectWall, OCT_TERRAIN);
 
 	// ÉJÉÅÉâ

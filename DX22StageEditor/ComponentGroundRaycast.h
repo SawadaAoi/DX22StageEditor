@@ -36,6 +36,8 @@ public:
 	// ゲッター
 	Vector3<float> GetHitPos();				// レイ地面接触座標
 	bool GetHitFlg();						// レイ地面接触判定フラグ
+	std::string GetHitObjName();			// 接触オブジェクト名
+
 	// セッター
 	void SetRayLength(float fLength);						// レイの長さを設定
 	void SetRayDirection(const Vector3<float>& vDir);		// レイの方向を設定
@@ -69,6 +71,8 @@ private:
 
 	Vector3<float>	m_vHitPos;		// レイ地面接触座標
 	bool			m_bIsHit;		// レイ地面接触判定フラグ
+
+	std::string m_sHitObjName;	// 接触オブジェクト名
 
 #ifdef _DEBUG
 	std::string		m_sDispIsHit;	// 地面接触表示

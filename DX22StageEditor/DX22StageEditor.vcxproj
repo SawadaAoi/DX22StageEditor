@@ -187,6 +187,7 @@
     <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="ObjectBlock.cpp" />
     <ClCompile Include="ObjectBlockGroundAABB.cpp" />
+    <ClCompile Include="ObjectBlockGroundOBB.cpp" />
     <ClCompile Include="ObjectBullet.cpp" />
     <ClCompile Include="ObjectBulletPlayer.cpp" />
     <ClCompile Include="ObjectCameraDebug.cpp" />
@@ -290,6 +291,7 @@
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="ObjectBlock.h" />
     <ClInclude Include="ObjectBlockGroundAABB.h" />
+    <ClInclude Include="ObjectBlockGroundOBB.h" />
     <ClInclude Include="ObjectBullet.h" />
     <ClInclude Include="ObjectBulletPlayer.h" />
     <ClInclude Include="ObjectCameraDebug.h" />

@@ -33,11 +33,12 @@ ComponentGroundRaycast::ComponentGroundRaycast(ObjectBase* pOwner)
 	, m_pOwnerTransform(nullptr)
 	, m_pRayLine(nullptr)
 	, m_vHitPos(0.0f, 0.0f, 0.0f)
+	, m_sHitObjName("")
 #ifdef _DEBUG
 	, m_bIsHit(false)
 	, m_bIsDispRayLine(false)
 	, m_bIsDispTriPointToHitPos(false)
-#elif
+#else
 	, m_bIsHit(false)
 	, m_bIsDispRayLine(false)
 	, m_bIsDispTriPointToHitPos(false)
@@ -150,7 +151,9 @@ void ComponentGroundRaycast::CheckGround()
 		// 接触座標が地面の内側にある場合
  		if (CheckOnGround(pGround))
 		{
-			m_bIsHit = true;
+			m_bIsHit		= true;					
+			m_sHitObjName	= pObject->GetName();	// 接触オブジェクト名を取得(斜め床用)
+
 			break;	// いずれかの地面に接触している場合はループを抜ける
 		}
 		// 接触座標が地面の外側にある場合
@@ -341,6 +344,16 @@ bool ComponentGroundRaycast::GetHitFlg()
 }
 
 /* ========================================
+	ゲッター(接触オブジェクト名)関数
+	-------------------------------------
+	戻値：std::string	接触オブジェクト名
+=========================================== */
+std::string ComponentGroundRaycast::GetHitObjName()
+{
+	return m_sHitObjName;
+}
+
+/* ========================================
 	セッター(レイの長さ)関数
 	-------------------------------------
 	引数1：float	レイの長さ
@@ -405,6 +418,8 @@ void ComponentGroundRaycast::Debug(DebugUI::Window& window)
 
 	pGroupGroundRaycast->AddGroupItem(Item::CreateBind("IsDispRayLine",				Item::Bool, &m_bIsDispRayLine));			// レイ描画フラグ
 	pGroupGroundRaycast->AddGroupItem(Item::CreateBind("IsDispTriPointToHitPos",	Item::Bool, &m_bIsDispTriPointToHitPos));	// 三角頂点→地面接触座標までの線表示フラグ
+
+	pGroupGroundRaycast->AddGroupItem(Item::CreateBind("HitObjName", Item::Text, &m_sHitObjName));	// 接触オブジェクト名
 
 	window.AddItem(pGroupGroundRaycast);
 

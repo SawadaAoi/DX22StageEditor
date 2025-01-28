@@ -225,7 +225,10 @@ void ComponentCollisionBase::SetColObjMTV(T_MTV tMtv, std::string sName)
 	{
 		if (mtv.sName == sName)
 		{
-			mtv = tMtv;
+			mtv.bIsCol		= tMtv.bIsCol;
+			mtv.vAxis		= tMtv.vAxis;
+			mtv.fOverlap	= tMtv.fOverlap;
+
 			break;
 		}
 	}
