@@ -100,9 +100,6 @@ void SceneBase::Uninit()
 =========================================== */
 void SceneBase::Update()
 {
-	UpdateObject();	// オブジェクト更新
-	UpdateLocal();	// 個別更新処理
-
 #ifdef _DEBUG
 	// 変形エディタ更新
 	UpdateTransformEdit();	
@@ -111,6 +108,8 @@ void SceneBase::Update()
 	// オブジェクトリスト再読み込み
 	ReloadDebugObjectList();	
 #endif // _DEBUG
+	UpdateObject();	// オブジェクト更新
+	UpdateLocal();	// 個別更新処理
 
 }
 

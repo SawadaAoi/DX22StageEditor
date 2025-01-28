@@ -28,6 +28,7 @@ public:
 public:
 	ObjectSkyBox(SceneBase* pScene);
 	void InitLocal() override;
+	void UpdateLocal() override;
 
 	// ÉfÅ[É^ï€ë∂
 	void OutPutLocalData(std::ofstream& file) override;

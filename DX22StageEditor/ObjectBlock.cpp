@@ -48,6 +48,7 @@ void ObjectBlock::InitLocal()
 	else if (m_eColType == E_COL_TYPE::COL_OBB)
 		m_pCompColBase = AddComponent<ComponentCollisionOBB>();
 
+	m_pCompColBase->SetDynamic(false);	// 静的オブジェクト
 }
 
 /* ========================================

@@ -227,8 +227,8 @@ void Menu::Draw()
 		if (windowIt->enable)
 		{
 			// ウィンドウ内の描画開始-------------------------------------
-			ImGui::Begin(windowIt->name.c_str());
-			//ImGui::Begin(windowIt->name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);	// 大きさ、位置固定
+			//ImGui::Begin(windowIt->name.c_str());
+			ImGui::Begin(windowIt->name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);	// 大きさ、位置固定
 			// アイテムごとに描画
 			auto itemIt = windowIt->items.begin();
 			while (itemIt != windowIt->items.end())

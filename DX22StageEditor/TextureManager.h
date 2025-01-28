@@ -38,6 +38,7 @@ public:
 		STAGE_GOAL,		// ゴール
 		WALL_FENCE,		// 壁(フェンス)
 		PLAYER_STARTPOS,	// プレイヤースタート位置
+		TITLE_LOGO,		// タイトルロゴ
 		MAX,
 	};
 
@@ -55,6 +56,7 @@ public:
 		{TEX_KEY::STAGE_GOAL,	"Assets/Texture/Stage_Goal.png"			},
 		{TEX_KEY::WALL_FENCE,	"Assets/Texture/Wall_Fence.png"			},
 		{TEX_KEY::PLAYER_STARTPOS, "Assets/Texture/Player_StartPos.png"	},
+		{TEX_KEY::TITLE_LOGO,	"Assets/Texture/Title_Logo.png"			},
 
 	};
 

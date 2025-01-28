@@ -15,6 +15,7 @@
 
 // =============== 定数 ===========================
 const Vector3<float> DEFAULT_SCALE = Vector3<float>(150.0f, 150.0f, 150.0f);
+const float ROTATE_SPEED = 1.0f;
 
 // =============== コンストラクタ =====================
 ObjectSkyBox::ObjectSkyBox(SceneBase* pScene)
@@ -36,6 +37,17 @@ void ObjectSkyBox::InitLocal()
 	SetLightUse(false);
 
 	m_pCompTransform->SetLocalScale(DEFAULT_SCALE);
+}
+
+/* ========================================
+	更新関数
+	-------------------------------------
+	内容：更新処理
+========================================= */
+void ObjectSkyBox::UpdateLocal()
+{
+	// ゆっくり回転
+	m_pCompTransform->RotateY(ROTATE_SPEED * DELTA_TIME);
 }
 
 /* ========================================
