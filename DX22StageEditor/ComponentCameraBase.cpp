@@ -99,7 +99,7 @@ void ComponentCameraBase::Update()
 	}
 
 	// 自身の座標、回転から注視点と上方向を更新
-	m_vLook = m_pTransform->GetWorldPosition() + m_pTransform->GetForwardVector();
+	m_vLook = m_pTransform->GetPosition() + m_pTransform->GetForwardVector();
 	m_vUp = m_pTransform->GetUpVector();
 }
 
@@ -284,7 +284,7 @@ DirectX::XMFLOAT4X4 ComponentCameraBase::GetViewMatrix()
 	//m_vLook = m_pTransform->GetWorldPosition() + m_pTransform->GetForwardVector();
 	//m_vUp = m_pTransform->GetUpVector();
 
-	DirectX::XMVECTOR pos	= m_pTransform->GetWorldPosition().ToXMVECTOR();				// 自オブジェクトの位置を取得
+	DirectX::XMVECTOR pos	= m_pTransform->GetPosition().ToXMVECTOR();				// 自オブジェクトの位置を取得
 	DirectX::XMVECTOR look	= m_vLook.ToXMVECTOR();	//(自オブジェクトの位置 + 自オブジェクトの正面ベクトル)
 	DirectX::XMVECTOR up	= m_vUp.ToXMVECTOR();						// 自オブジェクトの上方向ベクトルを取得
 
@@ -314,7 +314,7 @@ DirectX::XMFLOAT4X4 ComponentCameraBase::GetViewMatrixNotTransposed()
 	/*m_vLook = m_pTransform->GetWorldPosition() + m_pTransform->GetForwardVector();
 	m_vUp = m_pTransform->GetUpVector();*/
 
-	DirectX::XMVECTOR pos = m_pTransform->GetWorldPosition().ToXMVECTOR();				// 自オブジェクトの位置を取得
+	DirectX::XMVECTOR pos = m_pTransform->GetPosition().ToXMVECTOR();				// 自オブジェクトの位置を取得
 	DirectX::XMVECTOR look = m_vLook.ToXMVECTOR();	//(自オブジェクトの位置 + 自オブジェクトの正面ベクトル)
 	DirectX::XMVECTOR up = m_vUp.ToXMVECTOR();						// 自オブジェクトの上方向ベクトルを取得
 

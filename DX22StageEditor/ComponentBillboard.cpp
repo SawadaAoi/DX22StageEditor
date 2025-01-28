@@ -71,7 +71,7 @@ void ComponentBillboard::Draw()
 	matWVP[2] = CAMERA_MNG_INST.GetActiveCamera()->GetProjectionMatrix();
 
 
-	Vector3<float> vScale = m_pCompTran->GetWorldScale();
+	Vector3<float> vScale = m_pCompTran->GetScale();
 	// 頂点シェーダに渡すパラメータ
 	DirectX::XMFLOAT4 param[3];
 	param[0] = { 0.0f, 0.0f, vScale.x, vScale.y };		// オフセット、スケール
@@ -131,8 +131,8 @@ DirectX::XMFLOAT4X4 ComponentBillboard::CreateWorldMatrix()
 {
 	DirectX::XMFLOAT4X4 mat;
 
-	Vector3<float>	vPos = m_pCompTran->GetWorldPosition();
-	Quaternion		fRot = m_pCompTran->GetWorldRotation();
+	Vector3<float>	vPos = m_pCompTran->GetPosition();
+	Quaternion		fRot = m_pCompTran->GetRotation();
 
 	DirectX::XMStoreFloat4x4(&mat,								// Float4x4に変換して格納
 		DirectX::XMMatrixTranspose(									// 転地

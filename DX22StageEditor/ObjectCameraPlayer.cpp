@@ -77,7 +77,7 @@ void ObjectCameraPlayer::UpdateLocal()
 
 
 	// プレイヤーの座標を取得
-	Vector3<float> playerPos = m_pPlayer->GetComponent<ComponentTransform>()->GetWorldPosition();
+	Vector3<float> playerPos = m_pPlayer->GetComponent<ComponentTransform>()->GetPosition();
 
 	// 注視点をプレイヤーの座標に設定
 	m_pCompCameraBase->SetLook(playerPos);

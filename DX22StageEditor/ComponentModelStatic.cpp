@@ -63,7 +63,7 @@ void ComponentModelStatic::Draw()
 	ObjectBase::T_LightParam lightParam = m_pOwnerObj->GetLightMaterial();
 	m_pModel->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, lightParam.bLightUse);	// ライトパラメータ設定
 	m_pModel->SetLights(LIGHT_MNG_INST.GetLightList());																	// ライト設定
-	m_pModel->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetWorldPosition());	// カメラ位置設定
+	m_pModel->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetPosition());	// カメラ位置設定
 
 	m_pModel->Draw();
 

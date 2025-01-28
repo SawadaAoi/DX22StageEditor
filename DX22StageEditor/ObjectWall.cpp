@@ -70,7 +70,7 @@ void ObjectWall::InitLocal()
 void ObjectWall::UpdateLocal()
 {
 	// ‰¡•‚É‡‚í‚¹‚Ä‰æ‘œ‚ðƒ‹[ƒv‚³‚¹‚é
-	float fScaleX			= m_pCompTransform->GetWorldScale().x;		
+	float fScaleX			= m_pCompTransform->GetScale().x;		
 	float fAdjustUvScale	= fScaleX / WALL_SCALE;
 	m_pCompGeometry->SetUvScale(Vector2<float>(fAdjustUvScale, 1.0f));
 }

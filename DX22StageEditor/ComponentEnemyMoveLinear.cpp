@@ -109,7 +109,7 @@ void ComponentEnemyMoveLinear::Move()
 	Vector3<float> vCurrentWayPoint = m_vtWayPoints[m_nCurrentWayPoint];
 
 	// 移動先とのベクトルを計算
-	Vector3<float> vDir = vCurrentWayPoint - m_pCompTransform->GetWorldPosition();
+	Vector3<float> vDir = vCurrentWayPoint - m_pCompTransform->GetPosition();
 	vDir.y = 0.0f;
 
 	// 移動先に到達している場合
@@ -137,7 +137,7 @@ void ComponentEnemyMoveLinear::Move()
 
 	// 移動先の座標を向く(高さは考慮しない)
 	Vector3<float> vLook = vCurrentWayPoint;
-	vLook.y = m_pCompTransform->GetWorldPosition().y;
+	vLook.y = m_pCompTransform->GetPosition().y;
 	m_pCompTransform->LookAt(vLook);
 }
 
@@ -152,7 +152,7 @@ void ComponentEnemyMoveLinear::ReverseMove()
 	Vector3<float> vCurrentWayPoint = m_vtWayPoints[m_nCurrentWayPoint];
 
 	// 移動先とのベクトルを計算
-	Vector3<float> vDir = vCurrentWayPoint - m_pCompTransform->GetWorldPosition();
+	Vector3<float> vDir = vCurrentWayPoint - m_pCompTransform->GetPosition();
 	vDir.y = 0.0f;
 
 	// 移動先に到達している場合
@@ -180,7 +180,7 @@ void ComponentEnemyMoveLinear::ReverseMove()
 
 	// 移動先の座標を向く(高さは考慮しない)
 	Vector3<float> vLook = vCurrentWayPoint;
-	vLook.y = m_pCompTransform->GetWorldPosition().y;
+	vLook.y = m_pCompTransform->GetPosition().y;
 	m_pCompTransform->LookAt(vLook);
 }
 
@@ -334,7 +334,7 @@ void ComponentEnemyMoveLinear::Debug(DebugUI::Window& window)
 	pGroupMoveLinear->AddGroupItem(Item::CreateCallBack("CurrentWayPoint", Item::Kind::Int,		// 現在の座標番号
 		[this](bool isWrite, void* arg) { FuncWayCurrent(isWrite, arg); }));
 	pGroupMoveLinear->AddGroupItem(Item::CreateCallBack("AddWayPoint", Item::Kind::Command,		// 移動座標追加
-		[this](bool isWrite, void* arg) { AddWayPoint(m_pCompTransform->GetWorldPosition()); }));
+		[this](bool isWrite, void* arg) { AddWayPoint(m_pCompTransform->GetPosition()); }));
 	pGroupMoveLinear->AddGroupItem(Item::CreateCallBack("RemoveWayPoint", Item::Kind::Command, 	// 移動座標削除
 		[this](bool isWrite, void* arg) { RemoveWayPoint(m_nSelectWayPointIdx); }, false, true));
 

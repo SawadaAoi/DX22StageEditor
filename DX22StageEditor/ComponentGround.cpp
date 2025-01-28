@@ -59,13 +59,13 @@ void ComponentGround::Update()
 {
 	UpdateTriangleVertex();		// 三角形の頂点情報更新
 
-	m_vWorldNormalDirection = m_pCompTransform->GetWorldRotation().Rotate(m_vNormalDirection);
+	m_vWorldNormalDirection = m_pCompTransform->GetRotation().Rotate(m_vNormalDirection);
 
 	if (m_bIsDispNormal)
 	{
 		// 法線の位置、向き、スケールを更新
-		m_pNormalLine->SetPos(m_pCompTransform->GetWorldPosition());
-		m_pNormalLine->SetRotation(m_pCompTransform->GetWorldRotation());
+		m_pNormalLine->SetPos(m_pCompTransform->GetPosition());
+		m_pNormalLine->SetRotation(m_pCompTransform->GetRotation());
 	}
 }
 
@@ -92,8 +92,8 @@ void ComponentGround::Draw()
 =========================================== */
 void ComponentGround::UpdateTriangleVertex()
 {
-	Vector3<float> vScaleHalf	= m_pCompTransform->GetWorldScale() / 2.0f;
-	Vector3<float> vPos			= m_pCompTransform->GetWorldPosition();
+	Vector3<float> vScaleHalf	= m_pCompTransform->GetScale() / 2.0f;
+	Vector3<float> vPos			= m_pCompTransform->GetPosition();
 
 	// 三角形の頂点を設定 (Z軸は奥が正)
 	// 1つ目の三角形 (左上、右上、左下)
@@ -107,7 +107,7 @@ void ComponentGround::UpdateTriangleVertex()
 	m_TriangleVertices[1].pos[2] = Vector3<float>(-vScaleHalf.x, 0.0f, -vScaleHalf.z);  // 左下
 
 	// 親オブジェクトの回転に合わせて三角形の頂点を回転
-	Quaternion rotation = m_pCompTransform->GetWorldRotation();
+	Quaternion rotation = m_pCompTransform->GetRotation();
 	for (int i = 0; i < TRIANGLE_NUM; i++)
 	{
 		for (int j = 0; j < 3; j++)

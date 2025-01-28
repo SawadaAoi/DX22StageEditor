@@ -55,8 +55,8 @@ void ComponentEnemyMoveChase::Init()
 	m_pTargetObj = m_pOwnerObj->GetOwnerScene()->GetSceneObjectTag(E_ObjectTag::Player);
 	m_pDistLine = std::make_unique<ShapeLine>(1);
 
-	m_vStartPos = m_pCompTransform->GetWorldPosition();
-	m_qStartRot = m_pCompTransform->GetWorldRotation();
+	m_vStartPos = m_pCompTransform->GetPosition();
+	m_qStartRot = m_pCompTransform->GetRotation();
 }
 
 /* ========================================
@@ -71,7 +71,7 @@ void ComponentEnemyMoveChase::Update()
 	{
 		WIN_OBJ_INFO["EnemyMoveChase"]["TargetObj"].SetText(m_pTargetObj ? m_pTargetObj->GetName() : "None");
 		float fDist = m_pTargetObj ? 
-			(m_pTargetObj->GetTransform()->GetWorldPosition() - m_pCompTransform->GetWorldPosition()).Length() : 0.0f;
+			(m_pTargetObj->GetTransform()->GetPosition() - m_pCompTransform->GetPosition()).Length() : 0.0f;
 		WIN_OBJ_INFO["EnemyMoveChase"]["DistanceToPlayer"].SetText(std::to_string(fDist));
 	}
 #endif // _DEBUG
@@ -114,7 +114,7 @@ void ComponentEnemyMoveChase::Draw()
 void ComponentEnemyMoveChase::Move()
 {
 	// 追跡対象との距離
-	float fDistSq = m_pTargetObj->GetTransform()->GetWorldPosition().DistanceSq(m_pCompTransform->GetWorldPosition());
+	float fDistSq = m_pTargetObj->GetTransform()->GetPosition().DistanceSq(m_pCompTransform->GetPosition());
 
 	
 	// 追跡開始距離より近づいたら追跡開始
@@ -138,10 +138,10 @@ void ComponentEnemyMoveChase::Move()
 void ComponentEnemyMoveChase::ChaseTarget()
 {
 	// プレイヤーの座標を取得
-	Vector3<float> vTargetPos = m_pTargetObj->GetTransform()->GetWorldPosition();
+	Vector3<float> vTargetPos = m_pTargetObj->GetTransform()->GetPosition();
 
 	// プレイヤーの方向
-	Vector3<float> vDirTarget = vTargetPos - m_pCompTransform->GetWorldPosition();
+	Vector3<float> vDirTarget = vTargetPos - m_pCompTransform->GetPosition();
 	vDirTarget.y = 0.0f;
 
 	// 追跡対象との距離が追跡限界距離より遠い場合は追跡
@@ -166,7 +166,7 @@ void ComponentEnemyMoveChase::ChaseTarget()
 
 	// 追跡対象の方向を向く
 	Vector3<float> vLook = vTargetPos;
-	vLook.y = m_pCompTransform->GetWorldPosition().y;
+	vLook.y = m_pCompTransform->GetPosition().y;
 	m_pCompTransform->LookAt(vLook);
 }
 
@@ -178,7 +178,7 @@ void ComponentEnemyMoveChase::ChaseTarget()
 void ComponentEnemyMoveChase::BackToStartPos()
 {
 	// 移動開始座標の方向
-	Vector3<float> vDirStart = m_vStartPos - m_pCompTransform->GetWorldPosition();
+	Vector3<float> vDirStart = m_vStartPos - m_pCompTransform->GetPosition();
 	vDirStart.y = 0.0f;
 
 	//
@@ -193,7 +193,7 @@ void ComponentEnemyMoveChase::BackToStartPos()
 
 		// 移動開始座標の方向を向く
 		Vector3<float> vLook = m_vStartPos;
-		vLook.y = m_pCompTransform->GetWorldPosition().y;
+		vLook.y = m_pCompTransform->GetPosition().y;
 		m_pCompTransform->LookAt(vLook);
 	}
 	else
@@ -217,11 +217,11 @@ void ComponentEnemyMoveChase::BackToStartPos()
 void ComponentEnemyMoveChase::DrawPlayerDistLine()
 {
 	// プレイヤーの座標を取得
-	Vector3<float> vTargetPos = m_pTargetObj->GetComponent<ComponentTransform>()->GetWorldPosition();
+	Vector3<float> vTargetPos = m_pTargetObj->GetComponent<ComponentTransform>()->GetPosition();
 
 	// 距離ライン描画(ターゲットの方向へ、追跡開始距離分の距離)
-	Vector3<float> vStart = m_pCompTransform->GetWorldPosition();				// 自分の位置
-	Vector3<float> vDir = vTargetPos - m_pCompTransform->GetWorldPosition();	// プレイヤーの方向
+	Vector3<float> vStart = m_pCompTransform->GetPosition();				// 自分の位置
+	Vector3<float> vDir = vTargetPos - m_pCompTransform->GetPosition();	// プレイヤーの方向
 	vDir.Normalize();															// 正規化
 	Vector3<float> vEnd = vStart + (vDir * m_fChaseStartDist);					// 追跡開始距離分の位置
 

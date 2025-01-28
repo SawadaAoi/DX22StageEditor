@@ -81,11 +81,11 @@ void ComponentTransform::UpdateWorldTransform()
 
 		// 親オブジェクトのワールド行列(回転、座標)を生成
 		DirectX::XMMATRIX parentMat =
-			pParentTran->GetWorldRotation().ToDirectXMatrix() *		// 回転
+			pParentTran->GetRotation().ToDirectXMatrix() *		// 回転
 			DirectX::XMMatrixTranslation(							// 座標		
-				pParentTran->GetWorldPosition().x, 
-				pParentTran->GetWorldPosition().y, 
-				pParentTran->GetWorldPosition().z);
+				pParentTran->GetPosition().x, 
+				pParentTran->GetPosition().y, 
+				pParentTran->GetPosition().z);
 		
 		// ローカルと親の行列を掛け合わせてワールド行列(回転、座標)を生成
 		DirectX::XMMATRIX matrix = localMat * parentMat;
@@ -95,7 +95,7 @@ void ComponentTransform::UpdateWorldTransform()
 		m_qWorldRotation = Quaternion::FromDirectXMatrix(matrix);			// 回転取得
 
 		// ワールドスケールを計算(回転、座標と一緒に計算すると大きさが不正確になるため別で計算)
-		m_vWorldScale = m_vLocalScale * pParentTran->GetWorldScale();
+		m_vWorldScale = m_vLocalScale * pParentTran->GetScale();
 	}
 	else
 	{
@@ -135,11 +135,11 @@ void ComponentTransform::RecalculateLocalTransform()
 	ComponentTransform* pParentTran = m_pOwnerObj->GetParentObject()->GetComponent<ComponentTransform>();
 	// 親オブジェクトのワールド行列(回転、座標)を生成
 	DirectX::XMMATRIX parentMat =
-		pParentTran->GetWorldRotation().ToDirectXMatrix() *		// 回転
+		pParentTran->GetRotation().ToDirectXMatrix() *		// 回転
 		DirectX::XMMatrixTranslation(							// 座標		
-			pParentTran->GetWorldPosition().x,
-			pParentTran->GetWorldPosition().y,
-			pParentTran->GetWorldPosition().z);
+			pParentTran->GetPosition().x,
+			pParentTran->GetPosition().y,
+			pParentTran->GetPosition().z);
 
 	// ローカル行列(回転、座標)を生成
 	DirectX::XMMATRIX localMat =
@@ -158,7 +158,7 @@ void ComponentTransform::RecalculateLocalTransform()
 
 
 	// 大きさの再計算(回転、座標と一緒に計算すると大きさが不正確になるため別で計算)
-	m_vLocalScale = m_vWorldScale / pParentTran->GetWorldScale();
+	m_vLocalScale = m_vWorldScale / pParentTran->GetScale();
 
 }
 
@@ -531,6 +531,46 @@ void ComponentTransform::UpdateMoveTo()
 
 
 /* ========================================
+	ゲッター(座標)関数
+	-------------------------------------
+	戻値：座標	Vector3<float>
+=========================================== */
+Vector3<float> ComponentTransform::GetPosition() const
+{
+	return m_vWorldPosition;
+}
+
+/* ========================================
+	ゲッター(回転(クォータニオン))関数
+	-------------------------------------
+	戻値：回転	Quaternion
+=========================================== */
+Quaternion ComponentTransform::GetRotation() const
+{
+	return m_qWorldRotation;
+}
+
+/* ========================================
+	ゲッター(回転(オイラー))関数
+	-------------------------------------
+	戻値：回転	Vector3<float>
+=========================================== */
+Vector3<float> ComponentTransform::GetRotationEuler() const
+{
+	return m_qWorldRotation.ToEulerAngle();
+}
+
+/* ========================================
+	ゲッター(スケール)関数
+	-------------------------------------
+	戻値：スケール	Vector3<float>
+=========================================== */
+Vector3<float> ComponentTransform::GetScale() const
+{
+	return m_vWorldScale;
+}
+
+/* ========================================
 	ゲッター(ローカル座標)関数
 	-------------------------------------
 	戻値：座標	Vector3<float>
@@ -538,36 +578,6 @@ void ComponentTransform::UpdateMoveTo()
 Vector3<float> ComponentTransform::GetLocalPosition() const
 {
 	return m_vLocalPosition;
-}
-
-/* ========================================
-	ゲッター(ワールド座標)関数
-	-------------------------------------
-	戻値：座標	Vector3<float>
-=========================================== */
-Vector3<float> ComponentTransform::GetWorldPosition() const
-{
-	return m_vWorldPosition;
-}
-
-/* ========================================
-	ゲッター(ローカル回転(オイラー))関数
-	-------------------------------------
-	戻値：回転	Vector3<float>
-=========================================== */
-Vector3<float> ComponentTransform::GetLocalRotationEuler() const
-{
-	return m_qLocalRotation.ToEulerAngle();
-}
-
-/* ========================================
-	ゲッター(ワールド回転(オイラー))関数
-	-------------------------------------
-	戻値：回転	Vector3<float>
-=========================================== */
-Vector3<float> ComponentTransform::GetWorldRotationEuler() const
-{
-	return m_qWorldRotation.ToEulerAngle();
 }
 
 /* ========================================
@@ -581,13 +591,13 @@ Quaternion ComponentTransform::GetLocalRotation() const
 }
 
 /* ========================================
-	ゲッター(ワールド回転(クォータニオン))関数
+	ゲッター(ローカル回転(オイラー))関数
 	-------------------------------------
-	戻値：回転	Quaternion
+	戻値：回転	Vector3<float>
 =========================================== */
-Quaternion ComponentTransform::GetWorldRotation() const
+Vector3<float> ComponentTransform::GetLocalRotationEuler() const
 {
-	return m_qWorldRotation;
+	return m_qLocalRotation.ToEulerAngle();
 }
 
 /* ========================================
@@ -598,16 +608,6 @@ Quaternion ComponentTransform::GetWorldRotation() const
 Vector3<float> ComponentTransform::GetLocalScale() const
 {
 	return m_vLocalScale;
-}
-
-/* ========================================
-	ゲッター(ワールドスケール)関数
-	-------------------------------------
-	戻値：スケール	Vector3<float>
-=========================================== */
-Vector3<float> ComponentTransform::GetWorldScale() const
-{
-	return m_vWorldScale;
 }
 
 /* ========================================
@@ -674,7 +674,7 @@ void ComponentTransform::SetPosition(const Vector3<float>& position)
 		ComponentTransform* pParentTran = m_pOwnerObj->GetParentObject()->GetTransform();
 		// 親オブジェクトのワールド行列(座標)を生成
 		DirectX::XMMATRIX parentMat = DirectX::XMMatrixTranslation(	
-			pParentTran->GetWorldPosition().x,	pParentTran->GetWorldPosition().y,pParentTran->GetWorldPosition().z);
+			pParentTran->GetPosition().x,	pParentTran->GetPosition().y,pParentTran->GetPosition().z);
 
 		// ローカル行列(座標)を生成
 		DirectX::XMMATRIX localMat = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
@@ -713,7 +713,7 @@ void ComponentTransform::SetRotation(const Quaternion& rotation)
 		// 親オブジェクトのTransformコンポーネントを取得
 		ComponentTransform* pParentTran = m_pOwnerObj->GetParentObject()->GetComponent<ComponentTransform>();
 		// 親オブジェクトのワールド行列(回転)を生成
-		DirectX::XMMATRIX parentMat = pParentTran->GetWorldRotation().ToDirectXMatrix();		// 回転
+		DirectX::XMMATRIX parentMat = pParentTran->GetRotation().ToDirectXMatrix();		// 回転
 
 		// ローカル行列(回転)を生成
 		DirectX::XMMATRIX localMat = rotation.ToDirectXMatrix();
@@ -777,7 +777,7 @@ void ComponentTransform::SetScale(const Vector3<float>& scale)
 		// 親オブジェクトのTransformコンポーネントを取得
 		ComponentTransform* pParentTran = m_pOwnerObj->GetParentObject()->GetComponent<ComponentTransform>();
 		// ワールドスケールを計算
-		m_vLocalScale = scale / pParentTran->GetWorldScale();
+		m_vLocalScale = scale / pParentTran->GetScale();
 		// ワールド座標の更新
 		UpdateWorldTransform();
 	}

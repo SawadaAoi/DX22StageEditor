@@ -147,7 +147,7 @@ void ObjectPlayer::CheckGround()
 		&& m_pCompRigidbody->GetVelocity().y <= 0.0f)
 	{
 		// 地面に設置している位置にプレイヤーを設定
-		Vector3<float> vPos = m_pCompTransform->GetWorldPosition();
+		Vector3<float> vPos = m_pCompTransform->GetPosition();
 		vPos.y = m_pCompGroundRaycast->GetHitPos().y + 0.5f;
 		m_pCompTransform->SetPosition(vPos);
 

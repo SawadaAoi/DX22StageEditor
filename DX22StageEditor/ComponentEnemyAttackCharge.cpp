@@ -122,11 +122,11 @@ void ComponentEnemyAttackCharge::Draw()
 void ComponentEnemyAttackCharge::Idle()
 {
 	// プレイヤー座標を取得
-	Vector3<float> vTargetPos = m_pTarget->GetTransform()->GetWorldPosition();
+	Vector3<float> vTargetPos = m_pTarget->GetTransform()->GetPosition();
 
 	// 向きを変更
 	Vector3<float> vLookPos = vTargetPos;
-	vLookPos.y				= m_pCompTransform->GetWorldPosition().y;	// 高さは変更しない
+	vLookPos.y				= m_pCompTransform->GetPosition().y;	// 高さは変更しない
 	m_pCompTransform->LookAt(vLookPos);
 
 	m_fAtkInvCnt += DELTA_TIME;
@@ -135,9 +135,9 @@ void ComponentEnemyAttackCharge::Idle()
 		m_fAtkInvCnt	= 0.0f;			// カウントリセット
 
 		// 突進終了座標を設定
-		Vector3<float> vDir = vTargetPos - m_pCompTransform->GetWorldPosition();
+		Vector3<float> vDir = vTargetPos - m_pCompTransform->GetPosition();
 		vDir.y = 0.0f;	// 高さは変更しない
-		m_vChargeEndPos		= m_pCompTransform->GetWorldPosition() + (vDir.GetNormalize() * m_fChargeDist);
+		m_vChargeEndPos		= m_pCompTransform->GetPosition() + (vDir.GetNormalize() * m_fChargeDist);
 
 		m_eChargeState	= CS_ATTACK;	// 攻撃状態に遷移
 	}
@@ -151,7 +151,7 @@ void ComponentEnemyAttackCharge::Idle()
 void ComponentEnemyAttackCharge::Attack()
 {
 	// 目的座標までのベクトルを求める
-	Vector3<float> vDir = m_vChargeEndPos - m_pCompTransform->GetWorldPosition();
+	Vector3<float> vDir = m_vChargeEndPos - m_pCompTransform->GetPosition();
 
 	// 移動
 	m_pCompRigidbody->SetVelocity(vDir.GetNormalize() * m_fChargeSpeed);

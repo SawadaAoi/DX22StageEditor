@@ -43,7 +43,7 @@ void ComponentLightBase::Init()
 {
 	m_pCompTransform = m_pOwnerObj->GetComponent<ComponentTransform>();
 
-	Vector3<float> vStart = m_pCompTransform->GetWorldPosition();
+	Vector3<float> vStart = m_pCompTransform->GetPosition();
 	Vector3<float> vEnd = vStart + m_pCompTransform->GetForwardVector();
 	m_pDirLine = std::make_unique<ShapeLine>(vStart, vEnd, ColorVec3::RED);
 
@@ -61,17 +61,17 @@ void ComponentLightBase::Init()
 ========================================== */
 void ComponentLightBase::Update()
 {
-	m_pDirLine->SetPos(m_pCompTransform->GetWorldPosition());
-	m_pDirLine->SetRotation(m_pCompTransform->GetWorldRotation());
+	m_pDirLine->SetPos(m_pCompTransform->GetPosition());
+	m_pDirLine->SetRotation(m_pCompTransform->GetRotation());
 
 	switch (m_eLightType)
 	{
 	case ComponentLightBase::POINT:
-		m_pSphere->SetPosition(m_pCompTransform->GetWorldPosition());
+		m_pSphere->SetPosition(m_pCompTransform->GetPosition());
 		m_pSphere->SetScale(Vector3<float>(m_fRange, m_fRange, m_fRange));
 		break;
 	case ComponentLightBase::SPOT:
-		Vector3<float> vStart	= m_pCompTransform->GetWorldPosition();
+		Vector3<float> vStart	= m_pCompTransform->GetPosition();
 		Vector3<float> vEnd		= vStart + m_pCompTransform->GetForwardVector() * m_fRange;
 		//m_pDirLine->UpdateLine(1, vStart, vEnd, ColorVec3::RED);
 

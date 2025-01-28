@@ -183,12 +183,12 @@ void CameraManager::FocusMoveCamera(ObjectBase* pObj)
 	// トランスフォームが取得できない場合は処理しない
 	if (pCameraTrans == nullptr || pTargetTrans == nullptr) return;
 
-	Vector3<float> vTargetPos = pTargetTrans->GetWorldPosition();
+	Vector3<float> vTargetPos = pTargetTrans->GetPosition();
 	vTargetPos += FOCUS_OFFSET;	// 斜め後ろから見下ろすように位置を調整
 
 	// カメラの位置と向きを設定
 	pCameraTrans->SetLocalPosition(vTargetPos);
-	pCameraTrans->LookAt(pTargetTrans->GetWorldPosition());
+	pCameraTrans->LookAt(pTargetTrans->GetPosition());
 
 }
 

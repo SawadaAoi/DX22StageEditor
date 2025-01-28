@@ -63,7 +63,7 @@ void ObjectLight::UninitLocal()
 =========================================== */
 Vector3<float> ObjectLight::GetPosition() const
 {
-	return m_pCompTransform->GetWorldPosition();
+	return m_pCompTransform->GetPosition();
 }
 
 /* ========================================

@@ -78,14 +78,14 @@ void ComponentCollisionBase::Update()
 	if (!m_pOwnerTransform) return;
 
 	// 所有オブジェクトの座標＋調整座標
-	m_vPosition = m_pOwnerTransform->GetWorldPosition() + m_vPositionOffset;
+	m_vPosition = m_pOwnerTransform->GetPosition() + m_vPositionOffset;
 
 	// 所持オブジェクトのトランスフォームを参照する場合
 	if (m_bRefOwnerTransform)
 	{
 		// 回転、スケールを親オブジェクトから取得
-		m_qRotation = m_pOwnerTransform->GetWorldRotation();
-		m_vScale = m_pOwnerTransform->GetWorldScale();
+		m_qRotation = m_pOwnerTransform->GetRotation();
+		m_vScale = m_pOwnerTransform->GetScale();
 	}
 
 #ifdef _DEBUG

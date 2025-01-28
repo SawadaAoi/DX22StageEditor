@@ -143,7 +143,7 @@ void ComponentEnemyMoveRandom::InitTargetPos()
 void ComponentEnemyMoveRandom::Move()
 {
 	// 目的座標に向かって移動
-	Vector3<float> vDistance = m_vTargetPos - m_pCompTransform->GetWorldPosition();
+	Vector3<float> vDistance = m_vTargetPos - m_pCompTransform->GetPosition();
 
 	// 目的座標に到達している場合は目的座標を変更
 	if (vDistance.LengthSq() < LIMIT_DISTANCE_SQ)
@@ -159,7 +159,7 @@ void ComponentEnemyMoveRandom::Move()
 
 	// 移動先の座標を向く(高さは考慮しない)
 	Vector3<float> vLook = m_vTargetPos;
-	vLook.y = m_pCompTransform->GetWorldPosition().y;
+	vLook.y = m_pCompTransform->GetPosition().y;
 	m_pCompTransform->LookAt(vLook);
 }
 
@@ -434,7 +434,7 @@ void ComponentEnemyMoveRandom::Debug(DebugUI::Window& window)
 	// 移動範囲再設定
 	EnemyMoveRandom->AddGroupItem(Item::CreateCallBack("ResetRect", Item::Kind::Command, [this](bool isWrite, void* arg)
 	{
-		m_vRectCenter = m_pCompTransform->GetWorldPosition();
+		m_vRectCenter = m_pCompTransform->GetPosition();
 		InitTargetPos();
 	}));
 	// 移動範囲リスト

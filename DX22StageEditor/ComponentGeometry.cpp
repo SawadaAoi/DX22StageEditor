@@ -86,9 +86,9 @@ void ComponentGeometry::Update()
 	if (m_pTransform != nullptr)
 	{
 		// 座標コンポーネントが取得できた場合は座標を設定
-		m_pShape->SetPosition(m_pTransform->GetWorldPosition());
-		m_pShape->SetRotation(m_pTransform->GetWorldRotation());
-		m_pShape->SetScale(m_pTransform->GetWorldScale());
+		m_pShape->SetPosition(m_pTransform->GetPosition());
+		m_pShape->SetRotation(m_pTransform->GetRotation());
+		m_pShape->SetScale(m_pTransform->GetScale());
 	}
 
 	// テクスチャ設定
@@ -129,7 +129,7 @@ void ComponentGeometry::Draw()
 		ObjectBase::T_LightParam lightParam = m_pOwnerObj->GetLightMaterial();
 		m_pShape->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, lightParam.bLightUse);					// ライトパラメー
 		m_pShape->SetLights(LIGHT_MNG_INST.GetLightList());	// ライト設定
-		m_pShape->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetWorldPosition());	// カメラ位置設定
+		m_pShape->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetPosition());	// カメラ位置設定
 
 		m_pShape->Draw();
 	}

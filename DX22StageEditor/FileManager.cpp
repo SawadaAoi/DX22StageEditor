@@ -74,9 +74,9 @@ void FileManager::StageObjectOutput(std::string sPath)
 
 		// 位置、回転、拡大
 		ComponentTransform* pTransform = pObject->GetComponent<ComponentTransform>();
-		data.vPos	= pTransform->GetWorldPosition();
-		data.qRot	= pTransform->GetWorldRotation();
-		data.vScale = pTransform->GetWorldScale();
+		data.vPos	= pTransform->GetPosition();
+		data.qRot	= pTransform->GetRotation();
+		data.vScale = pTransform->GetScale();
 
 		// オブジェクト名
 		strncpy(data.cObjectName, pObject->GetName().c_str(), sizeof(data.cObjectName) - 1);

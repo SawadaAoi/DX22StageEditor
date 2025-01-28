@@ -72,8 +72,8 @@ void ObjectCameraGameClear::InitLocal()
 void ObjectCameraGameClear::UpdateLocal()
 {
 	// 常にプレイヤーを向く
-	m_pCompCameraBase->SetLook(m_pTarget->GetTransform()->GetWorldPosition());
-	m_pCompTransform->LookAt(m_pTarget->GetTransform()->GetWorldPosition());
+	m_pCompCameraBase->SetLook(m_pTarget->GetTransform()->GetPosition());
+	m_pCompTransform->LookAt(m_pTarget->GetTransform()->GetPosition());
 
 	// 待機時間カウント
 	m_fStandByTimeCnt += DELTA_TIME;
@@ -94,7 +94,7 @@ void ObjectCameraGameClear::UpdateLocal()
 =========================================== */
 void ObjectCameraGameClear::EventMoveNearPlayer()
 {
-	Vector3<float> playerPos = m_pTarget->GetTransform()->GetWorldPosition();	// プレイヤーの座標
+	Vector3<float> playerPos = m_pTarget->GetTransform()->GetPosition();	// プレイヤーの座標
 	Vector3<float> vTargetPos = (playerPos + CAMERA_NEAR_PLAYER_POS);			// プレイヤーの座標からZ軸負方向に移動
 
 	// 目的座標へ指定時間で移動

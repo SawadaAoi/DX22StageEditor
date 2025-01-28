@@ -32,9 +32,9 @@ ComponentGroundBox::ComponentGroundBox(ObjectBase* pOwner)
 void ComponentGroundBox::UpdateTriangleVertex()
 {
 	// 所有オブジェクトの座標、回転、スケールを取得
-	Vector3<float> vScale	= m_pCompTransform->GetWorldScale();
-	Vector3<float> vPos		= m_pCompTransform->GetWorldPosition();
-	Quaternion vRot			= m_pCompTransform->GetWorldRotation();
+	Vector3<float> vScale	= m_pCompTransform->GetScale();
+	Vector3<float> vPos		= m_pCompTransform->GetPosition();
+	Quaternion vRot			= m_pCompTransform->GetRotation();
 
 	// 四角形の上面の頂点座標を計算
 	std::vector<Vector3<float>> vVertexPos;		// 頂点座標

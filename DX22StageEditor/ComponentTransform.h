@@ -60,14 +60,14 @@ public:
 	Vector3<float> GetUpVector() const;
 
     // ÉQÉbÉ^Å[
+	Vector3<float> GetPosition() const;
+	Quaternion GetRotation() const;
+	Vector3<float> GetRotationEuler() const;
+	Vector3<float> GetScale() const;
     Vector3<float> GetLocalPosition() const;
-	Vector3<float> GetWorldPosition() const;
-	Vector3<float> GetLocalRotationEuler() const;
-	Vector3<float> GetWorldRotationEuler() const;
 	Quaternion GetLocalRotation() const;
-	Quaternion GetWorldRotation() const;
+	Vector3<float> GetLocalRotationEuler() const;
 	Vector3<float> GetLocalScale() const;
-	Vector3<float> GetWorldScale() const;
 
 	DirectX::XMFLOAT4X4 GetWorldMatrix() const;
 	DirectX::XMFLOAT4X4 GetWorldMatrixOffset(

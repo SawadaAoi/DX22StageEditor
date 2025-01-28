@@ -104,11 +104,11 @@ void ComponentModelAnime::Draw()
 	ObjectBase::T_LightParam lightParam = m_pOwnerObj->GetLightMaterial();
 	m_pModel->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, lightParam.bLightUse);					// ライトパラメータ設定
 	m_pModel->SetLights(LIGHT_MNG_INST.GetLightList());	// ライト設定
-	m_pModel->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetWorldPosition());	// カメラ位置設定
+	m_pModel->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetPosition());	// カメラ位置設定
 
 #ifdef _DEBUG
 	if (m_bDispBone)	// ボーン表示
-		m_pModel->DrawBone(m_pCompTran->GetWorldPosition(), m_pCompTran->GetWorldRotation(), m_pCompTran->GetWorldScale());
+		m_pModel->DrawBone(m_pCompTran->GetPosition(), m_pCompTran->GetRotation(), m_pCompTran->GetScale());
 	else
 		m_pModel->Draw();	// 描画
 #else
