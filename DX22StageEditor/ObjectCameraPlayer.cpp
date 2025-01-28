@@ -19,7 +19,7 @@
 #include "MathUtils.h"
 
 // =============== 定数定義 =======================
-const float DEFAULT_ROT_SPEED	= 0.01f;						// デフォルト回転速度
+const float DEFAULT_ROT_SPEED	= 1.0f;							// デフォルト回転速度
 const float DEFAULT_DISTANCE	= 8.0f;							// デフォルト距離
 const float DEFAULT_RAD_Y		= MathUtils::ToRadian(45.0f);	// デフォルトY軸回転角度
 const float DEFAULT_RAD_XZ		= MathUtils::ToRadian(180.0f);	// デフォルトXZ平面回転角度
@@ -38,7 +38,7 @@ const float LIMIT_RAD_Y_MIN = MathUtils::ToRadian(20.0f);	// Y軸回転角度最小値
 ObjectCameraPlayer::ObjectCameraPlayer(SceneBase* pScene)
 	: ObjectCamera(pScene)
 	, m_pPlayer(nullptr)
-	, m_fRotSpeed(DEFAULT_ROT_SPEED)
+	, m_fRotSpeed(0.0f)
 	, m_fDistance(DEFAULT_DISTANCE)
 	, m_fRadY(DEFAULT_RAD_Y)
 	, m_fRadXZ(DEFAULT_RAD_XZ)
@@ -83,10 +83,13 @@ void ObjectCameraPlayer::UpdateLocal()
 	m_pCompCameraBase->SetLook(playerPos);
 	m_pCompTransform->LookAt(playerPos);		// 移動時にカメラの正面ベクトルを使用するので回転も変更する
 
-	if (Input::IsKeyPress(VK_UP))		m_fRadY		+= m_fRotSpeed;
-	if (Input::IsKeyPress(VK_DOWN))		m_fRadY		-= m_fRotSpeed;
-	if (Input::IsKeyPress(VK_LEFT))		m_fRadXZ	-= m_fRotSpeed;
-	if (Input::IsKeyPress(VK_RIGHT))	m_fRadXZ	+= m_fRotSpeed;
+	// 回転速度
+	m_fRotSpeed = DEFAULT_ROT_SPEED * DELTA_TIME;
+
+	if (Input::IsKeyPress(VK_UP))		m_fRadY += m_fRotSpeed;
+	if (Input::IsKeyPress(VK_DOWN))		m_fRadY -= m_fRotSpeed;
+	if (Input::IsKeyPress(VK_LEFT))		m_fRadXZ -= m_fRotSpeed;
+	if (Input::IsKeyPress(VK_RIGHT))	m_fRadXZ += m_fRotSpeed;
 
 	CheckLimitRadY();	// Y軸回転角度制限
 
