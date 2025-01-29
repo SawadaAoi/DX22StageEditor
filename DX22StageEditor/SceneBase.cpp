@@ -770,7 +770,7 @@ ObjectBase* SceneBase::CopyObject(ObjectBase* pOriginalObj)
 	ObjectBase* pCopyObj = OBJ_TYPE_REGISTRY_INST.CreateObject(pOriginalObj->GetObjClassName());
 	pCopyObj->Init(CreateUniqueName(pOriginalObj->GetName()));	// オブジェクト初期化(名前重複避ける)
 	ComponentTransform* pCopyTrans = pCopyObj->GetComponent<ComponentTransform>();
-	pCopyTrans->SetLocalPosition(pOriTrans->GetPosition());
+	pCopyTrans->SetPosition(pOriTrans->GetPosition());
 	pCopyTrans->SetLocalRotation(pOriTrans->GetRotation());
 	pCopyTrans->SetLocalScale(pOriTrans->GetScale());
 

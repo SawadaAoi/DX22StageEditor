@@ -199,7 +199,7 @@ void ComponentEnemyMoveLinear::AddWayPoint(const Vector3<float>& vWayPoint)
 	// ˆÚ“®À•W‚ª1‚Â‚Ìê‡‚ÍÀ•W‚ðÝ’è
 	if (m_vtWayPoints.size() == 1)
 	{
-		m_pCompTransform->SetLocalPosition(vWayPoint);
+		m_pCompTransform->SetPosition(vWayPoint);
 	}
 
 	m_nCurrentWayPoint = 0;

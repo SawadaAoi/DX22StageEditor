@@ -316,7 +316,7 @@ namespace DebugUI
 
 			Vector3<float> vPos;
 			vPos = WIN_OBJ_TYPE_LIST["CreatePos"].GetVector();
-			pObject->GetTransform()->SetLocalPosition(vPos);
+			pObject->GetTransform()->SetPosition(vPos);
 
 			pScene->AddSceneObjectBase(pObject);					// ÉVÅ[ÉìÇ…í«â¡
 		}

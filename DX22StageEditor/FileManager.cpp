@@ -170,9 +170,9 @@ void FileManager::StageObjectInput(std::string sPath)
 
 			// 位置、回転、拡大の設定
 			ComponentTransform* pTransform = pObject->GetComponent<ComponentTransform>();
-			pTransform->SetLocalPosition(data.vPos);
-			pTransform->SetLocalRotation(data.qRot);
-			pTransform->SetLocalScale(data.vScale);
+			pTransform->SetPosition(data.vPos);
+			pTransform->SetRotation(data.qRot);
+			pTransform->SetScale(data.vScale);
 
 			// シーンに追加
 			pScene->AddSceneObjectBase(pObject);

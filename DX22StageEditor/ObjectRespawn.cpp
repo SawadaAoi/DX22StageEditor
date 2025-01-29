@@ -79,7 +79,7 @@ void ObjectRespawn::OnCollisionEnter(ObjectBase* pHit)
 			break;
 		// 決まった位置からリスポーン
 		case E_RespawnType::RT_POSITION:	
-			pHit->GetTransform()->SetLocalPosition(m_RespawnPosition);
+			pHit->GetTransform()->SetPosition(m_RespawnPosition);
 			break;
 		}
 	}

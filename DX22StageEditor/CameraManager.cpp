@@ -187,7 +187,7 @@ void CameraManager::FocusMoveCamera(ObjectBase* pObj)
 	vTargetPos += FOCUS_OFFSET;	// ŽÎ‚ßŒã‚ë‚©‚çŒ©‰º‚ë‚·‚æ‚¤‚ÉˆÊ’u‚ð’²®
 
 	// ƒJƒƒ‰‚ÌˆÊ’u‚ÆŒü‚«‚ðÝ’è
-	pCameraTrans->SetLocalPosition(vTargetPos);
+	pCameraTrans->SetPosition(vTargetPos);
 	pCameraTrans->LookAt(pTargetTrans->GetPosition());
 
 }

@@ -31,6 +31,6 @@ ObjectCameraDebug::ObjectCameraDebug(SceneBase* pScene)
 void ObjectCameraDebug::InitLocal()
 {
 	ObjectCamera::InitLocal();										// 基底クラスの初期化関数を呼ぶ
-	m_pCompTransform->SetLocalPosition(Vector3(0.0f, 1.0f, -5.0f));	// カメラ位置を設定
+	m_pCompTransform->SetPosition(Vector3(0.0f, 1.0f, -5.0f));	// カメラ位置を設定
 	AddComponent<ComponentCameraDebug>();							// デバッグ機能を追加
 }

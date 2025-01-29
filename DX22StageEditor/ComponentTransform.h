@@ -64,6 +64,7 @@ public:
 	Quaternion GetRotation() const;
 	Vector3<float> GetRotationEuler() const;
 	Vector3<float> GetScale() const;
+
     Vector3<float> GetLocalPosition() const;
 	Quaternion GetLocalRotation() const;
 	Vector3<float> GetLocalRotationEuler() const;
@@ -74,8 +75,6 @@ public:
 		const Vector3<float>& vPos = Vector3<float>::Zero(), 
 		const Quaternion& qRot = Quaternion(), 
 		const Vector3<float>& vScale = {1.0f,1.0f,1.0f}) const;
-
-	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数
 
 	// セッター
 	void SetPosition(const Vector3<float>& position);
@@ -95,6 +94,7 @@ public:
 	void CallbackRotation(bool bIsWrite, void* arg, Quaternion& qRotation);
 #endif // _DEBUG
 
+	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数
 private:
 	void UpdateMoveTo();	// MoveToの更新
 private:

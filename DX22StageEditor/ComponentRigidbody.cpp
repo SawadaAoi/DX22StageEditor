@@ -185,7 +185,7 @@ void ComponentRigidbody::CheckRaycastGround()
 ========================================= */
 void ComponentRigidbody::ResolveOverlapCollision()
 {
-	using T_MTV = ComponentCollisionOBB::T_MTV;
+	using T_MTV = ComponentCollisionBase::T_MTV;
 
 	// ‚ß‚è‚İî•ñ”z—ñ‚ğæ“¾
 	std::vector<T_MTV> mtvs = m_pCompCollisionBase->GetMtvs();

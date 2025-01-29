@@ -53,9 +53,9 @@ void ObjectCameraGameClear::InitLocal()
 	ObjectCameraPlayer* pPlayerCamera = m_pOwnerScene->GetSceneObject<ObjectCameraPlayer>();
 
 	// プレイヤーカメラの情報をコピー(カメラの切り替えを自然に見せるため)
-	m_pCompTransform->SetLocalPosition(pPlayerCamera->GetTransform()->GetLocalPosition());	// 座標
-	m_pCompTransform->SetLocalRotation(pPlayerCamera->GetTransform()->GetLocalRotation());	// 回転
-	m_pCompCameraBase->SetLook(pPlayerCamera->GetCameraBase()->GetLook());					// 注視点
+	m_pCompTransform->SetPosition(pPlayerCamera->GetTransform()->GetLocalPosition());	// 座標
+	m_pCompTransform->SetRotation(pPlayerCamera->GetTransform()->GetLocalRotation());	// 回転
+	m_pCompCameraBase->SetLook(pPlayerCamera->GetCameraBase()->GetLook());				// 注視点
 
 	// ターゲット(プレイヤー)を取得
 	m_pTarget = m_pOwnerScene->GetSceneObjectTag(E_ObjectTag::Player);

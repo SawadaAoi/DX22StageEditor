@@ -98,7 +98,7 @@ void ObjectCameraPlayer::UpdateLocal()
 	cameraPos.y = m_fDistance * sinf(m_fRadY) + m_pCompCameraBase->GetLook().y;
 	cameraPos.z = m_fDistance * cosf(m_fRadY) * cosf(m_fRadXZ) + m_pCompCameraBase->GetLook().z;
 
-	m_pCompTransform->SetLocalPosition(cameraPos);
+	m_pCompTransform->SetPosition(cameraPos);
 }
 
 /* ========================================

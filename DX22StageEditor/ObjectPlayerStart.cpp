@@ -42,7 +42,7 @@ ObjectPlayerStart::ObjectPlayerStart(SceneBase* pScene)
 void ObjectPlayerStart::InitLocal()
 {
 	// 位置設定
-	GetTransform()->SetLocalPosition(Vector3(0.0f, 0.0f, 0.0f));
+	GetTransform()->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 
 #ifdef _DEBUG
 	// ビルボード設定
@@ -67,7 +67,7 @@ void ObjectPlayerStart::UpdateLocal()
 	if (m_bIsPlayerStart)
 	{
 		ObjectBase* pPlayer = m_pOwnerScene->AddSceneObject<ObjectPlayer>(PLAYER_OBJECT_NAME);
-		pPlayer->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());			// 自身の位置にプレイヤーを生成
+		pPlayer->GetTransform()->SetPosition(GetTransform()->GetLocalPosition());			// 自身の位置にプレイヤーを生成
 
 		SetState(E_State::STATE_DEAD);	// 自身を削除
 	}

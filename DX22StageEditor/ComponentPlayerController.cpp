@@ -221,8 +221,8 @@ void ComponentPlayerController::Shot()
 	{
 
 		ObjectBullet* pBullet = m_pOwnerObj->GetOwnerScene()->AddSceneObject<ObjectBulletPlayer>("PlayerBullet");
-		pBullet->GetTransform()->SetLocalPosition(m_pCompTran->GetPosition());
-		pBullet->GetTransform()->SetLocalRotation(m_pCompTran->GetRotation());
+		pBullet->GetTransform()->SetPosition(m_pCompTran->GetPosition());
+		pBullet->GetTransform()->SetRotation(m_pCompTran->GetRotation());
 		m_bShot = false;	// ˜AŽË–hŽ~
 	}
 }
