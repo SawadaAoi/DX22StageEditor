@@ -320,7 +320,7 @@ void ComponentPlayerController::RotateToMoveDir(Vector3<float> moveDir)
 
 	Quaternion qRot = Quaternion::Slerp(qSelfRot, qTargetRot, 0.2f);	// ƒXƒ€[ƒY‚É‰ñ“]
 
-	m_pCompTran->SetLocalRotation(qRot);	// ‰ñ“]‚ğİ’è
+	m_pCompTran->SetRotation(qRot);	// ‰ñ“]‚ğİ’è
 
 }
 

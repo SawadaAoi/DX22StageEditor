@@ -36,7 +36,7 @@ void ObjectSkyBox::InitLocal()
 
 	SetLightUse(false);
 
-	m_pCompTransform->SetLocalScale(DEFAULT_SCALE);
+	m_pCompTransform->SetScale(DEFAULT_SCALE);
 }
 
 /* ========================================

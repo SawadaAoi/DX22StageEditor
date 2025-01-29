@@ -113,7 +113,7 @@ void ObjectPlayer::GameClear()
 
 	// プレイヤーの向きを-Z軸方向に
 	float fRad = MathUtils::ToRadian(180.0f);
-	m_pCompTransform->SetLocalRotationEuler(Vector3<float>(0.0f, fRad, 0.0f));
+	m_pCompTransform->SetRotationEuler(Vector3<float>(0.0f, fRad, 0.0f));
 
 	// ゲームクリアアニメーション再生
 	m_pCompModelAnime->PlayAnime(ANIME_KEY_PLAYER::PLYR_GAMECLEAR, false, 1.0f);

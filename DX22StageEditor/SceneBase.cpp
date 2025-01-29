@@ -771,8 +771,8 @@ ObjectBase* SceneBase::CopyObject(ObjectBase* pOriginalObj)
 	pCopyObj->Init(CreateUniqueName(pOriginalObj->GetName()));	// オブジェクト初期化(名前重複避ける)
 	ComponentTransform* pCopyTrans = pCopyObj->GetComponent<ComponentTransform>();
 	pCopyTrans->SetPosition(pOriTrans->GetPosition());
-	pCopyTrans->SetLocalRotation(pOriTrans->GetRotation());
-	pCopyTrans->SetLocalScale(pOriTrans->GetScale());
+	pCopyTrans->SetRotation(pOriTrans->GetRotation());
+	pCopyTrans->SetScale(pOriTrans->GetScale());
 
 
 	AddSceneObjectBase(pCopyObj);	// シーンにオブジェクトを追加
