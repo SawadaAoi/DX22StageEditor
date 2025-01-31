@@ -8,6 +8,9 @@
 
 // =============== インクルード =====================
 #include "ObjectEnemy.h"
+#include "ObjectExplosion.h"
+
+#include "SceneBase.h"
 
 #include "ComponentCollisionSphere.h"
 #include "ComponentEnemyState.h"
@@ -144,6 +147,8 @@ void ObjectEnemy::Damage()
 	if (m_nHp <= 0)
 	{
 		SetState(E_State::STATE_DEAD);	// 死亡状態に設定
+		ObjectBase* pExplosion = m_pOwnerScene->AddSceneObject<ObjectExplosion>("Explosion_" + m_sName);
+		pExplosion->GetTransform()->SetPosition(m_pCompTransform->GetPosition());
 	}
 }
 

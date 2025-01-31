@@ -173,6 +173,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComponentBillboardAnime.cpp" />
     <ClCompile Include="ComponentCollisionPlane.cpp" />
     <ClCompile Include="ComponentEnemyAttackBase.cpp" />
     <ClCompile Include="ComponentEnemyAttackCharge.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="ObjectEnemyChase.cpp" />
     <ClCompile Include="ObjectEnemyLinear.cpp" />
     <ClCompile Include="ObjectEnemyRandom.cpp" />
+    <ClCompile Include="ObjectExplosion.cpp" />
     <ClCompile Include="ObjectGameStateManager.cpp" />
     <ClCompile Include="ObjectGoal.cpp" />
     <ClCompile Include="ObjectLight.cpp" />
@@ -276,6 +278,7 @@
     <ClCompile Include="ModelStaticMake.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ComponentBillboardAnime.h" />
     <ClInclude Include="ComponentCollisionPlane.h" />
     <ClInclude Include="ComponentEnemyAttackBase.h" />
     <ClInclude Include="ComponentEnemyAttackCharge.h" />
@@ -301,6 +304,7 @@
     <ClInclude Include="ObjectEnemyChase.h" />
     <ClInclude Include="ObjectEnemyLinear.h" />
     <ClInclude Include="ObjectEnemyRandom.h" />
+    <ClInclude Include="ObjectExplosion.h" />
     <ClInclude Include="ObjectGameStateManager.h" />
     <ClInclude Include="ObjectGoal.h" />
     <ClInclude Include="ObjectLight.h" />

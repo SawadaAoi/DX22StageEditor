@@ -54,10 +54,10 @@ public:
 	void Debug(DebugUI::Window& window) override;
 	DebugUI::Item* InitTextureList();
 #endif // _DEBUG
-private:
+protected:
 	void InitMesh();
 	DirectX::XMFLOAT4X4 CreateWorldMatrix();
-private:
+protected:
 	ComponentTransform*			m_pCompTran;	// トランスフォームコンポーネント
 	Texture*					m_pTexture;		// テクスチャ
 	std::shared_ptr<MeshBuffer> m_pMesh;		// メッシュバッファ

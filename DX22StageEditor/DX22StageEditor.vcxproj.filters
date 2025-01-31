@@ -195,6 +195,9 @@
     <Filter Include="ソース ファイル\App\GameObject\StageObject\Block\0_Super">
       <UniqueIdentifier>{3c44e17c-feed-4b43-b059-c0143a0fa14c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\Effect">
+      <UniqueIdentifier>{fe4c7a4e-f9c7-4ecc-b3fe-fb580aef754b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -499,6 +502,12 @@
     </ClCompile>
     <ClCompile Include="ObjectBlockGroundOBB.cpp">
       <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentBillboardAnime.cpp">
+      <Filter>ソース ファイル\App\Component\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectExplosion.cpp">
+      <Filter>ソース ファイル\App\GameObject\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -819,6 +828,12 @@
     </ClInclude>
     <ClInclude Include="ObjectBlockGroundOBB.h">
       <Filter>ソース ファイル\App\GameObject\StageObject\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentBillboardAnime.h">
+      <Filter>ソース ファイル\App\Component\Visual</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectExplosion.h">
+      <Filter>ソース ファイル\App\GameObject\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
