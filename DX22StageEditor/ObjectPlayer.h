@@ -26,11 +26,21 @@ class ObjectPlayer :
     public ObjectBase
 {
 public:
+	// プレイヤーの状態
+	// クリアアニメーションが他のアニメ(歩き等)に上書きされるのを防ぐため
+	enum E_PlayerState
+	{
+		PS_Normal,
+		PS_Dead,
+		PS_GameClear,
+	};
+public:
 	ObjectPlayer(SceneBase* pScene);
 	void InitLocal() override;
 	void UpdateLocal() override;
 
 	void GameClear();
+	void Dead();
 
 	void OnCollisionStay(ObjectBase* pHit) override;
 
@@ -66,6 +76,6 @@ private:
 	float	m_fInvCnt;		// 無敵時間カウント
 	float	m_fInvFlashCnt;	// 無敵時間点滅カウント
 
-	
+	E_PlayerState m_ePlayerState;
 };
 

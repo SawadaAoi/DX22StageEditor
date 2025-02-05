@@ -29,7 +29,7 @@ using E_ForceMode = ComponentRigidbody::E_ForceMode;
 
 const float DEFAULT_MOVE_SPEED		= 5.0f;		// 移動速度
 const float DEFAULT_ROTATE_SPEED	= 15.0f;	// 回転速度
-const float DEFAULT_JUMP_POWER		= 5.0f;		// ジャンプ力
+const float DEFAULT_JUMP_POWER		= 5.5f;		// ジャンプ力
 
 
 // アニメーション
@@ -193,7 +193,7 @@ void ComponentPlayerController::Jump()
 	if (Input::IsKeyTrigger(m_MoveKey[E_MoveKey::JUMP]))
 	{
 		m_pCompRigidbody->AddForce(Vector3<float>::Up() * m_fJumpPower, E_ForceMode::IMPULSE);
-		m_pCompTran->TranslateY(1.1f);	// 少し浮かせる(地面判定の位置修正を考慮して)
+		m_pCompTran->TranslateY(0.1f);	// 少し浮かせる(地面判定の位置修正を考慮して)
 	}
 }
 

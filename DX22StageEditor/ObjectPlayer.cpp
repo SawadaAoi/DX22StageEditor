@@ -30,6 +30,7 @@ const Vector3<float>	RAY_OFFSET	= Vector3<float>(0.0f, -0.4f, 0.0f);	// レイの開
 // リジッドボディ
 const float				GROUND_DRAG = 0.9f;	// 地面摩擦
 
+const float CLEAR_ANGLE = 180.0f;	// クリア時の回転角度
 
 /* ========================================
 	コンストラクタ関数
@@ -50,6 +51,7 @@ ObjectPlayer::ObjectPlayer(SceneBase* pScene)
 	, m_bInvincible(false)
 	, m_fInvCnt(0.0f)
 	, m_fInvFlashCnt(0.0f)
+	, m_ePlayerState(E_PlayerState::PS_Normal)
 
 {
 	SetTag(E_ObjectTag::Player);	// タグの設定
@@ -99,6 +101,20 @@ void ObjectPlayer::UpdateLocal()
 
 	// ダメージ後の無敵時間処理
 	if (m_bInvincible)	InvincibleUpdate();
+
+
+	// 演出アニメが他アニメ上書きされるのを防止
+	if (m_ePlayerState == E_PlayerState::PS_GameClear
+		&& !m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_GAMECLEAR))
+	{
+		GameClear();
+	}
+	if (m_ePlayerState == E_PlayerState::PS_Dead
+		&& !m_pCompModelAnime->GetIsPlayAnime(ANIME_KEY_PLAYER::PLYR_DIE))
+	{
+		Dead();
+	}
+
 }
 
 /* ========================================
@@ -112,11 +128,29 @@ void ObjectPlayer::GameClear()
 	m_pCompRigidbody->SetVelocity(Vector3<float>::Zero());	// 移動速度を0に
 
 	// プレイヤーの向きを-Z軸方向に
-	float fRad = MathUtils::ToRadian(180.0f);
+	float fRad = MathUtils::ToRadian(CLEAR_ANGLE);
 	m_pCompTransform->SetRotationEuler(Vector3<float>(0.0f, fRad, 0.0f));
 
 	// ゲームクリアアニメーション再生
 	m_pCompModelAnime->PlayAnime(ANIME_KEY_PLAYER::PLYR_GAMECLEAR, false, 1.0f);
+
+	m_ePlayerState = E_PlayerState::PS_GameClear;
+}
+
+/* ========================================
+	死亡関数
+	-------------------------------------
+	内容：死亡時の処理
+========================================= */
+void ObjectPlayer::Dead()
+{
+	m_pCompPlayerController->SetInputEnable(false);			// 操作を無効に
+	m_pCompRigidbody->SetVelocity(Vector3<float>::Zero());	// 移動速度を0に
+
+	// 死亡アニメーション
+	m_pCompModelAnime->PlayAnime(ANIME_KEY_PLAYER::PLYR_DIE, false, 1.0f);
+
+	m_ePlayerState = E_PlayerState::PS_Dead;
 }
 
 /* ========================================
@@ -176,11 +210,7 @@ void ObjectPlayer::Damage()
 
 	if (m_nHp <= 0)
 	{
-		m_pCompPlayerController->SetInputEnable(false);			// 操作を無効に
-		m_pCompRigidbody->SetVelocity(Vector3<float>::Zero());	// 移動速度を0に
-
-		// 死亡アニメーション
-		m_pCompModelAnime->PlayAnime(ANIME_KEY_PLAYER::PLYR_DIE, false, 1.0f);
+		Dead();
 	}
 }
 
