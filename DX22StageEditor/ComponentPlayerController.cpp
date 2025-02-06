@@ -15,6 +15,7 @@
 #include "ComponentRigidbody.h"	// リジッドボディコンポーネント
 #include "ComponentTransform.h"	// トランスフォームコンポーネント
 #include "ComponentModelAnime.h"	// アニメーションモデルコンポーネント
+#include "ComponentSmokeEffect.h"		// 煙生成コンポーネント
 
 #include "Input.h"
 #include "SceneManager.h"
@@ -99,7 +100,8 @@ ComponentPlayerController::ComponentPlayerController(ObjectBase* pOwner)
 	, m_bIsInputEnable(true)
 	, m_bUseJump(true)
 	, m_bShot(false)
-
+	, m_vMoveDir(Vector3<float>::Zero())
+	, m_pCompSmoke(nullptr)
 {
 }
 
@@ -116,6 +118,7 @@ void ComponentPlayerController::Init()
 
 	m_pObjCamera = SceneManager::GetScene()->GetSceneObject<ObjectCameraPlayer>();	// カメラオブジェクトを取得
 
+	m_pCompSmoke = m_pOwnerObj->GetComponent<ComponentSmokeEffect>();	// 煙生成コンポーネントを取得
 }
 
 /* ========================================
@@ -138,14 +141,10 @@ void ComponentPlayerController::Update()
 	if (!m_pObjCamera)
 	{
 		m_pObjCamera = SceneManager::GetScene()->GetSceneObject<ObjectCameraPlayer>();
-		return;
+		return;	
 	}
 
-	if (!m_pCompModelAnime)
-	{
-		m_pCompModelAnime = m_pOwnerObj->GetComponent<ComponentModelAnime>();
-		return;
-	}
+	if (!CheckComponent()) return;	// コンポーネントが取得できていない場合は処理しない
 
 	// 入力無効
 	if (!m_bIsInputEnable) return;	
@@ -159,6 +158,33 @@ void ComponentPlayerController::Update()
 }
 
 
+/* ========================================
+	コンポーネント取得確認関数
+	-------------------------------------
+	内容：コンポーネントが取得できているか確認
+	-------------------------------------
+	戻値：true	取得できている
+		  false	取得できていない
+========================================== */
+bool ComponentPlayerController::CheckComponent()
+{	
+	bool bResult = true;
+
+	// アニメーション
+	if (!m_pCompModelAnime)
+	{
+		m_pCompModelAnime = m_pOwnerObj->GetComponent<ComponentModelAnime>();
+		bResult = false;
+	}
+	// 煙生成コンポーネント
+	if (!m_pCompSmoke)
+	{
+		m_pCompSmoke = m_pOwnerObj->GetComponent<ComponentSmokeEffect>();
+		bResult = false;
+	}
+
+	return bResult;
+}
 
 /* ========================================
 	移動関数
@@ -167,17 +193,19 @@ void ComponentPlayerController::Update()
 ========================================== */
 void ComponentPlayerController::Move()
 {
-	Vector3<float> moveDir = Vector3<float>::Zero();	// 移動方向
+	m_vMoveDir = Vector3<float>::Zero();	// 移動方向
 
 	// キーボード入力
-	moveDir = MoveKeybord();
+	m_vMoveDir = MoveKeybord();
 	
-	m_pCompRigidbody->AddForce(moveDir * m_fMoveSpeed);
+	m_pCompRigidbody->AddForce(m_vMoveDir * m_fMoveSpeed);
 
-	RotateToMoveDir(moveDir);	// 移動方向に回転
+	RotateToMoveDir(m_vMoveDir);	// 移動方向に回転
 
 	// 移動アニメーション
-	MoveAnime(moveDir);
+	MoveAnime(m_vMoveDir);
+
+	m_pCompSmoke->SetMoveDir(m_vMoveDir);	// 煙生成コンポーネントに移動方向を設定
 }
 
 /* ========================================
@@ -384,6 +412,16 @@ float ComponentPlayerController::GetRotateSpeed()
 bool ComponentPlayerController::GetUseJump()
 {
 	return m_bUseJump;
+}
+
+/* ========================================
+	ゲッター(移動方向)関数
+	-------------------------------------
+	戻値：Vector3<float>		移動方向
+=========================================== */
+Vector3<float> ComponentPlayerController::GetMoveDir()
+{
+	return m_vMoveDir;
 }
 
 /* ========================================

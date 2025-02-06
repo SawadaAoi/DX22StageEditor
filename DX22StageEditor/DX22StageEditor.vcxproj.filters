@@ -509,6 +509,9 @@
     <ClCompile Include="ObjectExplosion.cpp">
       <Filter>ソース ファイル\App\GameObject\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentSmokeEffect.cpp">
+      <Filter>ソース ファイル\App\Component\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">
@@ -834,6 +837,9 @@
     </ClInclude>
     <ClInclude Include="ObjectExplosion.h">
       <Filter>ソース ファイル\App\GameObject\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentSmokeEffect.h">
+      <Filter>ソース ファイル\App\Component\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,7 @@ class ComponentTransform;
 class ComponentRigidbody;
 class ComponentModelAnime;
 class ObjectCameraPlayer;
+class ComponentSmokeEffect;
 
 // =============== クラス定義 =====================
 class ComponentPlayerController :
@@ -48,6 +49,7 @@ public:
 	float GetMoveSpeed();
 	float GetRotateSpeed();
 	bool GetUseJump();
+	Vector3<float> GetMoveDir();
 
 	// セッター
 	void SetMoveSpeed(float fMoveSpeed);
@@ -62,6 +64,7 @@ public:
 	DebugUI::Item* CreateKeyList(std::string sName, BYTE* moveKey);
 #endif // _DEBUG
 private:
+	bool CheckComponent();	// コンポーネント設定
 	void Move();	// 移動処理
 	void Jump();	// ジャンプ処理
 	void Shot();	// 弾発射処理
@@ -74,10 +77,11 @@ private:
 
 	void MoveAnime(Vector3<float> vMoveDir);	// 移動アニメーション
 private:
-	 ComponentTransform* m_pCompTran;	 
-	 ComponentRigidbody* m_pCompRigidbody;	
-	 ObjectCameraPlayer* m_pObjCamera;
-	 ComponentModelAnime* m_pCompModelAnime;
+	 ComponentTransform*	m_pCompTran;	 
+	 ComponentRigidbody*	m_pCompRigidbody;	
+	 ObjectCameraPlayer*	m_pObjCamera;
+	 ComponentModelAnime*	m_pCompModelAnime;
+	 ComponentSmokeEffect*		m_pCompSmoke;
 
 	 float m_fMoveSpeed;	// 移動速度
 	 float m_fRotateSpeed;	// 回転速度
@@ -90,5 +94,7 @@ private:
 	 bool m_bIsInputEnable;
 
 	 bool m_bShot;	// ショットフラグ(連射防止用)
+
+	 Vector3<float> m_vMoveDir;	// 移動方向
 };
 

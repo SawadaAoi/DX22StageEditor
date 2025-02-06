@@ -31,4 +31,5 @@ enum E_UpdateOrder
 	OrderCameraBase,		// カメラ基底
 	OrderCameraDebug,		// カメラ(デバッグ)
 	OrderLightBase,			// ライト基底
+	OrderSmoke,				// 煙
 };
