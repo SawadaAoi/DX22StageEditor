@@ -32,6 +32,7 @@ public:
 		TEST_MODEL,
 		PLAYER_CAT,
 		SKYBOX_SUNNY,
+		GOAL_NIKUKYU,
 		MAX,
 	};
 
@@ -40,6 +41,7 @@ public:
 		{MODEL_KEY::TEST_MODEL,		"Assets/Model/Static/Test/TestObject.fbx"},
 		{MODEL_KEY::PLAYER_CAT,		"Assets/Model/Static/Player/Cat.fbx"},
 		{MODEL_KEY::SKYBOX_SUNNY,	"Assets/Model/Static/Skybox/Sunny/SkyBox_Sunny.fbx"},
+		{MODEL_KEY::GOAL_NIKUKYU,	"Assets/Model/Static/Goal/Goal_Nikukyu.fbx"},
 	};
 
 	// 各モデルデータ大きさ指定
@@ -48,6 +50,7 @@ public:
 		{MODEL_KEY::TEST_MODEL,		1.0f},
 		{MODEL_KEY::PLAYER_CAT,		0.6f},
 		{MODEL_KEY::SKYBOX_SUNNY,	1.0f},
+		{MODEL_KEY::GOAL_NIKUKYU,	0.4f},
 	};
 
 public:
