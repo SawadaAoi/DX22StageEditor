@@ -10,7 +10,6 @@
 #include "AppController.h"
 #include "DirectXManager.h"		// DirectX管理			
 #include "Input.h"
-#include "DebugConsole.h"
 #include "ShaderManager.h"
 
 #include "SceneManager.h"
@@ -20,7 +19,7 @@
 #include "ModelStaticManager.h"
 #include "ModelAnimeManager.h"
 #include "TextureManager.h"
-#include "ObjectTypeRegistry.h"
+#include "ObjectTypeRegistry.h"	// オブジェクトタイプ登録(ファイル読み込み)
 
 #include "WindowAPI.h"
 
@@ -36,30 +35,25 @@ HRESULT AppController::Init()
 	HRESULT hr;
 
 	// DirectX初期化
-	if(FAILED(hr = DirectXManager::InitDirectX()))
+	if (FAILED(hr = DirectXManager::InitDirectX()))
 	{
 		return hr;
 	}
 
 	TimeManager::Init();	// 時間管理初期化
 
-	SHADER_INST.Init();	// シェーダー読み込み
+	SHADER_INST.Init();				// シェーダー読み込み
 	MODEL_STATIC_MNG_INST.Init();	// 静的モデル管理初期化
 	MODEL_ANIME_MNG_INST.Init();	// アニメーションモデル管理初期化
 	TEXTURE_MNG_INST.Init();		// テクスチャ管理初期化
 
 	ObjectTypeRegistry::RegisterAllObjectTypes();	// オブジェクトタイプ登録
-
 #ifdef _DEBUG
 	DebugUI::Menu::Init();
 	DebugUI::InitDebugWindow();
 #endif
 
 	SceneManager::Init();	// シーン管理初期化
-
-	//DebugConsole::Init();	// デバッグコンソール初期化
-
-
 
 	GridLine::Init();	// グリッド線初期化
 
@@ -74,15 +68,10 @@ HRESULT AppController::Init()
 =========================================== */
 void AppController::Uninit()
 {
-
 	SceneManager::Uninit();	// シーン管理削除
-
 #ifdef _DEBUG
 	DebugUI::Menu::Uninit();
 #endif
-
-
-	DebugConsole::Uninit();	// デバッグコンソール終了
 
 	DirectXManager::UninitDirectX();	// DirectX終了
 }
@@ -98,13 +87,8 @@ void AppController::Update(float tick)
 {
 
 	TimeManager::Update(tick);	// 時間管理更新
-
-
-
-
 	SceneManager::Update();
 
-	//DebugConsole::Update();	// デバッグコンソール更新
 
 }
 
@@ -124,6 +108,10 @@ void AppController::Draw()
 #endif
 
 	DirectXManager::EndDrawDirectX();	// バックバッファをフロントバッファにコピー
+
+	// シーン再読み込みが指示されていたら
+	if (SceneManager::GetIsReloadScene())
+		SceneManager::ReloadScene();
 }
 
 

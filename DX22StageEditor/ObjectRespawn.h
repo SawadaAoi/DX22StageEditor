@@ -39,7 +39,6 @@ public:
 	ObjectRespawn(SceneBase* pScene);
 
 	void InitLocal() override;
-	void UpdateLocal() override;
 
 	void OnCollisionEnter(ObjectBase* pHit) override;
 
@@ -64,7 +63,6 @@ private:
 	E_RespawnType	m_RespawnType;			// リスポーン種類
 	Vector3<float>	m_RespawnPosition;		// リスポーン位置
 
-	bool			m_IsReloadScene;		// シーン再読み込みフラグ
 
 	ComponentCollisionAABB* m_pCompColAABB;	// 当たり判定
 };

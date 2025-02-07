@@ -21,19 +21,22 @@ public:
 	static void Uninit();
 	static void Update();
 	static void Draw();
-	
+
 	// シーン切り替え
 	template<typename T>
 	static void ChangeScene();
 
 	// シーン再読み込み
-	static void ReloadScene();
+	static void CallReloadScene();	// シーン再読み込みを呼び出す
+	static void ReloadScene();		// シーン再読み込み
 
-	// シーン取得
-	static SceneBase* GetScene();
+	// ゲッター
+	static SceneBase* GetScene();	// シーン取得
+	static bool GetIsReloadScene();	// シーン再読み込みフラグ取得
 
 private:
-	static inline std::unique_ptr<SceneBase> m_pScene = nullptr;  // std::unique_ptrに変更
+	static inline std::unique_ptr<SceneBase> m_pScene = nullptr;	// std::unique_ptrに変更
+	static inline bool	m_IsReloadScene = false;					// シーン再読み込み処理呼び出しフラグ
 };
 
 // =============== テンプレート関数の実装 =====================

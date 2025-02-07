@@ -363,27 +363,59 @@ void SceneBase::UpdateCollision()
 =========================================== */
 std::string SceneBase::CreateUniqueName(std::string sName)
 {
-	// 名前が重複している場合は連番を付ける
-	int nDupCnt = 0;	// 重複回数
+	std::string sReName = sName;				// 返す名前
+	std::vector<ObjectBase*> pSelectObjects;	// 名前が含まれているオブジェクト配列
+
+	// 名前が含まれているオブジェクトを検索
+	// 例："Player"の場合、"CameraPlayer","PlayerStart","Player_1"など
 	for (auto& pObject : m_pObjects)
 	{
-		// 名前が含まれている場合(既に連番をつけている場合を想定して)
 		if (pObject->GetName().find(sName) != std::string::npos)
 		{
-			nDupCnt++;
+			pSelectObjects.push_back(pObject.get());
+		}
+	}
+	// 重複していない場合はそのまま返す
+	if (pSelectObjects.size() == 0) return sName;
+
+	int nDupCnt = 0;	// 重複回数
+	// 名前が重複している場合は連番を付ける(重複がなくなるまで)
+	while (!CheckUniqueName(sReName, pSelectObjects))
+	{
+		nDupCnt++;
+		sReName = sName + "_" + std::to_string(nDupCnt);
+	}
+
+	return sReName;
+
+}
+
+/* ========================================
+	名前重複チェック関数
+	-------------------------------------
+	内容：名前が重複しているかチェック
+		　名前が含まれているオブジェクトの配列を渡す
+	-------------------------------------
+	引数1：sName	名前
+	引数2：pObjects	オブジェクト配列
+	-------------------------------------
+	戻値：重複しているかどうか
+=========================================== */
+bool SceneBase::CheckUniqueName(std::string sName, std::vector<ObjectBase*> pObjects)
+{
+	for (auto& pObject : pObjects)
+	{
+		// 同じ名前がある場合
+		if (sName == pObject->GetName())
+		{
+			return false;
 		}
 	}
 
-	if (nDupCnt > 0)
-	{
-		sName += "_" + std::to_string(nDupCnt);
-		return sName = CreateUniqueName(sName);	// オブジェクト名と重複チェック
-	}
-	else
-	{
-		return sName;
-	}
+	return true;
 }
+
+
 
 /* ========================================
 	全オブジェクト取得関数

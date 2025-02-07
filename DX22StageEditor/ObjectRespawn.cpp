@@ -14,7 +14,6 @@
 #include "ComponentTransform.h"
 #include "ComponentCollisionAABB.h"
 
-
 /* ========================================
 	コンストラクタ関数
 	-------------------------------------
@@ -27,7 +26,6 @@ ObjectRespawn::ObjectRespawn(SceneBase* pScene)
 	, m_RespawnType(E_RespawnType::RT_RELOAD_SCENE)
 	, m_RespawnPosition(Vector3<float>(0.0f, 0.0f, 0.0f))
 	, m_pCompColAABB(nullptr)
-	, m_IsReloadScene(false)
 {
 }
 
@@ -45,16 +43,6 @@ void ObjectRespawn::InitLocal()
 
 }
 
-/* ========================================
-	更新関数
-	-------------------------------------
-	内容：更新
-=========================================== */
-void ObjectRespawn::UpdateLocal()
-{
-	// シーンを再読み込み
-	if (m_IsReloadScene)	SceneManager::ReloadScene();
-}
 
 /* ========================================
 	衝突判定(開始時)関数
@@ -73,9 +61,8 @@ void ObjectRespawn::OnCollisionEnter(ObjectBase* pHit)
 		{
 		// シーンを再読み込み
 		case E_RespawnType::RT_RELOAD_SCENE:
-			// 当たり判定処理内でシーン再読み込み行うと、自身の所有シーンが破棄されるため、
-			// フラグを立ててUpdate処理で再読み込みする
-			m_IsReloadScene = true;
+			// シーン再読み込みを呼び出す
+			SceneManager::CallReloadScene();
 			break;
 		// 決まった位置からリスポーン
 		case E_RespawnType::RT_POSITION:	
