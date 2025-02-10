@@ -44,6 +44,7 @@ public:
 		TITLE_LOGO,			// タイトルロゴ
 		EFFECT_EXPLOSION,	// 爆発エフェクト
 		EFFECT_SMOKE,		// 煙エフェクト
+		STAGE_IMG_STAGE1,	// ステージ1画像
 		MAX,
 	};
 
@@ -57,8 +58,8 @@ public:
 		{TEX_KEY::BLOCK_SIMPLE,			"Assets/Texture/Block_Simple.png"			},
 		{TEX_KEY::GROUND_GRASS,			"Assets/Texture/Ground_Grass.png"			},
 		{TEX_KEY::GROUND_GRASS_SIDE,	"Assets/Texture/Ground_Grass_Side.png"		},
-		{TEX_KEY::GROUND_GRASS_TOP,		"Assets/Texture/Ground_Grass_Top.png"		},
 		{TEX_KEY::GROUND_NOGRASS_SIDE,	"Assets/Texture/Ground_NoGrass_Side.png"	},
+		{TEX_KEY::GROUND_GRASS_TOP,		"Assets/Texture/Ground_Grass_Top.png"		},
 		{TEX_KEY::PLAYER_HP,			"Assets/Texture/Player_Hp.png"				},
 		{TEX_KEY::PLAYER_BULLET,		"Assets/Texture/Player_Bullet.png"			},
 		{TEX_KEY::STAGE_GOAL,			"Assets/Texture/Stage_Goal.png"				},
@@ -67,6 +68,8 @@ public:
 		{TEX_KEY::TITLE_LOGO,			"Assets/Texture/Title_Logo.png"				},
 		{TEX_KEY::EFFECT_EXPLOSION,		"Assets/Texture/Effect_Explosion.png"		},
 		{TEX_KEY::EFFECT_SMOKE,			"Assets/Texture/Effect_Smoke.png"			},
+		{TEX_KEY::STAGE_IMG_STAGE1,		"Assets/Texture/StageImage/Stage1.png"		},
+
 
 	};
 
