@@ -198,6 +198,12 @@
     <Filter Include="ソース ファイル\App\GameObject\Effect">
       <UniqueIdentifier>{fe4c7a4e-f9c7-4ecc-b3fe-fb580aef754b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\Component\StageGimmick">
+      <UniqueIdentifier>{fce39c59-a075-49c1-87b0-8cb7734a0c4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\StageGimmick">
+      <UniqueIdentifier>{2e23adfb-48d8-4267-a6cc-70e5f6757d10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -511,6 +517,12 @@
     </ClCompile>
     <ClCompile Include="ComponentSmokeEffect.cpp">
       <Filter>ソース ファイル\App\Component\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentGimmickMoveLinear.cpp">
+      <Filter>ソース ファイル\App\Component\StageGimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectMoveFloor.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageGimmick</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -840,6 +852,12 @@
     </ClInclude>
     <ClInclude Include="ComponentSmokeEffect.h">
       <Filter>ソース ファイル\App\Component\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentGimmickMoveLinear.h">
+      <Filter>ソース ファイル\App\Component\StageGimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectMoveFloor.h">
+      <Filter>ソース ファイル\App\GameObject\StageGimmick</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -26,6 +26,9 @@
 #include "ObjectBlockGroundOBB.h"
 #include "ObjectWall.h"
 
+// ステージギミック
+#include "ObjectMoveFloor.h"
+
 
 // カメラ
 #include "ObjectCamera.h"
@@ -74,6 +77,9 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectBlockGroundAABB, OCT_TERRAIN);
 	REGISTER_OBJECT_TYPE(ObjectBlockGroundOBB, OCT_TERRAIN);
 	REGISTER_OBJECT_TYPE(ObjectWall, OCT_TERRAIN);
+
+	// ステージギミック
+	REGISTER_OBJECT_TYPE(ObjectMoveFloor, OCT_GIMMICK);
 
 	// カメラ
 	REGISTER_OBJECT_TYPE(ObjectCamera, OCT_CAMERA);
