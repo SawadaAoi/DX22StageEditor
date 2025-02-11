@@ -33,10 +33,9 @@ public:
 		DEBUG_PLAYER_START,	// プレイヤースタート位置
 		BLOCK_SIMPLE,		// シンプルなブロック
 		BLOCK_GRASS,		// 草地
-		BLOCK_GRASS_SIDE,	// 草地(横)
 		BLOCK_GRASS_TOP,	// 草地(上)
+		BLOCK_GRASS_SIDE,	// 草地(横)
 		BLOCK_NOGRASS_SIDE,	// 草地なし(横)
-		PLAYER_HP,			// プレイヤーHP
 		PLAYER_BULLET,		// プレイヤー弾
 		WALL_FENCE,			// 壁(フェンス)
 		UI_TITLE_LOGO,		// タイトルロゴ
@@ -57,10 +56,9 @@ public:
 		{TEX_KEY::DEBUG_PLAYER_START,	"Assets/Texture/Debug/Debug_PlayerStart.png"	},
 		{TEX_KEY::BLOCK_SIMPLE,			"Assets/Texture/Block/Block_Simple.png"			},
 		{TEX_KEY::BLOCK_GRASS,			"Assets/Texture/Block/Block_Grass.png"			},
+		{TEX_KEY::BLOCK_GRASS_TOP,		"Assets/Texture/Block/Block_Grass_Top.png"		},
 		{TEX_KEY::BLOCK_GRASS_SIDE,		"Assets/Texture/Block/Block_Grass_Side.png"		},
 		{TEX_KEY::BLOCK_NOGRASS_SIDE,	"Assets/Texture/Block/Block_NoGrass_Side.png"	},
-		{TEX_KEY::BLOCK_GRASS_TOP,		"Assets/Texture/Block/Block_Grass_Top.png"		},
-		{TEX_KEY::PLAYER_HP,			"Assets/Texture/Player_Hp.png"					},
 		{TEX_KEY::PLAYER_BULLET,		"Assets/Texture/Player_Bullet.png"				},
 		{TEX_KEY::WALL_FENCE,			"Assets/Texture/Wall_Fence.png"					},
 		{TEX_KEY::UI_TITLE_LOGO,		"Assets/Texture/UI/UI_TitleLogo.png"			},
