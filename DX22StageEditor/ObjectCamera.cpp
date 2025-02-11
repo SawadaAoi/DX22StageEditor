@@ -48,7 +48,7 @@ void ObjectCamera::InitLocal()
 #ifdef _DEBUG
 	// デバッグ用カメラアイコン
 	AddComponent<ComponentBillboard>();
-	GetComponent<ComponentBillboard>()->SetTexture(GET_TEXTURE_DATA(TEX_KEY::CAMERA_ICON));
+	GetComponent<ComponentBillboard>()->SetTexture(GET_TEXTURE_DATA(TEX_KEY::DEBUG_CAMERA_ICON));
 #endif // _DEBUG
 }
 

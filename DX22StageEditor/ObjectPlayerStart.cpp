@@ -47,7 +47,7 @@ void ObjectPlayerStart::InitLocal()
 #ifdef _DEBUG
 	// ビルボード設定
 	ComponentBillboard* pBillboard = AddComponent<ComponentBillboard>();
-	pBillboard->SetTexture(GET_TEXTURE_DATA(TEX_KEY::PLAYER_STARTPOS));
+	pBillboard->SetTexture(GET_TEXTURE_DATA(TEX_KEY::DEBUG_PLAYER_START));
 
 	// 当たり判定(位置を視認しやすくするため)
 	ComponentCollisionAABB* pCollision = AddComponent<ComponentCollisionAABB>();
