@@ -36,6 +36,8 @@ public:
 		BLOCK_GRASS_TOP,	// 草地(上)
 		BLOCK_GRASS_SIDE,	// 草地(横)
 		BLOCK_NOGRASS_SIDE,	// 草地なし(横)
+		BLOCK_BRICK,		// レンガブロック
+		BLOCK_BRICK_CRACK,	// レンガブロック(亀裂)
 		PLAYER_BULLET,		// プレイヤー弾
 		WALL_FENCE,			// 壁(フェンス)
 		UI_TITLE_LOGO,		// タイトルロゴ
@@ -59,6 +61,8 @@ public:
 		{TEX_KEY::BLOCK_GRASS_TOP,		"Assets/Texture/Block/Block_Grass_Top.png"		},
 		{TEX_KEY::BLOCK_GRASS_SIDE,		"Assets/Texture/Block/Block_Grass_Side.png"		},
 		{TEX_KEY::BLOCK_NOGRASS_SIDE,	"Assets/Texture/Block/Block_NoGrass_Side.png"	},
+		{TEX_KEY::BLOCK_BRICK,			"Assets/Texture/Block/Block_Brick.png"			},
+		{TEX_KEY::BLOCK_BRICK_CRACK,	"Assets/Texture/Block/Block_Brick_Crack.png"	},
 		{TEX_KEY::PLAYER_BULLET,		"Assets/Texture/Player_Bullet.png"				},
 		{TEX_KEY::WALL_FENCE,			"Assets/Texture/Wall_Fence.png"					},
 		{TEX_KEY::UI_TITLE_LOGO,		"Assets/Texture/UI/UI_TitleLogo.png"			},

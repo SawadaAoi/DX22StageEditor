@@ -46,6 +46,7 @@ public:
 	// セッター
 	void SetShapeType(E_ShapeType eType);	// 図形の種類を設定	
 	void SetTexture(Texture* pTexture, int nIndex = 0);		// テクスチャを設定
+	void SetTextureAll(Texture* pTexture);	// 全てのテクスチャを設定
 	void SetIsTex(bool bIsTex);				// テクスチャ使用フラグを設定
 	void SetCulling(bool bIsCulling);		// カリング設定
 	void SetUvScale(const Vector2<float>& scale, int nIndex = 0);	// テクスチャスケールを設定

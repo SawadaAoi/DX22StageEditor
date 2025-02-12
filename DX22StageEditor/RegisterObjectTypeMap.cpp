@@ -28,6 +28,7 @@
 
 // ステージギミック
 #include "ObjectMoveFloor.h"
+#include "ObjectBlockBreakable.h"
 
 
 // カメラ
@@ -80,6 +81,7 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 
 	// ステージギミック
 	REGISTER_OBJECT_TYPE(ObjectMoveFloor, OCT_GIMMICK);
+	REGISTER_OBJECT_TYPE(ObjectBlockBreakable, OCT_GIMMICK);
 
 	// カメラ
 	REGISTER_OBJECT_TYPE(ObjectCamera, OCT_CAMERA);

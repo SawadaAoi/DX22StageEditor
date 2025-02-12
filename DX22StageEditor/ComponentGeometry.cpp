@@ -308,6 +308,26 @@ void ComponentGeometry::SetTexture(Texture* pTexture, int nIndex)
 }
 
 /* ========================================
+	セッター(テクスチャ(全面))関数
+	-------------------------------------
+	引数：テクスチャ
+=========================================== */
+void ComponentGeometry::SetTextureAll(Texture* pTexture)
+{
+	if (m_eType == TYPE_BOX)
+	{
+		for (int i = 0; i < MAX_TEXTURE_NUM; i++)
+		{
+			m_pTextures[i] = pTexture;
+		}
+	}
+	else
+	{
+		m_pTextures[0] = pTexture;
+	}
+}
+
+/* ========================================
 	セッター(テクスチャ使用フラグ)関数
 	-------------------------------------
 	引数：テクスチャ使用フラグ

@@ -189,6 +189,7 @@
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="ObjectBlock.cpp" />
+    <ClCompile Include="ObjectBlockBreakable.cpp" />
     <ClCompile Include="ObjectBlockGroundAABB.cpp" />
     <ClCompile Include="ObjectBlockGroundOBB.cpp" />
     <ClCompile Include="ObjectBullet.cpp" />
@@ -298,6 +299,7 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="ObjectBlock.h" />
+    <ClInclude Include="ObjectBlockBreakable.h" />
     <ClInclude Include="ObjectBlockGroundAABB.h" />
     <ClInclude Include="ObjectBlockGroundOBB.h" />
     <ClInclude Include="ObjectBullet.h" />
