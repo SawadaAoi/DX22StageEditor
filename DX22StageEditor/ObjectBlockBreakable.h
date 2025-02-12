@@ -15,7 +15,7 @@
 
 // =============== クラス定義 ===================
 class ObjectBlockBreakable :
-    public ObjectBlock
+	public ObjectBlock
 {
 public:
 	ObjectBlockBreakable(SceneBase* pScene);
@@ -28,7 +28,5 @@ public:
 private:
 	int m_nHp;		// HP
 	int m_nHpOld;	// HP(前回)
-
-	bool m_bIsBreak;	// 壊れたかどうか
 };
 

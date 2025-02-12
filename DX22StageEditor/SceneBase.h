@@ -19,6 +19,12 @@
 // =============== 前方宣言 =======================
 class ComponentCollisionBase;
 
+// =============== 定数定義 =======================
+// E_Stateの呼び出しを省略
+#define OBJ_ACTIVE	ObjectBase::E_State::STATE_ACTIVE
+#define OBJ_DEAD	ObjectBase::E_State::STATE_DEAD
+#define OBJ_PAUSE	ObjectBase::E_State::STATE_PAUSE
+
 
 // =============== クラス定義 =====================
 class SceneBase

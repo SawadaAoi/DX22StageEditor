@@ -57,7 +57,7 @@ void ObjectExplosion::UpdateLocal()
 	// アニメーション終了時
 	if (m_pCompBillboardAnime->GetAnimeEnd())
 	{
-		SetState(E_State::STATE_DEAD);
+		Destroy();
 	}
 }
 
@@ -68,5 +68,5 @@ void ObjectExplosion::UpdateLocal()
 =========================================== */
 ComponentBillboardAnime* ObjectExplosion::GetCompBillboardAnime()
 {
-	return nullptr;
+	return m_pCompBillboardAnime;
 }

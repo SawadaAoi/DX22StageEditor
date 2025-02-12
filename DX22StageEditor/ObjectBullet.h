@@ -19,7 +19,7 @@ class ComponentCollisionSphere;
 
 // =============== クラス定義 =====================
 class ObjectBullet :
-    public ObjectBase
+	public ObjectBase
 {
 public:
 	ObjectBullet(SceneBase* pScene);
@@ -44,7 +44,5 @@ protected:
 
 	float m_fDelTime;		// 最大生存時間
 	float m_fMoveSpeed;		// 移動速度
-
-	float m_fDelTimeCnt;	// 経過時間
 };
 

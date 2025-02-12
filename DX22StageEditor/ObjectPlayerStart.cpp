@@ -69,7 +69,7 @@ void ObjectPlayerStart::UpdateLocal()
 		ObjectBase* pPlayer = m_pOwnerScene->AddSceneObject<ObjectPlayer>(PLAYER_OBJECT_NAME);
 		pPlayer->GetTransform()->SetPosition(GetTransform()->GetLocalPosition());			// 自身の位置にプレイヤーを生成
 
-		SetState(E_State::STATE_DEAD);	// 自身を削除
+		Destroy();	// 自身を削除
 	}
 }
 

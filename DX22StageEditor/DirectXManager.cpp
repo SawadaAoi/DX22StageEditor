@@ -54,7 +54,7 @@ D3D11_FILTER SAMPLER_FILTER[] = {
 
 // 初期値
 const DirectXManager::CullMode			DEFAULT_CULLING_MODE	= DirectXManager::CULL_BACK;				// カリングモード
-const DirectXManager::BlendMode			EFAULT_BLEND_MODE		= DirectXManager::BLEND_ALPHA;				// ブレンドモード
+const DirectXManager::BlendMode			DEFAULT_BLEND_MODE		= DirectXManager::BLEND_ALPHA;				// ブレンドモード
 const DirectXManager::DepthState		DEFAULT_DEPTH_STATE		= DirectXManager::DEPTH_ENABLE_WRITE_TEST;	// 深度ステート
 const DirectXManager::SamplerState		DEFAULT_SAMPLER_STATE	= DirectXManager::SAMPLER_LINEAR;			// サンプラーステート
 
@@ -438,7 +438,7 @@ HRESULT DirectXManager::InitBlendState()
 	}
 	
 	// ブレンドステートを設定
-	SetBlendMode(EFAULT_BLEND_MODE);	// デフォルトはアルファブレンド
+	SetBlendMode(DEFAULT_BLEND_MODE);	// デフォルトはアルファブレンド
 
 	return hr;
 }

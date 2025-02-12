@@ -79,7 +79,7 @@ void ComponentSmokeEffect::Update()
 		// ¶¬‚³‚ê‚Ä‚©‚çˆê’èŽžŠÔŒo‰ß‚µ‚½‚çíœ
 		if (smoke.second >= m_fLifeTime)
 		{
-			smoke.first->SetState(ObjectBase::E_State::STATE_DEAD);
+			smoke.first->Destroy();
 			smoke.first = nullptr;
 		}
 	}

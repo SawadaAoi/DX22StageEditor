@@ -29,7 +29,6 @@ ObjectBlockBreakable::ObjectBlockBreakable(SceneBase* pScene)
 	: ObjectBlock(pScene)
 	, m_nHp(1)
 	, m_nHpOld(0)
-	, m_bIsBreak(false)
 {
 	SetTag(E_ObjectTag::Ground);	// タグの設定
 }
@@ -55,13 +54,6 @@ void ObjectBlockBreakable::InitLocal()
 ========================================== */
 void ObjectBlockBreakable::UpdateLocal()
 {
-	if (m_bIsBreak)
-	{
-		SetState(E_State::STATE_DEAD);	// 死亡状態に設定
-		ObjectBase* pExplosion = m_pOwnerScene->AddSceneObject<ObjectExplosion>("Explosion_" + m_sName);
-		pExplosion->GetTransform()->SetPosition(m_pCompTransform->GetPosition());
-	}
-
 	if (m_nHp != m_nHpOld)
 	{
 		// HPが1の時、テクスチャを亀裂状態に変更
@@ -81,13 +73,18 @@ void ObjectBlockBreakable::UpdateLocal()
 ========================================== */
 void ObjectBlockBreakable::OnCollisionEnter(ObjectBase* pHit)
 {
+	// 弾に当たった時
 	if (pHit->GetTag() == E_ObjectTag::PlayerBullet)
 	{
 		m_nHp--;
 
 		if (m_nHp <= 0)
 		{
-			m_bIsBreak = true;
+			Destroy();	// 自身を削除
+
+			// 爆発エフェクト生成(仮)
+			ObjectBase* pExplosion = m_pOwnerScene->AddSceneObject<ObjectExplosion>("Explosion_" + m_sName);
+			pExplosion->GetTransform()->SetPosition(m_pCompTransform->GetPosition());
 		}
 	}
 }

@@ -177,7 +177,7 @@ void SceneBase::RemoveDeadObjects()
 	{
 		ObjectBase* pObject = it->get();
 		// 死亡状態かどうか
-		if (pObjectStateMap.at(pObject) == ObjectBase::E_State::STATE_DEAD)
+		if (pObjectStateMap.at(pObject) == OBJ_DEAD)
 		{
 #ifdef _DEBUG
 			// 削除対象オブジェクトが一覧で選択中の場合
@@ -280,8 +280,8 @@ void SceneBase::RemoveSceneObject(ObjectBase* pObject)
 		}
 	}
 
-	pObject->RemoveParentObject();						// 親オブジェクトから削除
-	pObject->SetState(ObjectBase::E_State::STATE_DEAD);	// 死亡状態に設定
+	pObject->RemoveParentObject();	// 親オブジェクトから削除
+	pObject->Destroy();				// オブジェクト削除
 
 }
 
@@ -511,7 +511,7 @@ void SceneBase::InitObjectList()
 		// カメラオブジェクトがアクティブの場合、削除不可
 		if (CAMERA_MNG_INST.GetActiveCamera() == m_pSelectObj)	return;
 
-		m_pSelectObj->SetState(ObjectBase::E_State::STATE_DEAD);	// 死亡状態に設定
+		m_pSelectObj->Destroy();	// オブジェクト削除
 
 	}));
 

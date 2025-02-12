@@ -25,7 +25,6 @@ ObjectBullet::ObjectBullet(SceneBase* pScene)
 	, m_pCompCollisionSphere(nullptr)
 	, m_fDelTime(5.0f)
 	, m_fMoveSpeed(10.0f)
-	, m_fDelTimeCnt(0.0f)
 {
 }
 
@@ -36,10 +35,13 @@ ObjectBullet::ObjectBullet(SceneBase* pScene)
 =========================================== */
 void ObjectBullet::InitLocal()
 {
-	m_pCompRigidbody		= AddComponent<ComponentRigidbody>();
-	m_pCompCollisionSphere	= AddComponent<ComponentCollisionSphere>();
+	m_pCompRigidbody = AddComponent<ComponentRigidbody>();
+	m_pCompCollisionSphere = AddComponent<ComponentCollisionSphere>();
 
-	m_pCompCollisionSphere->SetTrigger(true);
+	m_pCompRigidbody->SetUseGravity(false);		// d—Í–³Œø
+	m_pCompCollisionSphere->SetTrigger(true);	// Õ“Ë‚Í‚·‚è”²‚¯
+
+	Destroy(m_fDelTime);	// ˆê’èŠÔŒã‚Éíœ
 }
 
 /* ========================================
@@ -51,13 +53,6 @@ void ObjectBullet::UpdateLocal()
 {
 	// Œü‚¢‚Ä‚¢‚é•ûŒü‚ÉˆÚ“®
 	m_pCompRigidbody->SetVelocity(m_pCompTransform->GetForwardVector() * m_fMoveSpeed);
-
-	// íœŠÔŒo‰ß‚Åíœ
-	m_fDelTimeCnt += DELTA_TIME;
-	if (m_fDelTimeCnt >= m_fDelTime)
-	{
-		SetState(E_State::STATE_DEAD);
-	}
 }
 
 /* ========================================
@@ -69,7 +64,7 @@ void ObjectBullet::UpdateLocal()
 =========================================== */
 void ObjectBullet::OnCollisionEnter(ObjectBase* pHit)
 {
-	SetState(E_State::STATE_DEAD);
+	Destroy();
 }
 
 /* ========================================
@@ -100,6 +95,7 @@ float ObjectBullet::GetMoveSpeed()
 void ObjectBullet::SetDeleteTime(float fLifeTime)
 {
 	m_fDelTime = fLifeTime;
+	Destroy(m_fDelTime);	// íœŠÔ‚ğÄİ’è‚·‚é(‰Šú‰»‚Éİ’è‚³‚ê‚Ä‚¢‚é’l‚ğã‘‚«)
 }
 
 /* ========================================

@@ -82,6 +82,10 @@ public:
 	virtual void UpdateLocal() {};	// 個別更新処理
 	virtual void DrawLocal() {};	// 個別描画処理
 
+	// オブジェクトの破棄
+	void Destroy(float nTime = 0.0f);
+
+	// 衝突処理
 	virtual void OnCollisionEnter(ObjectBase* pHit);	// 衝突開始処理
 	virtual void OnCollisionStay(ObjectBase* pHit);		// 衝突中処理
 	virtual void OnCollisionExit(ObjectBase* pHit);		// 衝突終了処理
@@ -122,6 +126,17 @@ public:
 	void SetIsSave(bool bIsSave);		// セーブするかどうかの設定
 	void SetIsFold(bool bIsFold);		// オブジェクト一覧折りたたみフラグの設定
 
+
+	// コンポーネント関連
+	template<typename T>
+	T* AddComponent();	// コンポーネント追加
+
+	template<typename T>
+	T* GetComponent();	// コンポーネント取得
+
+	template<typename T>
+	void RemoveComponent();	// コンポーネント削除
+
 #ifdef _DEBUG
 	void Debug();					// デバッグ用の処理(オブジェクト情報ウィンドウに表示)
 	virtual void DebugLocal(DebugUI::Window& window) {};	// 個別デバッグ処理
@@ -134,17 +149,6 @@ public:
 	std::string GetListName();	// リスト表示用の名前取得
 
 #endif
-
-	// コンポーネント関連
-	template<typename T>
-	T* AddComponent();	// コンポーネント追加
-
-	template<typename T>
-	T* GetComponent();	// コンポーネント取得
-
-	template<typename T>
-	void RemoveComponent();	// コンポーネント削除
-
 private:
 	void InitDefaultComponent();	// デフォルトコンポーネント設定
 
@@ -169,6 +173,10 @@ protected:
 
 	// オブジェクト一覧折りたたみフラグ(true:折りたたむ, false:展開)
 	bool m_bIsFold;
+
+	bool m_bIsDestroy;			// オブジェクト破棄フラグ(true:破棄, false:未破棄)
+	float m_fDestroyTime;		// 破棄時間
+	float m_fDestroyTimeCnt;	// 破棄時間カウント
 };
 
 #include "ObjectBase.inl"

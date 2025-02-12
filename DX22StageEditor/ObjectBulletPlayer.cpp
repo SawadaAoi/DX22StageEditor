@@ -59,6 +59,6 @@ void ObjectBulletPlayer::OnCollisionEnter(ObjectBase* pHit)
 		pHit->OnCollisionStay(this);
 	}
 	
-	SetState(E_State::STATE_DEAD);
+	Destroy();
 }
 
