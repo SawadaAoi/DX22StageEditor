@@ -51,6 +51,7 @@ ObjectPlayer::ObjectPlayer(SceneBase* pScene)
 	, m_fInvCnt(0.0f)
 	, m_fInvFlashCnt(0.0f)
 	, m_ePlayerState(E_PlayerState::PS_Normal)
+	, m_nCoinNum(0)
 
 {
 	SetTag(E_ObjectTag::Player);	// タグの設定
@@ -152,6 +153,22 @@ void ObjectPlayer::Dead()
 }
 
 /* ========================================
+	衝突判定(開始時)関数
+	-------------------------------------
+	内容：他オブジェクトとの衝突判定(開始時)
+	-------------------------------------
+	引数：衝突相手オブジェクト
+=========================================== */
+void ObjectPlayer::OnCollisionEnter(ObjectBase* pHit)
+{
+	// コインと接触したら
+	if (pHit->GetTag() == E_ObjectTag::Coin)
+	{
+		m_nCoinNum++;	// コイン取得数加算
+	}
+}
+
+/* ========================================
 	衝突判定(継続時)関数
 	-------------------------------------
 	内容：他オブジェクトとの衝突判定(継続時)
@@ -201,7 +218,6 @@ void ObjectPlayer::Damage()
 	if (m_bInvincible)	return;	// 無敵時間中はダメージを受けない
 	if (m_nHp <= 0)		return;	// HPが0以下の場合はダメージを受けない
 
-	// ダメージアニメーション
 
 	m_bInvincible = true;	// 無敵時間開始
 	m_nHp--;				// HP減少
@@ -272,6 +288,16 @@ bool ObjectPlayer::GetInvincible()
 }
 
 /* ========================================
+	ゲッター(コイン数)関数
+	-------------------------------------
+	戻値：int	コイン数
+=========================================== */
+int ObjectPlayer::GetCoinNum()
+{
+	return m_nCoinNum;
+}
+
+/* ========================================
 	セッター(HP)関数
 	-------------------------------------
 	引数：int	HP
@@ -299,5 +325,15 @@ void ObjectPlayer::SetMaxHp(int maxHp)
 void ObjectPlayer::SetInvincible(bool bInvincible)
 {
 	m_bInvincible = bInvincible;
+}
+
+/* ========================================
+	セッター(コイン数)関数
+	-------------------------------------
+	引数：int	コイン数
+=========================================== */
+void ObjectPlayer::SetCoinNum(int coinNum)
+{
+	m_nCoinNum = coinNum;
 }
 

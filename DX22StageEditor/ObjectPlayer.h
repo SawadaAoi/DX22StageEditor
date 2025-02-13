@@ -14,7 +14,6 @@
 #include <memory>
 
 // =============== 前方宣言 =====================
-class ComponentTransform;
 class ComponentGroundRaycast;
 class ComponentRigidbody;
 class ComponentModelStatic;
@@ -42,17 +41,20 @@ public:
 	void GameClear();
 	void Dead();
 
+	void OnCollisionEnter(ObjectBase* pHit) override;
 	void OnCollisionStay(ObjectBase* pHit) override;
 
 	// ゲッター
 	int GetHp();
 	int GetMaxHp();
 	bool GetInvincible();
+	int GetCoinNum();
 
 	// セッター
 	void SetHp(int hp);
 	void SetMaxHp(int maxHp);
 	void SetInvincible(bool bInvincible);
+	void SetCoinNum(int coinNum);
 
 	DEFINE_OBJECT_TYPE(ObjectPlayer)	// オブジェクトの種類ID取得関数
 
@@ -76,6 +78,7 @@ private:
 	float	m_fInvCnt;		// 無敵時間カウント
 	float	m_fInvFlashCnt;	// 無敵時間点滅カウント
 
-	E_PlayerState m_ePlayerState;
+	E_PlayerState m_ePlayerState;	// プレイヤーの状態
+	int m_nCoinNum;	// 取得コインの数
 };
 

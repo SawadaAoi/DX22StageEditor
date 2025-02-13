@@ -30,6 +30,8 @@
 #include "ObjectMoveFloor.h"
 #include "ObjectBlockBreakable.h"
 
+// アイテム
+#include "ObjectCoin.h"
 
 // カメラ
 #include "ObjectCamera.h"
@@ -82,6 +84,9 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	// ステージギミック
 	REGISTER_OBJECT_TYPE(ObjectMoveFloor, OCT_GIMMICK);
 	REGISTER_OBJECT_TYPE(ObjectBlockBreakable, OCT_GIMMICK);
+
+	// アイテム
+	REGISTER_OBJECT_TYPE(ObjectCoin, OCT_ITEM);
 
 	// カメラ
 	REGISTER_OBJECT_TYPE(ObjectCamera, OCT_CAMERA);

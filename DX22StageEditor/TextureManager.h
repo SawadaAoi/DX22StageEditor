@@ -46,13 +46,14 @@ public:
 		EFFECT_EXPLOSION,	// 爆発エフェクト
 		EFFECT_SMOKE,		// 煙エフェクト
 		STAGE_IMG_STAGE1,	// ステージ1画像
+		ITEM_COIN,			// コイン
 		MAX,
 	};
 
 	// 画像データ保存先パス
 	const std::unordered_map < TextureManager::E_TEX_KEY, std::string > MODEL_TEX_PATH
 	{
-		{TEX_KEY::TEST,					"Assets/Texture/Test.png"						},
+		{TEX_KEY::TEST,					"Assets/Texture/Test.png"						},	
 		{TEX_KEY::DEBUG_CAMERA_ICON,	"Assets/Texture/Debug/Debug_Camera_Icon.png"	},
 		{TEX_KEY::DEBUG_LIGHT_ICON,		"Assets/Texture/Debug/Debug_Light_Icon.png"		},
 		{TEX_KEY::DEBUG_PLAYER_START,	"Assets/Texture/Debug/Debug_PlayerStart.png"	},
@@ -71,7 +72,7 @@ public:
 		{TEX_KEY::EFFECT_EXPLOSION,		"Assets/Texture/Effect_Explosion.png"			},
 		{TEX_KEY::EFFECT_SMOKE,			"Assets/Texture/Effect_Smoke.png"				},
 		{TEX_KEY::STAGE_IMG_STAGE1,		"Assets/Texture/StageImage/Stage1.png"			},
-
+		{TEX_KEY::ITEM_COIN,			"Assets/Texture/Item_Coin.png"					},
 
 	};
 

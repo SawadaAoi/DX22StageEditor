@@ -204,6 +204,9 @@
     <Filter Include="ソース ファイル\App\GameObject\StageObject\Gimmick">
       <UniqueIdentifier>{2e23adfb-48d8-4267-a6cc-70e5f6757d10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\StageObject\Item">
+      <UniqueIdentifier>{f6c872cd-d484-4379-bbd5-20339999de48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -526,6 +529,9 @@
     </ClCompile>
     <ClCompile Include="ObjectBlockBreakable.cpp">
       <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectCoin.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -864,6 +870,9 @@
     </ClInclude>
     <ClInclude Include="ObjectBlockBreakable.h">
       <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCoin.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

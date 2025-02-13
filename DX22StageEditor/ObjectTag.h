@@ -22,4 +22,5 @@ enum E_ObjectTag
 	Camera,			// カメラ
 	Light,			// ライト
 	Goal,			// ゴール
+	Coin,			// コイン
 };

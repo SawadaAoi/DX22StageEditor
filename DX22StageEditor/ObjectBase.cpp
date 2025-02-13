@@ -107,7 +107,7 @@ void ObjectBase::Update()
 		m_fDestroyTimeCnt += DELTA_TIME;
 		if (m_fDestroyTimeCnt >= m_fDestroyTime)
 		{
-			Destroy();
+			SetState(E_State::STATE_DEAD);	// ó‘Ô‚ğ”jŠü‚Éİ’è
 		}
 	}
 }

@@ -243,6 +243,7 @@ namespace DebugUI
 		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Enemy"));
 		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Terrain"));
 		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Gimmick"));
+		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Item"));
 		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Camera"));
 		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("Light"));
 		WIN_OBJ_TYPE_LIST.AddItem(Item::CreateGroup("System"));
@@ -254,6 +255,7 @@ namespace DebugUI
 		WIN_OBJ_TYPE_LIST["Enemy"].AddGroupItem(Item::CreateList("EnemyList",		Clickfunc, false, false, false, 5));
 		WIN_OBJ_TYPE_LIST["Terrain"].AddGroupItem(Item::CreateList("TerrainList",	Clickfunc, false, false, false, 5));
 		WIN_OBJ_TYPE_LIST["Gimmick"].AddGroupItem(Item::CreateList("GimmickList",	Clickfunc, false, false, false, 5));
+		WIN_OBJ_TYPE_LIST["Item"].AddGroupItem(Item::CreateList("ItemList", Clickfunc, false, false, false, 5));
 		WIN_OBJ_TYPE_LIST["Camera"].AddGroupItem(Item::CreateList("CameraList",		Clickfunc, false, false, false, 3));
 		WIN_OBJ_TYPE_LIST["Light"].AddGroupItem(Item::CreateList("LightList",		Clickfunc, false, false, false, 5));
 		WIN_OBJ_TYPE_LIST["System"].AddGroupItem(Item::CreateList("SystemList",		Clickfunc, false, false, false, 1));
@@ -358,6 +360,9 @@ namespace DebugUI
 			// ギミック
 			else if (category == ObjectTypeRegistry::ObjectCategoryType::OCT_GIMMICK)
 				WIN_OBJ_TYPE_LIST["Gimmick"]["GimmickList"].AddListItem(objectType.first.c_str());
+			// アイテム
+			else if (category == ObjectTypeRegistry::ObjectCategoryType::OCT_ITEM)
+				WIN_OBJ_TYPE_LIST["Item"]["ItemList"].AddListItem(objectType.first.c_str());
 			// カメラ
 			else if (category == ObjectTypeRegistry::ObjectCategoryType::OCT_CAMERA)
 				WIN_OBJ_TYPE_LIST["Camera"]["CameraList"].AddListItem(objectType.first.c_str());
