@@ -59,7 +59,7 @@ public:
 	DirectX::XMMATRIX ToDirectXMatrix() const;			// DirectXの行列に変換
 	DirectX::XMFLOAT4 ToDirectXFloat4() const;			// DirectXのXMFLOAT4に変換
 	DirectX::XMVECTOR ToXMVECTOR() const;				// DirectXのXMVECTORに変換
-	Vector3<float>	  ToEulerAngle() const;				// オイラー角に変換
+	Vector3<float>	  ToEulerAngle(bool bRange360 = false) const;				// オイラー角に変換
 	static Quaternion FromDirectXMatrix(DirectX::XMMATRIX matrix);	// 行列からクォータニオンに変換
 	static Quaternion FromEulerAngle(Vector3<float> fEulerAngle);	// オイラー角からクォータニオンに変換
 	static Quaternion FromXMVECTOR(DirectX::XMVECTOR vec);			// XMVECTORからクォータニオンに変換

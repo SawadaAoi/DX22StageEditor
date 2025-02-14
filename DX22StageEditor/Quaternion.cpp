@@ -410,38 +410,56 @@ DirectX::XMVECTOR Quaternion::ToXMVECTOR() const
 	-------------------------------------
 	内容：クォータニオンをオイラー角に変換する
 	-------------------------------------
+	引数1：bool bRange360	0～360に変換するかどうか
+	-------------------------------------
 	戻り値：Vector3<float>	オイラー角
 =========================================== */
-Vector3<float> Quaternion::ToEulerAngle() const
+Vector3<float> Quaternion::ToEulerAngle(bool bRange360) const
 {
-	float fYaw, fPitch, fRoll;
+	float fRoll, fPitch, fYaw;
 
 	// ロール
-	float fSinRoll = 2.0f * (m_fAngle * m_fAxis.x + m_fAxis.y * m_fAxis.z);
-	float fCosRoll = 1.0f - 2.0f * (m_fAxis.x * m_fAxis.x + m_fAxis.y * m_fAxis.y);
-	fRoll = std::atan2f(fSinRoll, fCosRoll);
+	fRoll = asinf(2.0f * (m_fAngle * m_fAxis.x + m_fAxis.y * m_fAxis.z));
 
-	// ピッチ
-	float fSinPitch = 2.0f * (m_fAngle * m_fAxis.y - m_fAxis.z * m_fAxis.x);
-
-	// 絶対値が1以上の場合は90度の場合
-	if (std::abs(fSinPitch) >= 1.0f)
+	// ロール(X)が0かどうかで分岐
+	float absX = fabsf(cosf(fRoll));
+	bool bIsZero = absX < 0.0001f;
+	if (bIsZero)
 	{
-		// ピッチが90度の場合
-		fPitch = std::copysignf(MathUtils::PI / 2.0f, fSinPitch);	// copysignf：符号をコピー
+		// ピッチ
+		fPitch = 0.0f;
+
+		// ヨー
+		float a = 2.0f * (m_fAxis.x * m_fAxis.y + m_fAxis.z * m_fAngle);
+		float b = (2.0f * (m_fAngle * m_fAngle)) + (2.0f * (m_fAxis.x * m_fAxis.x)) - 1.0f;
+		fYaw = atan2f(a , b);
 	}
 	else
 	{
-		fPitch = std::asinf(fSinPitch);	// 通常の場合
+		// ピッチ
+		float a = 2.0f * (m_fAxis.x * m_fAxis.z - m_fAxis.y * m_fAngle);
+		float b = (2.0f * (m_fAngle * m_fAngle)) + (2.0f * (m_fAxis.z * m_fAxis.z)) - 1.0f;
+		fPitch = atan2f(-a , b);
+
+		// ヨー
+		float c = 2.0f * (m_fAxis.x * m_fAxis.y - m_fAxis.z * m_fAngle);
+		float d = (2.0f * (m_fAngle * m_fAngle)) + (2.0f * (m_fAxis.y * m_fAxis.y)) - 1.0f;
+		fYaw = atanf(-(c / d));
+		fYaw = atan2f(-c , d);
+
 	}
 
-	// ヨー
-	float fSinYaw = 2.0f * (m_fAngle * m_fAxis.z + m_fAxis.x * m_fAxis.y);
-	float fCosYaw = 1.0f - 2.0f * (m_fAxis.y * m_fAxis.y + m_fAxis.z * m_fAxis.z);
-	fYaw = std::atan2f(fSinYaw, fCosYaw);
+	// 0～360に変換
+	if (bRange360)
+	{
+		fRoll	= MathUtils::ConvertTo0To2Pi(fRoll);
+		fPitch	= MathUtils::ConvertTo0To2Pi(fPitch);
+		fYaw	= MathUtils::ConvertTo0To2Pi(fYaw);
+	}
 
 	return Vector3<float>(fRoll, fPitch, fYaw);
 }
+
 
 /* ========================================
 	DirectX行列変換取得関数
@@ -478,11 +496,11 @@ Quaternion Quaternion::FromDirectXMatrix(DirectX::XMMATRIX matrix)
 =========================================== */
 Quaternion Quaternion::FromEulerAngle(Vector3<float> fEulerAngle)
 {
-	Quaternion qRoll	= Quaternion::FromAxisAngleNormalized(Vector3<float>::Forward(), fEulerAngle.z);	// ロール回転
-	Quaternion qPitch	= Quaternion::FromAxisAngleNormalized(Vector3<float>::Right(), fEulerAngle.x);		// ピッチ回転
-	Quaternion qYaw		= Quaternion::FromAxisAngleNormalized(Vector3<float>::Up(), fEulerAngle.y);			// ヨー回転
+	Quaternion	qRoll = Quaternion::FromAxisAngleNormalized(Vector3<float>::Right(), fEulerAngle.x);	// ロール回転
+	Quaternion 	qPitch = Quaternion::FromAxisAngleNormalized(Vector3<float>::Up(), fEulerAngle.y);		// ピッチ回転
+	Quaternion	qYaw = Quaternion::FromAxisAngleNormalized(Vector3<float>::Forward(), fEulerAngle.z);	// ヨー回転
 
-	Quaternion reQ = qYaw * qPitch * qRoll;// ヨー、ピッチ、ロールの順で掛ける
+	Quaternion reQ = qYaw * qRoll * qPitch;// ヨー、ピッチ、ロールの順で掛ける
 
 	return reQ;
 }

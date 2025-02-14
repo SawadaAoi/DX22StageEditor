@@ -47,4 +47,13 @@ namespace MathUtils
 			return dist(gen);
 		}
 	}
+
+	inline double ConvertTo0To2Pi(double value) {
+		// 負の値の場合、2πを加えて正の範囲に移す
+		while (value < 0)
+			value += 2 * PI;
+
+		// 2πを超える値の場合、2πで割った余りを取る
+		return fmod(value, 2 * PI);
+	}
 }
