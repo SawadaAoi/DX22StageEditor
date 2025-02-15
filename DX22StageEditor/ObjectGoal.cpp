@@ -40,6 +40,7 @@ ObjectGoal::ObjectGoal(SceneBase* pScene)
 	, m_pModel(nullptr)
 	, m_fAnimeTimeCnt(0.0f)
 	, m_bIsSetBasePos(false)
+	, m_bOnFloatAnime(true)
 {
 	SetTag(E_ObjectTag::Goal);	// タグの設定
 }
@@ -61,6 +62,7 @@ void ObjectGoal::InitLocal()
 	SetLightMaterial(LIGHT_DIFFUSE, LIGHT_SPECULAR, LIGHT_SHININESS);
 }
 
+
 /* ========================================
 	更新関数
 	-------------------------------------
@@ -71,7 +73,7 @@ void ObjectGoal::UpdateLocal()
 	// 基準座標設定
 	if (!m_bIsSetBasePos) 
 	{
-		m_vBasePos = GetTransform()->GetPosition();	// 基準座標設定
+		m_vBasePos = GetTransform()->GetLocalPosition();	// 基準座標設定
 		m_bIsSetBasePos = true;
 	}
 
@@ -81,14 +83,16 @@ void ObjectGoal::UpdateLocal()
 		m_pModel->SetIsVisible(false);
 	}
 
+	if (!m_bOnFloatAnime) return;	// アニメーションフラグが立っていない場合は処理しない
+
 	GetTransform()->RotateY(ROTATE_SPEED * DELTA_TIME);	// 回転
 
 	// 上下にふわふわと揺らす
 	m_fAnimeTimeCnt += DELTA_TIME;	// アニメーション時間カウント
 
-	Vector3<float> vPos = m_vBasePos;		// 現在の座標取得
+	Vector3<float> vPos = m_vBasePos;								// 現在の座標取得
 	vPos.y += sinf(m_fAnimeTimeCnt * FLOAT_SPEED) * FLOAT_RANGE;	// 上下移動
-	GetTransform()->SetPosition(vPos);							// 座標設定
+	GetTransform()->SetLocalPosition(vPos);								// 座標設定
 }
 
 /* ========================================
@@ -126,3 +130,61 @@ void ObjectGoal::SetIsGoal(bool bIsGoal)
 {
 	m_bIsGoal = bIsGoal;
 }
+
+/* ========================================
+	ローカルデータ出力関数
+	-------------------------------------
+	内容：オブジェクトのローカルデータをファイルに書き込む
+	-------------------------------------
+	引数1：ファイル
+=========================================== */
+void ObjectGoal::OutPutLocalData(std::ofstream& file)
+{
+	S_SaveData data;
+
+	// 基本座標
+	data.vBasePos = m_vBasePos;
+
+	// ファイルに書き込む
+	file.write((char*)&data, sizeof(S_SaveData));
+}
+
+/* ========================================
+	ローカルデータ入力関数
+	-------------------------------------
+	内容：ファイルからオブジェクトのローカルデータを読み込む
+	-------------------------------------
+	引数1：ファイル
+=========================================== */
+void ObjectGoal::InputLocalData(std::ifstream& file)
+{
+	S_SaveData data;
+
+	// ファイルから読み込む
+	file.read((char*)&data, sizeof(S_SaveData));
+
+	// 基本座標
+	m_vBasePos = data.vBasePos;
+}
+
+#ifdef _DEBUG
+/* ========================================
+	デバッグ関数
+	-------------------------------------
+	内容：デバッグ用の処理
+======================================== */
+void ObjectGoal::DebugLocal(DebugUI::Window& window)
+{
+	using namespace DebugUI;
+
+	Item* pGroupGoal = Item::CreateGroup("Goal");
+
+	// 基本座標
+	pGroupGoal->AddGroupItem(Item::CreateBind("BasePos", Item::Vector, &m_vBasePos));
+
+	// 浮遊アニメーション
+	pGroupGoal->AddGroupItem(Item::CreateBind("OnFloatAnime", Item::Bool, &m_bOnFloatAnime));
+
+	window.AddItem(pGroupGoal);
+}
+#endif // _DEBUG

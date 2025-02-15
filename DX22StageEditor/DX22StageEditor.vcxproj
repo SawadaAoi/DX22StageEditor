@@ -198,6 +198,8 @@
     <ClCompile Include="ObjectCameraGameClear.cpp" />
     <ClCompile Include="ObjectCameraPlayer.cpp" />
     <ClCompile Include="ObjectCoin.cpp" />
+    <ClCompile Include="ObjectCoinGroupCircle.cpp" />
+    <ClCompile Include="ObjectCoinGroupLinear.cpp" />
     <ClCompile Include="ObjectEnemy.cpp" />
     <ClCompile Include="ObjectEnemyChase.cpp" />
     <ClCompile Include="ObjectEnemyLinear.cpp" />
@@ -309,6 +311,8 @@
     <ClInclude Include="ObjectCameraGameClear.h" />
     <ClInclude Include="ObjectCameraPlayer.h" />
     <ClInclude Include="ObjectCoin.h" />
+    <ClInclude Include="ObjectCoinGroupCircle.h" />
+    <ClInclude Include="ObjectCoinGroupLinear.h" />
     <ClInclude Include="ObjectEnemy.h" />
     <ClInclude Include="ObjectEnemyChase.h" />
     <ClInclude Include="ObjectEnemyLinear.h" />

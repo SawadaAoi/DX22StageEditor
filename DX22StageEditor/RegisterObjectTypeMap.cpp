@@ -32,6 +32,8 @@
 
 // アイテム
 #include "ObjectCoin.h"
+#include "ObjectCoinGroupCircle.h"
+#include "ObjectCoinGroupLinear.h"
 
 // カメラ
 #include "ObjectCamera.h"
@@ -87,6 +89,8 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 
 	// アイテム
 	REGISTER_OBJECT_TYPE(ObjectCoin, OCT_ITEM);
+	REGISTER_OBJECT_TYPE(ObjectCoinGroupCircle, OCT_ITEM);
+	REGISTER_OBJECT_TYPE(ObjectCoinGroupLinear, OCT_ITEM);
 
 	// カメラ
 	REGISTER_OBJECT_TYPE(ObjectCamera, OCT_CAMERA);

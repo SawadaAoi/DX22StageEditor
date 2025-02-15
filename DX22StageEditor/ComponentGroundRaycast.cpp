@@ -30,7 +30,6 @@ ComponentGroundRaycast::ComponentGroundRaycast(ObjectBase* pOwner)
 	, m_vStartPosOffset(0.0f, 0.0f, 0.0f)
 	, m_vDirection(0.0f, -1.0f, 0.0f)
 	, m_fRayLength(1.0f)
-	, m_pOwnerTransform(nullptr)
 	, m_pRayLine(nullptr)
 	, m_vHitPos(0.0f, 0.0f, 0.0f)
 	, m_sHitObjName("")
@@ -54,8 +53,7 @@ ComponentGroundRaycast::ComponentGroundRaycast(ObjectBase* pOwner)
 =========================================== */
 void ComponentGroundRaycast::Init()
 {
-	m_pOwnerTransform	= m_pOwnerObj->GetComponent<ComponentTransform>();
-	m_vStartPos			= m_pOwnerTransform->GetPosition() + m_vStartPosOffset;
+	m_vStartPos			= m_pOwnerObj->GetTransform()->GetPosition() + m_vStartPosOffset;
 	m_pRayLine			= std::make_unique<ShapeLine>(m_vStartPos, m_vStartPos + (m_vDirection * m_fRayLength));
 	for (int i = 0; i < 3; i++)
 	{
@@ -70,7 +68,7 @@ void ComponentGroundRaycast::Init()
 =========================================== */
 void ComponentGroundRaycast::Update()
 {
-	m_vStartPos = m_pOwnerTransform->GetPosition() + m_vStartPosOffset;
+	m_vStartPos = m_pOwnerObj->GetTransform()->GetPosition() + m_vStartPosOffset;
 	m_pRayLine->UpdateLine(1, m_vStartPos, m_vStartPos + (m_vDirection * m_fRayLength), ColorVec3::RED);
 
 	CheckGround();

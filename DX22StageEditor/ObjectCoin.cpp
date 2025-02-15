@@ -59,6 +59,7 @@ void ObjectCoin::InitLocal()
 
 	// Õ“Ë”»’èİ’è
 	m_pCompCollisionSphere->SetTrigger(true);
+	m_pCompCollisionSphere->SetDynamic(false);
 
 	// ‘å‚«‚³İ’è
 	m_pCompTransform->Scale(Vector3<float>(COIN_SCALE, COIN_SCALE, COIN_SCALE));
@@ -77,8 +78,8 @@ void ObjectCoin::UpdateLocal()
 	{
 		// ’n–Ê‚Éİ’u‚µ‚Ä‚¢‚éˆÊ’u‚É‚‚³‚ğ‡‚í‚¹‚é
 		Vector3<float> vPos = m_pCompTransform->GetPosition();
-		vPos.y = m_pCompGroundRaycast->GetHitPos().y + GetTransform()->GetScale().y / 2;
-		m_pCompTransform->SetPosition(vPos);
+		float fAdjustHeight = m_pCompGroundRaycast->GetHitPos().y + (m_pCompTransform->GetScale().y * 0.5f) - vPos.y;
+		m_pCompTransform->TranslateY(fAdjustHeight);
 	}
 }
 

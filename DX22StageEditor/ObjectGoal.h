@@ -21,6 +21,12 @@ class ObjectGoal :
     public ObjectBase
 {
 public:
+	// セーブデータ
+	struct S_SaveData
+	{
+		Vector3<float> vBasePos;	// 座標
+	};
+public:
 	ObjectGoal(SceneBase* pScene);
 
 	void InitLocal();
@@ -32,15 +38,23 @@ public:
 	bool GetIsGoal();
 
 	// セッター
-	void SetIsGoal(bool bIsGoal);
+	void SetIsGoal(bool bIsGoal);	// データ保存
+
+	void OutPutLocalData(std::ofstream& file) override;
+	void InputLocalData(std::ifstream& file) override;
 
 	DEFINE_OBJECT_TYPE(ObjectGoal)
+#ifdef _DEBUG
+	void DebugLocal(DebugUI::Window& window);
+#endif // DEBUG
 private:
 	ComponentModelStatic* m_pModel;	// モデルコンポーネント
 
-	bool m_bIsGoal;				// true: ゴール / false: 未ゴール
-	bool m_bIsSetBasePos;		// 基準座標設定フラグ
-	float m_fAnimeTimeCnt;		// アニメーション時間カウント
-	Vector3<float> m_vBasePos;	// 基準座標
+	bool			m_bIsGoal;			// true: ゴール / false: 未ゴール
+	bool			m_bIsSetBasePos;	// 基準座標設定フラグ
+	float			m_fAnimeTimeCnt;	// アニメーション時間カウント
+	Vector3<float>	m_vBasePos;			// 基準座標
+
+	bool m_bOnFloatAnime;				// 上下アニメーションフラグ
 };
 

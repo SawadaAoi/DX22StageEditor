@@ -533,6 +533,12 @@
     <ClCompile Include="ObjectCoin.cpp">
       <Filter>ソース ファイル\App\GameObject\StageObject\Item</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectCoinGroupCircle.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectCoinGroupLinear.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">
@@ -872,6 +878,12 @@
       <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
     </ClInclude>
     <ClInclude Include="ObjectCoin.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCoinGroupCircle.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCoinGroupLinear.h">
       <Filter>ソース ファイル\App\GameObject\StageObject\Item</Filter>
     </ClInclude>
   </ItemGroup>
