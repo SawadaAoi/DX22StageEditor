@@ -56,6 +56,10 @@ void ObjectGround::OutPutLocalData(std::ofstream& file)
 	data.nTextureID = TEXTURE_MNG_INST.GetTextureKey(m_pCompGeometry->GetTexture());
 	// テクスチャ使用フラグ
 	data.bUseTex = m_pCompGeometry->GetIsTex();
+	// テクスチャスケール
+	data.vUvScale = m_pCompGeometry->GetUvScale();
+	// テクスチャオフセット
+	data.vUvOffset = m_pCompGeometry->GetUvOffset();
 
 	// ファイルに書き込む
 	file.write((char*)&data, sizeof(S_SaveData));
@@ -77,6 +81,9 @@ void ObjectGround::InputLocalData(std::ifstream& file)
 	m_pCompGeometry->SetTexture(GET_TEXTURE_DATA((TextureManager::E_TEX_KEY)data.nTextureID));
 	// テクスチャ使用フラグ
 	m_pCompGeometry->SetIsTex(data.bUseTex);
+	// テクスチャスケール
+	m_pCompGeometry->SetUvScale(data.vUvScale);
+	// テクスチャオフセット
+	m_pCompGeometry->SetUvOffset(data.vUvOffset);
 }
-
 

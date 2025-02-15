@@ -19,13 +19,15 @@ class ComponentGround;
 
 // =============== クラス定義 =====================
 class ObjectGround :
-	public ObjectBase
+    public ObjectBase
 {
 public:
 	struct S_SaveData
 	{
 		int nTextureID;	// テクスチャID
 		bool bUseTex;	// テクスチャ使用フラグ
+		Vector2<float> vUvScale;		// テクスチャスケール
+		Vector2<float> vUvOffset;	// テクスチャオフセット
 	};
 public:
 	ObjectGround(SceneBase* pScene);
