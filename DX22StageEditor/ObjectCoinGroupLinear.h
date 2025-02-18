@@ -30,6 +30,7 @@ public:
 	};
 public:
 	ObjectCoinGroupLinear(SceneBase* pScene);
+	void InitLocal() override;
 	void UpdateLocal() override;
 
 	// ÉQÉbÉ^Å[

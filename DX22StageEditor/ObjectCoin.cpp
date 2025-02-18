@@ -72,6 +72,8 @@ void ObjectCoin::InitLocal()
 =========================================== */
 void ObjectCoin::UpdateLocal()
 {
+	if (!m_pCompRigidbody->GetUseGravity()) return;
+
 	// ’n–Ê”»’è
 	// ’n–Ê‚ÉÝ’u‚µ‚Ä‚¢‚éê‡
 	if (m_pCompGroundRaycast->GetHitFlg())

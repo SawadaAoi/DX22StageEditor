@@ -375,6 +375,15 @@ std::string SceneBase::CreateUniqueName(std::string sName)
 			pSelectObjects.push_back(pObject.get());
 		}
 	}
+	// 一時保存オブジェクト配列
+	for (auto& pObject : m_pStandbyObjects)
+	{
+		if (pObject->GetName().find(sName) != std::string::npos)
+		{
+			pSelectObjects.push_back(pObject.get());
+		}
+	}
+
 	// 重複していない場合はそのまま返す
 	if (pSelectObjects.size() == 0) return sName;
 

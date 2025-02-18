@@ -14,6 +14,10 @@
 #include "ComponentTransform.h"
 #include "ComponentRigidbody.h"
 
+#ifdef _DEBUG
+#include "ComponentCollisionSphere.h"	// debugの見た目用
+#endif // DEBUG
+
 // =============== 定数定義 =======================
 const int	DEFAULT_COIN_NUM	= 5;	// コイン数
 const float DEFAULT_COIN_RADIUS = 2.0f;	// コイン円半径
@@ -34,6 +38,18 @@ ObjectCoinGroupCircle::ObjectCoinGroupCircle(SceneBase* pScene)
 	, m_bIsInitCreate(false)
 	, m_bUseGravity(true)
 {
+}
+
+/* ========================================
+	初期化関数
+	-------------------------------------
+	内容：オブジェクトの初期化
+=========================================== */
+void ObjectCoinGroupCircle::InitLocal()
+{
+#ifdef _DEBUG
+	AddComponent<ComponentCollisionSphere>()->SetTrigger(true);	// debugの見た目用
+#endif // DEBUG
 }
 
 /* ========================================
@@ -61,10 +77,10 @@ void ObjectCoinGroupCircle::CreateCoin()
 {
 	float fCreateRad = 0.0f;
 
-	std::string strCoinName = "Coin_";
+	std::string strCoinName = "Coin";
 	for (int i = 0; i < m_nCoinNum; i++)
 	{
-		ObjectCoin* pCoin = m_pOwnerScene->AddSceneObject<ObjectCoin>(strCoinName + std::to_string(i));
+		ObjectCoin* pCoin = m_pOwnerScene->AddSceneObject<ObjectCoin>(strCoinName);
 
 		Vector2<float> vDirection	= Vector2<float>(cosf(fCreateRad), sinf(fCreateRad));	// 生成方向ベクトル
 		Vector3<float> vOffset		= Vector3<float>(vDirection.x * m_fCircleRadius, 0.0f, vDirection.y * m_fCircleRadius);
@@ -205,6 +221,9 @@ void ObjectCoinGroupCircle::DebugLocal(DebugUI::Window& window)
 			*fRadius = m_fCircleRadius;
 		}
 	}));
+
+	// 重力使用フラグ
+	pGroupCoinCircle->AddGroupItem(Item::CreateBind("UseGravity", Item::Kind::Bool, &m_bUseGravity));
 
 	// コイン生成ボタン
 	pGroupCoinCircle->AddGroupItem(Item::CreateCallBack("CreateCoin", Item::Kind::Command,

@@ -30,6 +30,7 @@ public:
 	};
 public:
 	ObjectCoinGroupCircle(SceneBase* pScene);
+	void InitLocal() override;
 	void UpdateLocal() override;
 
 	// ÉQÉbÉ^Å[

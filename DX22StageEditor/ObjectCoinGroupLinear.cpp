@@ -14,6 +14,11 @@
 #include "ComponentTransform.h"
 #include "ComponentRigidbody.h"
 
+#ifdef _DEBUG
+#include "ComponentCollisionSphere.h"	// debugの見た目用
+#endif // DEBUG
+
+
 // =============== 定数定義 =======================
 const int	DEFAULT_COIN_NUM	= 5;	// コイン数
 const float DEFAULT_COIN_SPACE	= 1.0f;	// コイン間隔
@@ -36,6 +41,17 @@ ObjectCoinGroupLinear::ObjectCoinGroupLinear(SceneBase* pScene)
 {
 }
 
+/* ========================================
+	初期化関数
+	-------------------------------------
+	内容：オブジェクトの初期化
+=========================================== */
+void ObjectCoinGroupLinear::InitLocal()
+{
+#ifdef _DEBUG
+	AddComponent<ComponentCollisionSphere>()->SetTrigger(true);	// debugの見た目用
+#endif // DEBUG
+}
 
 /* ========================================
 	更新関数
@@ -73,10 +89,10 @@ void ObjectCoinGroupLinear::CreateCoin()
 		Vector3<float>(vDirection.x * fCenterOffset, 0.0f, vDirection.y * fCenterOffset);
 
 	// コインの生成
-	std::string strCoinName = "Coin_";
+	std::string strCoinName = "Coin";
 	for (int i = 0; i < m_nCoinNum; i++)
 	{
-		ObjectCoin* pCoin = m_pOwnerScene->AddSceneObject<ObjectCoin>(strCoinName + std::to_string(i));
+		ObjectCoin* pCoin = m_pOwnerScene->AddSceneObject<ObjectCoin>(strCoinName);
 		// 親が向いている方向にコインを配置
 		Vector3<float> vOffset = Vector3<float>(vDirection.x * m_fCoinSpace * i, 0.0f, vDirection.y * m_fCoinSpace * i);	
 
@@ -214,6 +230,9 @@ void ObjectCoinGroupLinear::DebugLocal(DebugUI::Window& window)
 			*fSpace = m_fCoinSpace;
 		}
 	}));
+
+	// 重力使用フラグ
+	pGroupCoinLinear->AddGroupItem(Item::CreateBind("UseGravity", Item::Kind::Bool, &m_bUseGravity));
 
 	// コイン生成ボタン
 	pGroupCoinLinear->AddGroupItem(Item::CreateCallBack("CreateCoin", Item::Kind::Command,
