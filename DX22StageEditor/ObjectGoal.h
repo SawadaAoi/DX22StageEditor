@@ -51,7 +51,6 @@ private:
 	ComponentModelStatic* m_pModel;	// モデルコンポーネント
 
 	bool			m_bIsGoal;			// true: ゴール / false: 未ゴール
-	bool			m_bIsSetBasePos;	// 基準座標設定フラグ
 	float			m_fAnimeTimeCnt;	// アニメーション時間カウント
 	Vector3<float>	m_vBasePos;			// 基準座標
 

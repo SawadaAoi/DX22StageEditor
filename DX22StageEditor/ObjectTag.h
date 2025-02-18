@@ -12,15 +12,16 @@
 // ===列挙定義===========
 enum E_ObjectTag
 {
-	None,			// デフォルト
-	Player,			// プレイヤー
-	PlayerBullet,	// プレイヤーの弾
-	PlayerStart,	// プレイヤーの開始地点
-	Enemy,			// 敵
-	Ground,			// 地面
-	Wall,			// 壁
-	Camera,			// カメラ
-	Light,			// ライト
-	Goal,			// ゴール
-	Coin,			// コイン
+	None,				// デフォルト
+	Player,				// プレイヤー
+	PlayerBullet,		// プレイヤーの弾
+	PlayerStart,		// プレイヤーの開始地点
+	Enemy,				// 敵
+	Ground,				// 地面
+	Wall,				// 壁
+	Camera,				// カメラ
+	Light,				// ライト
+	Goal,				// ゴール
+	Coin,				// コイン
+	StageSampleParent,	// ステージサンプル親
 };

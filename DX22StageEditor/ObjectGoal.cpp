@@ -39,8 +39,8 @@ ObjectGoal::ObjectGoal(SceneBase* pScene)
 	, m_bIsGoal(false)
 	, m_pModel(nullptr)
 	, m_fAnimeTimeCnt(0.0f)
-	, m_bIsSetBasePos(false)
 	, m_bOnFloatAnime(true)
+	, m_vBasePos(Vector3<float>(0.0f, 0.0f, 0.0f))
 {
 	SetTag(E_ObjectTag::Goal);	// タグの設定
 }
@@ -70,13 +70,6 @@ void ObjectGoal::InitLocal()
 ========================================= */
 void ObjectGoal::UpdateLocal()
 {
-	// 基準座標設定
-	if (!m_bIsSetBasePos) 
-	{
-		m_vBasePos = GetTransform()->GetLocalPosition();	// 基準座標設定
-		m_bIsSetBasePos = true;
-	}
-
 	// ゴールしたら非表示にする
 	if (m_bIsGoal)
 	{
@@ -90,9 +83,9 @@ void ObjectGoal::UpdateLocal()
 	// 上下にふわふわと揺らす
 	m_fAnimeTimeCnt += DELTA_TIME;	// アニメーション時間カウント
 
-	Vector3<float> vPos = m_vBasePos;								// 現在の座標取得
-	vPos.y += sinf(m_fAnimeTimeCnt * FLOAT_SPEED) * FLOAT_RANGE;	// 上下移動
-	GetTransform()->SetLocalPosition(vPos);								// 座標設定
+	Vector3<float> vMovePos = Vector3<float>::Zero();					// 移動座標
+	vMovePos.y += sinf(m_fAnimeTimeCnt * FLOAT_SPEED) * FLOAT_RANGE;	// 上下移動
+	GetTransform()->SetLocalPosition(m_vBasePos + vMovePos);			// 座標設定
 }
 
 /* ========================================

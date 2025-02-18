@@ -53,6 +53,7 @@
 #include "ObjectGoal.h"
 #include "ObjectSkyBox.h"
 #include "ObjectRespawn.h"
+#include "ObjectStageSampleParent.h"
 
 
 /* ========================================
@@ -110,7 +111,7 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectSkyBox, OCT_OTHER);
 	REGISTER_OBJECT_TYPE(ObjectGoal, OCT_OTHER);
 	REGISTER_OBJECT_TYPE(ObjectRespawn, OCT_OTHER);
-
+	REGISTER_OBJECT_TYPE(ObjectStageSampleParent, OCT_OTHER);
 
 }
 

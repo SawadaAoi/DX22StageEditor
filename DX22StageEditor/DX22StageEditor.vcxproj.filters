@@ -207,6 +207,9 @@
     <Filter Include="ソース ファイル\App\GameObject\StageObject\Item">
       <UniqueIdentifier>{f6c872cd-d484-4379-bbd5-20339999de48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\Other\StageSelect">
+      <UniqueIdentifier>{5f9af61f-a0b1-4a0d-aaf2-395f55ae627e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -538,6 +541,9 @@
     </ClCompile>
     <ClCompile Include="ObjectCoinGroupLinear.cpp">
       <Filter>ソース ファイル\App\GameObject\StageObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectStageSampleParent.cpp">
+      <Filter>ソース ファイル\App\GameObject\Other\StageSelect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -885,6 +891,9 @@
     </ClInclude>
     <ClInclude Include="ObjectCoinGroupLinear.h">
       <Filter>ソース ファイル\App\GameObject\StageObject\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectStageSampleParent.h">
+      <Filter>ソース ファイル\App\GameObject\Other\StageSelect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
