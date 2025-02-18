@@ -317,6 +317,34 @@ int ObjectBase::GetGenerationCount()
 }
 
 /* ========================================
+	子孫チェック関数
+	-------------------------------------
+	内容：対象のオブジェクトが子孫かどうかをチェックする
+	-------------------------------------
+	引数1：対象のオブジェクト
+=========================================== */
+bool ObjectBase::CheckIsDescendant(ObjectBase* pObject)
+{
+	// 子オブジェクトがない場合は処理しない
+	if (m_pChildObjs.empty()) return false;
+
+	// 子オブジェクトを検索
+	for (auto pChild : m_pChildObjs)
+	{
+		// 子オブジェクトが対象のオブジェクトと一致した場合はtrueを返す
+		if (pChild == pObject) return true;
+
+		// 子オブジェクトの子孫を再帰的に検索
+		if (pChild->GetChildObjects().size() > 0)
+		{
+			// 子オブジェクトの子孫を再帰的に検索
+			if (pChild->CheckIsDescendant(pObject)) return true;
+		}
+	}
+
+	return false;
+}
+/* ========================================
 	出力データ個別関数
 	-------------------------------------
 	内容：オブジェクト毎に出力するデータを設定
@@ -620,10 +648,13 @@ DebugUI::Item* ObjectBase::InitParentList()
 	// シーン上のオブジェクトをリストに追加
 	for (const auto pObj : SceneManager::GetScene()->GetAllSceneObjects())
 	{
-		if (pObj->GetName() == this->GetName()) continue;	// 自身は追加しない
+		if (pObj->GetName() == this->GetName()) continue;  // 自身は除外
+		if (CheckIsDescendant(pObj)) continue;	// 子オブジェクトは除外(自身の子階層に存在する場合は除外
 
-		pParentList->AddListItem(pObj->GetName().c_str());	// シーン上のオブジェクト名を追加
+		pParentList->AddListItem(pObj->GetName().c_str());  // シーン上のオブジェクト名を追加
+
 	}
+
 	// 親オブジェクトがある場合
 	if (m_pParentObj)
 	{
@@ -653,13 +684,8 @@ void ObjectBase::ChangeName()
 
 	sReName = SceneManager::GetScene()->CreateUniqueName(sReName);	// 重複しない名前に変更
 
-	// オブジェクト名変更
-	int listNo = ITEM_OBJ_LIST.GetListNo(this->GetListName().c_str());			// オブジェクト一覧の表示位置取得
-	ITEM_OBJ_LIST.RemoveListItem(sOldName.c_str());	// 変更前の名前をリストから削除
-	
+	// オブジェクト名変更	
 	this->SetName(sReName);												// 内部の名前変更
-	ITEM_OBJ_LIST.InsertListItem(this->GetListName().c_str(), listNo);	// オブジェクト一覧に変更後の名前を追加
-
 	WIN_OBJ_INFO["ObjectName"].SetText(this->GetName().c_str());		// オブジェクト詳細の名前を変更
 }
 

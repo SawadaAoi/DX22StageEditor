@@ -743,6 +743,18 @@ void SceneBase::ReloadDebugObjectList()
 			AddObjectListChild(pObject);
 	}
 
+	// 名前変更や、親変更などで、オブジェクト一覧の位置がずれるため、選択中のオブジェクトを再選択する
+	// 選択中のオブジェクトがある場合
+	if (m_pSelectObj)
+	{
+		int nSelectNo = ITEM_OBJ_LIST.GetListNo(m_pSelectObj->GetListName().c_str());	// 選択中のオブジェクト番号を取得
+
+		if (m_nObjectListSelectNo != nSelectNo)
+		{
+			ITEM_OBJ_LIST.SetListNo(nSelectNo);		// 選択中のオブジェクトを選択状態にする
+			m_nObjectListSelectNo = nSelectNo;		// 選択中のオブジェクト番号を保持
+		}
+	}
 }
 
 

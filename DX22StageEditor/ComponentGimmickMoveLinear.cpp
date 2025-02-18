@@ -112,7 +112,6 @@ void ComponentGimmickMoveLinear::Move()
 
 	// 移動先とのベクトルを計算
 	Vector3<float> vDir = vCurrentWayPoint - m_pCompTransform->GetPosition();
-	vDir.y = 0.0f;
 
 	// 移動先に到達している場合
 	if (vDir.LengthSq() < LIMIT_DISTANCE_SQ)
@@ -144,7 +143,6 @@ void ComponentGimmickMoveLinear::ReverseMove()
 
 	// 移動先とのベクトルを計算
 	Vector3<float> vDir = vCurrentWayPoint - m_pCompTransform->GetPosition();
-	vDir.y = 0.0f;
 
 	// 移動先に到達している場合
 	if (vDir.LengthSq() < LIMIT_DISTANCE_SQ)

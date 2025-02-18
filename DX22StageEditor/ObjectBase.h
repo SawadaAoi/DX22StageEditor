@@ -97,6 +97,7 @@ public:
 	void RemoveChildObject(ObjectBase* pChildObj);	// 子オブジェクト解除
 	void RemoveAllChildObjects();					// 全子オブジェクト解除
 	int GetGenerationCount();						// 世代数の取得
+	bool CheckIsDescendant(ObjectBase* pObject);	// 子孫かどうかの判定
 
 
 	virtual void OutPutLocalData(std::ofstream& file);	// オブジェクトのデータ出力
