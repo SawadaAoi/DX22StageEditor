@@ -14,6 +14,8 @@
 #include "DebugMenu.h"
 #include "SceneManager.h"
 
+#include "ObjectTypeRegistry.h"
+
 // =============== 定数定義 =======================
 const float DEFAULT_LIGHT_DIFFUSE = 1.0f;	// デフォルト拡散光
 const float DEFAULT_LIGHT_SPECULAR = 0.0f;	// デフォルト鏡面光
@@ -344,6 +346,62 @@ bool ObjectBase::CheckIsDescendant(ObjectBase* pObject)
 
 	return false;
 }
+
+/* ========================================
+	コピー関数
+	-------------------------------------
+	内容：オブジェクトをコピーする
+	-------------------------------------
+	戻り値：コピーされたオブジェクト
+=========================================== */
+ObjectBase* ObjectBase::Copy()
+{
+	// トランスフォーム情報を取得
+	ComponentTransform* pOriTrans = GetTransform();
+
+	ObjectBase* pCopyObj = OBJ_TYPE_REGISTRY_INST.CreateObject(GetObjClassName());
+	pCopyObj->Init(m_pOwnerScene->CreateUniqueName(GetName()));	// オブジェクト初期化(名前重複避ける)
+	ComponentTransform* pCopyTrans = pCopyObj->GetComponent<ComponentTransform>();
+	pCopyTrans->SetPosition(GetTransform()->GetPosition());
+	pCopyTrans->SetRotation(GetTransform()->GetRotation());
+	pCopyTrans->SetScale(GetTransform()->GetScale());
+
+	CopyLocal(pCopyObj);	// オブジェクト個別のコピー処理
+
+	m_pOwnerScene->AddSceneObjectBase(pCopyObj);	// シーンにオブジェクトを追加
+
+	// 親子関係を再現
+	// 親オブジェクトがある場合
+	if (this->GetParentObject())
+	{
+		pCopyObj->SetParentObject(this->GetParentObject());
+	}
+
+	// 子オブジェクトがある場合
+	if (this->GetChildObjects().size() > 0)
+	{
+		for (auto& pChild : this->GetChildObjects())
+		{
+			ObjectBase* pCopyChild = pChild->Copy();
+			pCopyObj->AddChildObject(pCopyChild);
+		}
+	}
+
+	return pCopyObj;
+}
+
+/* ========================================
+	コピー関数(個別処理)
+	-------------------------------------
+	内容：オブジェクト個別のコピー処理
+	-------------------------------------
+	引数1：コピーされたオブジェクト
+=========================================== */
+void ObjectBase::CopyLocal(ObjectBase* pObject)
+{
+	// 継承して各オブジェクトで処理を記述
+}
+
 /* ========================================
 	出力データ個別関数
 	-------------------------------------

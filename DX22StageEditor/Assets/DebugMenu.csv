@@ -13,7 +13,7 @@ Bool,BasicSettings/Grid/AxisEnable,1
 Float,BasicSettings/Grid/Size,10.000000
 Float,BasicSettings/Grid/Margin,1.000000
 Color,BasicSettings/Grid/Color,0.000000/0.031373/0.000000/0.000000
-List,SceneList/SceneLists,0
+List,SceneList/SceneLists,1
 Bool,DataInOut/TransformOnly,0
 Bool,DataInOut/Camera,1
 Bool,DataInOut/Light,1

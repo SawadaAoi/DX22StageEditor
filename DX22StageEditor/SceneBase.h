@@ -90,8 +90,6 @@ private:
 	void UpdateTransformEdit();	// 変形エディタの更新
 	void AddObjectListChild(ObjectBase* pObject);
 
-	ObjectBase* CopyObject(ObjectBase* pOriginalObj);
-
 #endif // _DEBUG
 private:
 	std::vector<std::unique_ptr<ObjectBase>>	m_pObjects;			// シーンに所属するオブジェクト一覧

@@ -52,6 +52,36 @@ void ObjectBlock::InitLocal()
 }
 
 /* ========================================
+	コピー関数(個別処理)
+	-------------------------------------
+	内容：オブジェクト個別のコピー処理
+	-------------------------------------
+	引数1：コピーされたオブジェクト
+=========================================== */
+void ObjectBlock::CopyLocal(ObjectBase* pObject)
+{
+	ComponentGeometry* pCopyObjCompGeo = pObject->GetComponent<ComponentGeometry>();
+
+	// テクスチャ設定
+	for (int i = 0; i < 6; i++)
+		pCopyObjCompGeo->SetTexture(m_pCompGeometry->GetTexture(i), i);
+
+	// テクスチャ使用フラグ
+	pCopyObjCompGeo->SetIsTex(m_pCompGeometry->GetIsTex());
+
+	// 衝突判定形状
+	m_eColType = ((ObjectBlock*)pObject)->m_eColType;
+
+	// テクスチャスケール
+	for (int i = 0; i < 3; i++)
+		pCopyObjCompGeo->SetUvScale(m_pCompGeometry->GetUvScale(i), i);
+
+	// テクスチャオフセット
+	for (int i = 0; i < 3; i++)
+		pCopyObjCompGeo->SetUvOffset(m_pCompGeometry->GetUvOffset(i), i);
+}
+
+/* ========================================
 	ローカルデータ出力関数
 	-------------------------------------
 	内容：オブジェクトのローカルデータをファイルに書き込む

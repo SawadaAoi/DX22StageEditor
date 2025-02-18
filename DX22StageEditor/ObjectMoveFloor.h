@@ -39,6 +39,8 @@ public:
 	void OnCollisionEnter(ObjectBase* pHit) override;
 	void OnCollisionExit(ObjectBase* pHit) override;
 
+	void CopyLocal(ObjectBase* pObject) override;
+
 	void OutPutLocalData(std::ofstream& file) override;
 	void InputLocalData(std::ifstream& file) override;
 

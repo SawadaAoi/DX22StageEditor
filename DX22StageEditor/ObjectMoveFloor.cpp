@@ -82,6 +82,34 @@ void ObjectMoveFloor::OnCollisionExit(ObjectBase* pHit)
 }
 
 /* ========================================
+	コピー関数(個別処理)
+	-------------------------------------
+	内容：オブジェクト個別のコピー処理
+	-------------------------------------
+	引数1：コピーされたオブジェクト
+=========================================== */
+void ObjectMoveFloor::CopyLocal(ObjectBase* pObject)
+{
+	ObjectBlock::CopyLocal(pObject);	// 親クラスのコピー関数を呼ぶ
+
+	ComponentGimmickMoveLinear* pCopyObjCompMoveLinear = pObject->GetComponent<ComponentGimmickMoveLinear>();	// 移動コンポーネント
+
+	// 移動速度
+	pCopyObjCompMoveLinear->SetMoveSpeed(m_pCompMoveLinear->GetMoveSpeed());
+	// 移動座標数
+	int nWayPointNum = m_pCompMoveLinear->GetWayPoints().size();
+	// 逆順フラグ
+	pCopyObjCompMoveLinear->SetIsReverse(m_pCompMoveLinear->GetIsReverse());
+
+	// 移動座標
+	for (int i = 0; i < nWayPointNum; i++)
+	{
+		// 移動座標追加
+		pCopyObjCompMoveLinear->AddWayPoint(m_pCompMoveLinear->GetWayPoints()[i]);
+	}
+}
+
+/* ========================================
 	ローカルデータ出力関数
 	-------------------------------------
 	内容：オブジェクトのローカルデータをファイルに書き込む
@@ -146,5 +174,4 @@ void ObjectMoveFloor::InputLocalData(std::ifstream& file)
 		// 移動座標追加
 		m_pCompMoveLinear->AddWayPoint(wayPoint);
 	}
-
 }

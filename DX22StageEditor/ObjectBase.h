@@ -99,6 +99,9 @@ public:
 	int GetGenerationCount();						// 世代数の取得
 	bool CheckIsDescendant(ObjectBase* pObject);	// 子孫かどうかの判定
 
+	// コピー関数
+	ObjectBase* Copy();								// オブジェクトのコピー
+	virtual void CopyLocal(ObjectBase* pObject);	// オブジェクトのコピー(個別処理)
 
 	virtual void OutPutLocalData(std::ofstream& file);	// オブジェクトのデータ出力
 	virtual void InputLocalData(std::ifstream& file);	// オブジェクトのデータ入力
