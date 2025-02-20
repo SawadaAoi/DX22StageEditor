@@ -18,9 +18,6 @@
 #include "ObjectTypeRegistry.h"
 #include "ComponentTransform.h"
 
-// シーン
-#include <type_traits>
-#include "SceneStageSaves.h"
 
 // =============== 定数定義 =======================
 const std::string DEFAULT_SAVE_PATH = "Assets/Save/";	// デフォルトの保存先
@@ -45,15 +42,6 @@ namespace DebugUI
 		"TransformEdit",
 	};
 
-	// シーン名、シーン変更関数のマップ
-	const std::map< std::string, std::function<void()>> SCENE_MAP =
-	{
-		{"SceneStageSave_1", []() { SceneManager::ChangeScene<SceneStageSave_1>(); } },
-		{"SceneStageSave_2", []() { SceneManager::ChangeScene<SceneStageSave_2>(); } },
-		{"SceneStageSave_3", []() { SceneManager::ChangeScene<SceneStageSave_3>(); } },
-		{"SceneStageSave_4", []() { SceneManager::ChangeScene<SceneStageSave_4>(); } },
-		{"SceneStageSave_5", []() { SceneManager::ChangeScene<SceneStageSave_5>(); } },
-	};
 
 	/* ========================================
 		デバッグ用ウィンドウ初期化関数
@@ -155,17 +143,16 @@ namespace DebugUI
 		{
 			// 選択したらシーン変更
 			std::string sSceneName = reinterpret_cast<const char*>(arg);	// リスト項目名
-			SCENE_MAP.at(sSceneName)();	// シーン変更
+			SceneManager::ChangeScene(sSceneName, 0.0f);	// シーン変更
 		}, true, true);
 
 		// シーン名をリストに追加
-		for (auto& scene : SCENE_MAP)
+		for (auto& scene : SceneManager::GetSceneNameList())
 		{
-			pSceneList->AddListItem(scene.first.c_str());
+			pSceneList->AddListItem(scene.c_str());
 		}
 
 		WIN_SCENE_LIST.AddItem(pSceneList);
-
 	}
 
 	/* ========================================

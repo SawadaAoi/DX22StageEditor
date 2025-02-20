@@ -71,6 +71,6 @@ private:
 
 	ObjectPlayer* m_pPlayer;	// プレイヤーオブジェクト
 
-
+	float m_fWaitTime;			// 画面遷移待機時間
 };
 

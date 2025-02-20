@@ -54,7 +54,11 @@ ObjectBase* ObjectTypeRegistry::CreateObject(const std::string& sClassName)
 	return nullptr;
 }
 
-
+/* ========================================
+	オブジェクト登録関数
+	-------------------------------------
+	内容：オブジェクトの登録を行う
+=========================================== */
 void ObjectTypeRegistry::RegisterCategory(const std::string& sClassName, ObjectCategoryType cateNum)
 {
 	m_ObjectCategoryMap[sClassName] = cateNum;
@@ -71,6 +75,11 @@ std::unordered_map<std::string, ObjectTypeRegistry::CreateFunction*>& ObjectType
 	return m_ObjectTypeMap;
 }
 
+/* ========================================
+	ゲッター(カテゴリマップ)関数
+	-------------------------------------
+	戻値：unordered_map<std::string, ObjectCategoryType>& カテゴリマップ
+=========================================== */
 std::unordered_map<std::string, ObjectTypeRegistry::ObjectCategoryType>& ObjectTypeRegistry::GetObjectCategoryMap()
 {
 	return m_ObjectCategoryMap;

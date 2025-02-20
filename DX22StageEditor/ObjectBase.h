@@ -155,6 +155,7 @@ public:
 #endif
 private:
 	void InitDefaultComponent();	// デフォルトコンポーネント設定
+	void DestroyChild();
 
 protected:
 	SceneBase* m_pOwnerScene;	// 所有シーン

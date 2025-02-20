@@ -374,6 +374,7 @@
     <ClInclude Include="ObjectTag.h" />
     <ClInclude Include="ObjectWall.h" />
     <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="RegisterAllScene.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneStageSaves.h" />

@@ -110,6 +110,7 @@ void ObjectBase::Update()
 		if (m_fDestroyTimeCnt >= m_fDestroyTime)
 		{
 			SetState(E_State::STATE_DEAD);	// 状態を破棄に設定
+			DestroyChild();	// 子オブジェクトも破棄
 		}
 	}
 }
@@ -424,6 +425,21 @@ void ObjectBase::OutPutLocalData(std::ofstream& file)
 void ObjectBase::InputLocalData(std::ifstream& file)
 {
 	// 継承して各オブジェクトで処理を記述
+}
+
+/* ========================================
+	子オブジェクト死亡状態遷移関数
+	-------------------------------------
+	内容：子オブジェクトを全て死亡状態に遷移
+=========================================== */
+void ObjectBase::DestroyChild()
+{
+	// 子オブジェクトを全て削除
+	for (auto& pChild : m_pChildObjs)
+	{
+		pChild->SetState(E_State::STATE_DEAD);
+		pChild->DestroyChild();
+	}
 }
 
 /* ========================================

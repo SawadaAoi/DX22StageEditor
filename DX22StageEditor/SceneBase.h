@@ -25,6 +25,11 @@ class ComponentCollisionBase;
 #define OBJ_DEAD	ObjectBase::E_State::STATE_DEAD
 #define OBJ_PAUSE	ObjectBase::E_State::STATE_PAUSE
 
+// シーン名取得関数の定義を省略するためのマクロ
+#define DEFINE_SCENE_TYPE(name)				\
+	std::string GetSceneName() override {	\
+		return #name;						\
+	} 
 
 // =============== クラス定義 =====================
 class SceneBase
@@ -70,6 +75,7 @@ public:
 	std::string CreateUniqueName(std::string sName);	
 
 	// ゲッター
+	virtual std::string GetSceneName();								// シーン名取得
 	std::vector<ObjectBase*> GetAllSceneObjects();					// シーン上に存在する全てのオブジェクトを取得 
 	std::vector<ObjectBase*> GetSceneObjectsTag(E_ObjectTag tag);	// タグに対応するオブジェクトを取得
 	ObjectBase* GetSceneObjectTag(E_ObjectTag tag);					// タグに対応するオブジェクトを取得(一番最初に見つかったもの)

@@ -62,7 +62,7 @@ void ObjectRespawn::OnCollisionEnter(ObjectBase* pHit)
 		// シーンを再読み込み
 		case E_RespawnType::RT_RELOAD_SCENE:
 			// シーン再読み込みを呼び出す
-			SceneManager::CallReloadScene();
+			SceneManager::ReloadScene();
 			break;
 		// 決まった位置からリスポーン
 		case E_RespawnType::RT_POSITION:	

@@ -424,7 +424,15 @@ bool SceneBase::CheckUniqueName(std::string sName, std::vector<ObjectBase*> pObj
 	return true;
 }
 
-
+/* ========================================
+	シーン名取得関数
+	-------------------------------------
+	戻値：シーン名
+=========================================== */
+std::string SceneBase::GetSceneName()
+{
+	return "SceneBase";
+}
 
 /* ========================================
 	全オブジェクト取得関数

@@ -895,6 +895,9 @@
     <ClInclude Include="ObjectStageSampleParent.h">
       <Filter>ソース ファイル\App\GameObject\Other\StageSelect</Filter>
     </ClInclude>
+    <ClInclude Include="RegisterAllScene.h">
+      <Filter>ソース ファイル\App\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VS_Shape.hlsl">

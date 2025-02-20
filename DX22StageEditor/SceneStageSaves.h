@@ -33,6 +33,7 @@ public:
     void InitLocal() override { FILE_INPUT(1); };
     void UninitLocal() override { FILE_OUTPUT(1); };
 
+	DEFINE_SCENE_TYPE(SceneStageSave_1)
 };
 
 class SceneStageSave_2 :
@@ -42,6 +43,7 @@ public:
     void InitLocal() override { FILE_INPUT(2); };
     void UninitLocal() override { FILE_OUTPUT(2); };
 
+	DEFINE_SCENE_TYPE(SceneStageSave_2)
 };
 
 class SceneStageSave_3 :
@@ -51,6 +53,7 @@ public:
     void InitLocal() override { FILE_INPUT(3); };
     void UninitLocal() override { FILE_OUTPUT(3); };
 
+	DEFINE_SCENE_TYPE(SceneStageSave_3)
 };
 
 class SceneStageSave_4 :
@@ -60,6 +63,7 @@ public:
     void InitLocal() override { FILE_INPUT(4); };
     void UninitLocal() override { FILE_OUTPUT(4); };
 
+	DEFINE_SCENE_TYPE(SceneStageSave_4)
 };
 
 class SceneStageSave_5 :
@@ -69,4 +73,5 @@ public:
     void InitLocal() override { FILE_INPUT(5); };
     void UninitLocal() override { FILE_OUTPUT(5); };
 
+	DEFINE_SCENE_TYPE(SceneStageSave_5)
 };
