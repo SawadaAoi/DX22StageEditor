@@ -40,7 +40,7 @@ cbuffer BufCamera : register(b1)
 // シーン上のライト情報
 cbuffer BufLight : register(b2)
 {
-    LightData lightDatas[10];
+    LightData lightDatas[MAX_LIGHT];
 }
 
 

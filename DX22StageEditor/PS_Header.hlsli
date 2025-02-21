@@ -27,10 +27,13 @@
 //	float4 worldPos : TEXCOORD1;
 //};
 
+// =============== 定数定義 ========================
+static const int MAX_LIGHT = 20; // ライトの最大数
+
 // =============== 変数定義 ========================
 // テクスチャを受け取る
-Texture2D		tex	 : register(t0);
-SamplerState	samp : register(s0); // テクスチャの繰り返し設定
+Texture2D       tex : register(t0);
+SamplerState    samp : register(s0); // テクスチャの繰り返し設定
 
 // ライトのデータ
 struct LightData
@@ -59,21 +62,21 @@ float3 GetDiffuseLight(float3 normal, float3 lightDir, float4 lightColor)
 {
 	//法線
 	// normalize→正規化(単位ベクトル変換)
-	float3 N = normalize(normal);
+    float3 N = normalize(normal);
 
 	// ライトの方向
-	float3 L = normalize(lightDir);
+    float3 L = normalize(lightDir);
 	// 内積との計算結果が見た目に合うように、事前にライトの方向を反転させておく
-	L *= -1.0f;
+    L *= -1.0f;
 
 	// 内積の計算
-	float d = dot(L, N);
-	d = saturate(d);		// 0未満は0,1より大きいと1にする
+    float d = dot(L, N);
+    d = saturate(d); // 0未満は0,1より大きいと1にする
 
 	// 光の色を計算
-	float3 diffuseLight = lightColor.rgb * d;
+    float3 diffuseLight = lightColor.rgb * d;
 
-	return diffuseLight;
+    return diffuseLight;
 }
 
 
@@ -92,29 +95,29 @@ float3 GetDiffuseLight(float3 normal, float3 lightDir, float4 lightColor)
 float3 GetSpecularLight(float3 normal, float4 worldPos, float3 lightDir, float4 lightColor, float3 cameraPos)
 {
 	// 反射ベクトルの計算
-	float3 N = normalize(normal);		// 法線
-	float3 R = reflect(lightDir, N);	// 反射ベクトル
-	R = normalize(R);
+    float3 N = normalize(normal);       // 法線
+    float3 R = reflect(lightDir, N);    // 反射ベクトル
+    R = normalize(R);
 
 	// 視線(カメラ)に向かうベクトルの計算
-	float3 V = cameraPos - worldPos.xyz;	//カメラ座標-オブジェクト自身の座標
-	V = normalize(V);
+    float3 V = cameraPos - worldPos.xyz;    //カメラ座標-オブジェクト自身の座標
+    V = normalize(V);
 
 	// 鏡面反射の強さを求める
-	float d = dot(R, V);	// 反射ベクトルとオブジェクト→カメラ方向ベクトルの向きが近いほど強くなる(1に近づくほど)
+    float d = dot(R, V); // 反射ベクトルとオブジェクト→カメラ方向ベクトルの向きが近いほど強くなる(1に近づくほど)
 	// 内積の結果は負数(逆方向の場合)になるので、負数の場合は0になる
-	if (d < 0.0f)
-	{
-		d = 0.0f;
-	}
+    if (d < 0.0f)
+    {
+        d = 0.0f;
+    }
 
 	// 鏡面反射の強さを絞る
-	d = pow(d, 5.0f);	// 二乗をするのはdが1に近いときと、0に近いときの差が大きくなる。斜めの直線から垂れたロープの様なグラフになる
+    d = pow(d, 5.0f); // 二乗をするのはdが1に近いときと、0に近いときの差が大きくなる。斜めの直線から垂れたロープの様なグラフになる
 
 	// 鏡面反射の光の色を計算
-	float3 specularLight = lightColor.rgb * d;
+    float3 specularLight = lightColor.rgb * d;
 
-	return specularLight;
+    return specularLight;
 }
 
 /* ========================================
@@ -133,25 +136,25 @@ float3 GetSpecularLight(float3 normal, float4 worldPos, float3 lightDir, float4 
 float3 GetPointLight(float3 normal, float4 worldPos, float3 lightPos, float range, float4 lightColor,
                      float3 fCameraPos, float fDiffuseStr, float fSpecularStr)
 {
-	float3 pointLight = float3(0.0f, 0.0f, 0.0f);
+    float3 pointLight = float3(0.0f, 0.0f, 0.0f);
 	
-	float3 N = normalize(normal);		// 法線
+    float3 N = normalize(normal); // 法線
 	
 	// ライトの方向
-	float3 L = worldPos.xyz - lightPos;	
-	L = normalize(L);					// 正規化
+    float3 L = worldPos.xyz - lightPos;
+    L = normalize(L); // 正規化
 	
 	// ライトからの距離
-	float distance = length(worldPos.xyz - lightPos);	
+    float distance = length(worldPos.xyz - lightPos);
 	
 	// 距離による影響度(0～1)
-    float affect = saturate(1.0f - distance / range);	
+    float affect = saturate(1.0f - distance / range);
 	// 二乗をするのはdが1に近いときと、0に近いときの差が大きくなる。斜めの直線から垂れたロープの様なグラフになる
     affect = pow(affect, 2.0f);
 	
 	// 反射光の計算
     float3 diffuse = GetDiffuseLight(normal, L, lightColor) * fDiffuseStr;
-	float3 specular = GetSpecularLight(normal, worldPos, L, lightColor, fCameraPos) * fSpecularStr;
+    float3 specular = GetSpecularLight(normal, worldPos, L, lightColor, fCameraPos) * fSpecularStr;
 	
     pointLight.rgb = (diffuse + specular) * affect;
 	
@@ -178,34 +181,67 @@ float3 GetSpotLight(float3 normal, float4 worldPos, float3 lightPos, float3 ligh
 {
     float3 spotLight = float3(0.0f, 0.0f, 0.0f);
     
-    float3 N = normalize(normal);		// 法線
+    float3 N = normalize(normal); // 法線
     
 	// ライトの方向
-    float3 L = worldPos.xyz - lightPos; 
-    L = normalize(L);	// 正規化
+    float3 L = worldPos.xyz - lightPos;
+    L = normalize(L); // 正規化
     // ライトからの距離
-    float distance = length(worldPos.xyz - lightPos);	
+    float distance = length(worldPos.xyz - lightPos);
 	
     // 距離による影響度(0～1)
-    float affect = saturate(1.0f - distance / range);	
+    float affect = saturate(1.0f - distance / range);
     // 二乗をするのはdが1に近いときと、0に近いときの差が大きくなる。斜めの直線から垂れたロープの様なグラフになる
     affect = pow(affect, 2.0f);
 	
 	// ライトの照射方向と法線の角度を求める
-	float cosAngle = dot(lightDir, L);
-	float objAngle = acos(cosAngle);
+    float cosAngle = dot(lightDir, L);
+    float objAngle = acos(cosAngle);
 	
 	// 角度が指定された角度よりも大きい場合は影響度を0にする
-    float spotAffect = saturate(1.0f - (objAngle / angle));	// 角度による影響度(0～1))
+    float spotAffect = saturate(1.0f - (objAngle / angle)); // 角度による影響度(0～1))
     spotAffect = pow(spotAffect, 0.5f);
 	
 	// 反射光の計算
-    float3 diffuse	= GetDiffuseLight(normal, L, lightColor) * fDiffuseStr;
+    float3 diffuse = GetDiffuseLight(normal, L, lightColor) * fDiffuseStr;
     float3 specular = GetSpecularLight(normal, worldPos, L, lightColor, fCameraPos) * fSpecularStr;
     
     spotLight.rgb = (diffuse + specular) * affect * spotAffect;
     
     return spotLight;
+}
+
+/* ========================================
+    影チェック関数
+    -------------------------------------
+    内容：影のチェックを
+    -------------------------------------
+    引数1：ワールド座標
+    引数2：影の中心座標
+    引数3：影の半径
+    -------------------------------------
+    戻値：色の減衰値
+=========================================== */
+float CheckShadow(float3 normal, float4 worldPos, float3 shadowCenter, float shadowRadius)
+{
+    // 上方向ベクトルと法線の内積を求める
+    float dotValue = dot(normal, float3(0, 1, 0));
+    if(dotValue < 0.0f) return 1.0f; // 法線が逆向きの場合は影無し
+    
+     // 自身よりも高い位置にある場合は影無し
+    if (shadowCenter.y < worldPos.y)    return 1.0f;
+    
+    // 上から見た座標での距離を求める
+    float distanceXZ = length(worldPos.xz - shadowCenter.xz);
+    
+     // 高さが遠ざかると影の大きさを小さくする
+    float distanceHeight    = length(shadowCenter.y - worldPos.y);      // 高さの差
+    shadowRadius            = shadowRadius - (distanceHeight * 0.2f);   // 円の大きさ - 高さの差 * 係数
+    
+    // 影の範囲外の場合は影無し
+    if (distanceXZ > shadowRadius)  return 1.0f;
+   
+    return 0.5f;
 }
 
 /* ========================================
@@ -218,12 +254,13 @@ float3 GetSpotLight(float3 normal, float4 worldPos, float3 lightPos, float3 ligh
     -------------------------------------
     戻値：ライトの合計色
 =========================================== */
-float4 GetTotalLightColor(float3 normal, float4 worldPos, float3 fCameraPos, 
-    LightData lightDatas[10], float fDiffuseStr, float fSpecularStr, float fAmbientStr)
+float4 GetTotalLightColor(float3 normal, float4 worldPos, float3 fCameraPos,
+    LightData lightDatas[MAX_LIGHT], float fDiffuseStr, float fSpecularStr, float fAmbientStr)
 {
-    float4 LightTotal = float4(0, 0, 0, 0);
+    float4 LightTotal = float4(0, 0, 0, 1);
+    float fShadowPower = 1.0f;
         
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < MAX_LIGHT; i++)
     {
         LightData light = lightDatas[i];
             
@@ -241,21 +278,28 @@ float4 GetTotalLightColor(float3 normal, float4 worldPos, float3 fCameraPos,
             // 点光源
         else if (light.lightType == 2.0f)
         {
-            LightTotal.rgb += 
-                    GetPointLight(normal, worldPos, light.lightPos, light.range, light.lightColor, 
+            LightTotal.rgb +=
+                    GetPointLight(normal, worldPos, light.lightPos, light.range, light.lightColor,
                                     fCameraPos, fDiffuseStr, fSpecularStr);
         }
-            // スポットライト
+        // スポットライト
         else if (light.lightType == 3.0f)
         {
             LightTotal.rgb += GetSpotLight(normal, worldPos,
                     light.lightPos, light.lightDir, light.range, light.lightColor, light.angle,
                     fCameraPos, fDiffuseStr, fSpecularStr);
         }
+        // 影
+        else if (light.lightType == 4.0f)
+        {
+            fShadowPower *= CheckShadow(normal, worldPos, light.lightPos, light.range);
+        }
 
     }
+    
     LightTotal.rgb += fAmbientStr; // 環境光を加算
-	
-	
-	return LightTotal;
+		
+    LightTotal.rgb *= fShadowPower; // 影の影響度を反映
+    
+    return LightTotal;
 }

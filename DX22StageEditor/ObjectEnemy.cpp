@@ -19,6 +19,7 @@
 #include "ComponentRigidbody.h"
 #include "ComponentTransform.h"
 #include "ModelAnimeManager.h"
+#include "ComponentShadow.h"
 
 #include "ComponentEnemyMoveLinear.h"
 
@@ -80,6 +81,7 @@ void ObjectEnemy::InitLocal()
 
 	m_pCompEnemyState = AddComponent<ComponentEnemyState>();
 
+	AddComponent<ComponentShadow>();
 }
 
 /* ========================================
@@ -146,7 +148,7 @@ void ObjectEnemy::Damage()
 	// HPが0になったら
 	if (m_nHp <= 0)
 	{
-		Destroy();	// オブジェクト削除
+		Destroy();	// オブジェクト破棄
 		ObjectBase* pExplosion = m_pOwnerScene->AddSceneObject<ObjectExplosion>("Explosion_" + m_sName);
 		pExplosion->GetTransform()->SetPosition(m_pCompTransform->GetPosition());
 	}

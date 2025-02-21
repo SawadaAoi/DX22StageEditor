@@ -54,7 +54,6 @@ public:
 	void Debug(DebugUI::Window& window) override;
 #endif // _DEBUG
 private:
-	ComponentTransform* m_pCompTransform;	// トランスフォームコンポーネント
 	E_LightType			m_eLightType;		// ライトの種類
 	Vector3<float>		m_vColor;			// ディフューズカラー
 	float				m_fRange;			// ライトの有効範囲

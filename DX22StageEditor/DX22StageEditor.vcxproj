@@ -185,6 +185,7 @@
     <ClCompile Include="ComponentGimmickMoveLinear.cpp" />
     <ClCompile Include="ComponentGroundBox.cpp" />
     <ClCompile Include="ComponentLightBase.cpp" />
+    <ClCompile Include="ComponentShadow.cpp" />
     <ClCompile Include="ComponentSmokeEffect.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="LightManager.cpp" />
@@ -260,6 +261,7 @@
     <ClCompile Include="RegisterObjectTypeMap.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="ShadowManager.cpp" />
     <ClCompile Include="ShapeBox.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="DebugConsole.cpp" />
@@ -299,6 +301,7 @@
     <ClInclude Include="ComponentGroundBox.h" />
     <ClInclude Include="ComponentLightBase.h" />
     <ClInclude Include="ComponentOrder.h" />
+    <ClInclude Include="ComponentShadow.h" />
     <ClInclude Include="ComponentSmokeEffect.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="LightManager.h" />
@@ -378,6 +381,7 @@
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneStageSaves.h" />
+    <ClInclude Include="ShadowManager.h" />
     <ClInclude Include="ShapeBox.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="DebugConsole.h" />
@@ -469,6 +473,7 @@
   <ItemGroup>
     <None Include="ImGui\imgui.ini" />
     <None Include="ObjectBase.inl" />
+    <None Include="PS_Header.hlsli" />
     <None Include="SceneBase.inl" />
     <None Include="Vector2.inl" />
     <None Include="Vector3.inl" />

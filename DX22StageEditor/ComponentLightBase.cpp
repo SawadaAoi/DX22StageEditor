@@ -24,12 +24,11 @@
 ========================================== */
 ComponentLightBase::ComponentLightBase(ObjectBase* pOwner)
 	: ComponentBase(pOwner, OrderLightBase)
-	, m_pCompTransform(nullptr)
 	, m_eLightType(E_LightType::NONE)
 	, m_vColor(Vector3<float>(1.0f, 1.0f, 1.0f))
 	, m_fRange(0.0f)
 	, m_fAngle(0.0f)
-	, m_bDispLine(true)
+	, m_bDispLine(false)
 	, m_pDirLine(nullptr)
 {
 }
@@ -41,10 +40,8 @@ ComponentLightBase::ComponentLightBase(ObjectBase* pOwner)
 ========================================== */
 void ComponentLightBase::Init()
 {
-	m_pCompTransform = m_pOwnerObj->GetComponent<ComponentTransform>();
-
-	Vector3<float> vStart = m_pCompTransform->GetPosition();
-	Vector3<float> vEnd = vStart + m_pCompTransform->GetForwardVector();
+	Vector3<float> vStart = m_pOwnerObj->GetTransform()->GetPosition();
+	Vector3<float> vEnd = vStart + m_pOwnerObj->GetTransform()->GetForwardVector();
 	m_pDirLine = std::make_unique<ShapeLine>(vStart, vEnd, ColorVec3::RED);
 
 	m_pSphere = std::make_unique<ShapeSphere>();
@@ -61,20 +58,16 @@ void ComponentLightBase::Init()
 ========================================== */
 void ComponentLightBase::Update()
 {
-	m_pDirLine->SetPos(m_pCompTransform->GetPosition());
-	m_pDirLine->SetRotation(m_pCompTransform->GetRotation());
+	m_pDirLine->SetPos(m_pOwnerObj->GetTransform()->GetPosition());
+	m_pDirLine->SetRotation(m_pOwnerObj->GetTransform()->GetRotation());
 
 	switch (m_eLightType)
 	{
 	case ComponentLightBase::POINT:
-		m_pSphere->SetPosition(m_pCompTransform->GetPosition());
+		m_pSphere->SetPosition(m_pOwnerObj->GetTransform()->GetPosition());
 		m_pSphere->SetScale(Vector3<float>(m_fRange, m_fRange, m_fRange));
 		break;
 	case ComponentLightBase::SPOT:
-		Vector3<float> vStart	= m_pCompTransform->GetPosition();
-		Vector3<float> vEnd		= vStart + m_pCompTransform->GetForwardVector() * m_fRange;
-		//m_pDirLine->UpdateLine(1, vStart, vEnd, ColorVec3::RED);
-
 		m_pDirLine->SetScale(Vector3<float>(m_fRange, m_fRange, m_fRange));
 		break;
 	}

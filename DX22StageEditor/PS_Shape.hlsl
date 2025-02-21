@@ -52,7 +52,7 @@ cbuffer BufCamera : register(b3)
 // シーン上のライト情報
 cbuffer BufLight : register(b4)
 {
-    LightData lightDatas[10];
+    LightData lightDatas[MAX_LIGHT];
 }
 
 // ピクセルシェーダーのメイン関数

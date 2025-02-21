@@ -210,6 +210,18 @@
     <Filter Include="ソース ファイル\App\GameObject\Other\StageSelect">
       <UniqueIdentifier>{5f9af61f-a0b1-4a0d-aaf2-395f55ae627e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\PixelShader\Model">
+      <UniqueIdentifier>{b5268608-1aec-4c14-810d-e973e09db896}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\PixelShader\Shape">
+      <UniqueIdentifier>{d2da68d7-6a5d-4af2-b34b-b82cee218ce6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\VertexShader\Model">
+      <UniqueIdentifier>{64a6266d-07aa-4fad-a514-90ac51c32325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\VertexShader\Shape">
+      <UniqueIdentifier>{3e5abdaf-f4e7-4d95-81ee-38329bf2ce90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -544,6 +556,12 @@
     </ClCompile>
     <ClCompile Include="ObjectStageSampleParent.cpp">
       <Filter>ソース ファイル\App\GameObject\Other\StageSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentShadow.cpp">
+      <Filter>ソース ファイル\App\Component\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowManager.cpp">
+      <Filter>ソース ファイル\System\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -898,20 +916,14 @@
     <ClInclude Include="RegisterAllScene.h">
       <Filter>ソース ファイル\App\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentShadow.h">
+      <Filter>ソース ファイル\App\Component\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowManager.h">
+      <Filter>ソース ファイル\System\Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VS_Shape.hlsl">
-      <Filter>リソース ファイル\VertexShader</Filter>
-    </FxCompile>
-    <FxCompile Include="PS_Shape.hlsl">
-      <Filter>リソース ファイル\PixelShader</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_Line.hlsl">
-      <Filter>リソース ファイル\VertexShader</Filter>
-    </FxCompile>
-    <FxCompile Include="PS_Line.hlsl">
-      <Filter>リソース ファイル\PixelShader</Filter>
-    </FxCompile>
     <FxCompile Include="VS_Sprite.hlsl">
       <Filter>リソース ファイル\VertexShader</Filter>
     </FxCompile>
@@ -919,16 +931,28 @@
       <Filter>リソース ファイル\PixelShader</Filter>
     </FxCompile>
     <FxCompile Include="PS_ModelStatic.hlsl">
-      <Filter>リソース ファイル\PixelShader</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_ModelStatic.hlsl">
-      <Filter>リソース ファイル\VertexShader</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_ModelAnime.hlsl">
-      <Filter>リソース ファイル\VertexShader</Filter>
+      <Filter>リソース ファイル\PixelShader\Model</Filter>
     </FxCompile>
     <FxCompile Include="PS_ModelAnime.hlsl">
-      <Filter>リソース ファイル\PixelShader</Filter>
+      <Filter>リソース ファイル\PixelShader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_Line.hlsl">
+      <Filter>リソース ファイル\PixelShader\Shape</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_Shape.hlsl">
+      <Filter>リソース ファイル\PixelShader\Shape</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_ModelStatic.hlsl">
+      <Filter>リソース ファイル\VertexShader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_ModelAnime.hlsl">
+      <Filter>リソース ファイル\VertexShader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_Line.hlsl">
+      <Filter>リソース ファイル\VertexShader\Shape</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_Shape.hlsl">
+      <Filter>リソース ファイル\VertexShader\Shape</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -946,6 +970,9 @@
     </None>
     <None Include="ImGui\imgui.ini">
       <Filter>ソース ファイル\ImGui</Filter>
+    </None>
+    <None Include="PS_Header.hlsli">
+      <Filter>リソース ファイル\PixelShader</Filter>
     </None>
   </ItemGroup>
 </Project>

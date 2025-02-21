@@ -13,6 +13,7 @@
 #include "DirectXManager.h"
 #include "TextureManager.h"	
 #include "LightManager.h"
+#include "ShadowManager.h"
 
 
 /* ========================================
@@ -366,6 +367,23 @@ void ShapeBase::SetLights(std::vector<ObjectLight*> lights)
 		param[i][1] = { lightColor.x, lightColor.y, lightColor.z, 1.0f };			// ライトカラー
 		param[i][2] = { lightDir.x, lightDir.y, lightDir.z, lights[i]->GetRange() };// ライト方向、ライト有効範囲
 		param[i][3] = { lights[i]->GetAngle(), 0.0f, 0.0f, 0.0f };					// スポットライト角度
+	}
+
+	// 丸影の情報をセット
+	int nParamNum = lights.size();
+	std::vector<ComponentShadow*> shadows = SHADOW_MNG_INST.GetShadowList();
+	for (int i = 0; i < shadows.size(); i++)
+	{
+		if (nParamNum >= MAX_LIGHT_NUM) break;	// ライト、影合計数が最大数を超えたら終了
+
+		Vector3<float>	vShadowPos = shadows.at(i)->GetPosition();
+
+		param[nParamNum][0] = { 4.0f, vShadowPos.x, vShadowPos.y, vShadowPos.z };	// ライトタイプ(影は固定で4)、影の基準座標
+		param[nParamNum][1] = { 0.0f, 0.0f, 0.0f, 0.0f };							// ライトカラー(未使用)
+		param[nParamNum][2] = { 0.0f, 0.0f, 0.0f, shadows[i]->GetCircleSize() };	// ライト方向(未使用)、落影の円の大きさ
+		param[nParamNum][3] = { 0.0f, 0.0f, 0.0f, 0.0f };							// スポットライト角度(未使用)
+
+		nParamNum++;
 	}
 
 	m_pPS->WriteBuffer(4, param);

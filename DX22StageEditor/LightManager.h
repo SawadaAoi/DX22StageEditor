@@ -21,7 +21,7 @@ class ObjectBase;
 #define LIGHT_MNG_INST LightManager::GetInstance()	// instance取得
 #define GET_LIGHT LightManager::GetInstance().GetLight()	// ライト取得
 
-const int MAX_LIGHT_NUM = 10;	// ライト最大数
+const int MAX_LIGHT_NUM = 20;	// ライト＋影最大数
 
 class LightManager
 {

@@ -10,6 +10,8 @@
 // =============== インクルード ===================
 #include "ModelAnime.h"
 #include "ShaderManager.h"
+#include "ShadowManager.h"
+
 #include "LightManager.h"
 
 #include <assimp/Importer.hpp>
@@ -18,23 +20,23 @@
 
 
 #if _MSC_VER >= 1930
-#ifdef _DEBUG
-#pragma comment(lib, "assimp-vc143-mtd.lib")
-#else
-#pragma comment(lib, "assimp-vc143-mt.lib")
-#endif
+	#ifdef _DEBUG
+		#pragma comment(lib, "assimp-vc143-mtd.lib")
+	#else
+		#pragma comment(lib, "assimp-vc143-mt.lib")
+	#endif
 #elif _MSC_VER >= 1920
-#ifdef _DEBUG
-#pragma comment(lib, "assimp-vc142-mtd.lib")
-#else
-#pragma comment(lib, "assimp-vc142-mt.lib")
-#endif
+	#ifdef _DEBUG
+		#pragma comment(lib, "assimp-vc142-mtd.lib")
+	#else
+		#pragma comment(lib, "assimp-vc142-mt.lib")
+	#endif
 #elif _MSC_VER >= 1910
-#ifdef _DEBUG
-#pragma comment(lib, "assimp-vc141-mtd.lib")
-#else
-#pragma comment(lib, "assimp-vc141-mt.lib")
-#endif
+	#ifdef _DEBUG
+		#pragma comment(lib, "assimp-vc141-mtd.lib")
+	#else
+		#pragma comment(lib, "assimp-vc141-mt.lib")
+	#endif
 #endif
 
 
@@ -94,7 +96,7 @@ ModelAnime::ModelAnime(const ModelAnime& other)
 	, m_pPS(nullptr)
 	, m_nActiveNo(0)
 	, m_nBlendNo(0)
-	, m_nParametricAnimeNos{ 0,0 }
+	, m_nParametricAnimeNos{0,0}
 	, m_fBlendTime(0.0f)
 	, m_fBlendTimeTotal(0.0f)
 	, m_fParametricBlendRatio(0.0f)
@@ -106,26 +108,26 @@ ModelAnime::ModelAnime(const ModelAnime& other)
 {
 	if (this == &other)	return;
 
-	this->m_fLoadScale = other.m_fLoadScale;
-	this->m_LoadFlip = other.m_LoadFlip;
-	this->m_NodeList = other.m_NodeList;
-	this->m_AnimeList = other.m_AnimeList;
-	this->m_pVS = other.m_pVS;
-	this->m_pPS = other.m_pPS;
-	this->m_nActiveNo = other.m_nActiveNo;
-	this->m_nBlendNo = other.m_nBlendNo;
-	this->m_nParametricAnimeNos[0] = other.m_nParametricAnimeNos[0];
-	this->m_nParametricAnimeNos[1] = other.m_nParametricAnimeNos[1];
-	this->m_fBlendTime = other.m_fBlendTime;
-	this->m_fBlendTimeTotal = other.m_fBlendTimeTotal;
-	this->m_fParametricBlendRatio = other.m_fParametricBlendRatio;
-	this->m_sModelName = other.m_sModelName;
+	this->m_fLoadScale				= other.m_fLoadScale;
+	this->m_LoadFlip				= other.m_LoadFlip;
+	this->m_NodeList				= other.m_NodeList;
+	this->m_AnimeList				= other.m_AnimeList;
+	this->m_pVS						= other.m_pVS;
+	this->m_pPS						= other.m_pPS;
+	this->m_nActiveNo				= other.m_nActiveNo;
+	this->m_nBlendNo				= other.m_nBlendNo;
+	this->m_nParametricAnimeNos[0]	= other.m_nParametricAnimeNos[0];
+	this->m_nParametricAnimeNos[1]	= other.m_nParametricAnimeNos[1];
+	this->m_fBlendTime				= other.m_fBlendTime;
+	this->m_fBlendTimeTotal			= other.m_fBlendTimeTotal;
+	this->m_fParametricBlendRatio	= other.m_fParametricBlendRatio;
+	this->m_sModelName				= other.m_sModelName;
 #ifdef _DEBUG
 	this->m_pBoneLine = std::make_unique<ShapeLine>(*other.m_pBoneLine);
 #endif // _DEBUG
 
 	// 各変数が持つポインタをディープコピーする
-
+	
 	// メッシュ配列
 	this->m_MeshList = other.m_MeshList;
 	for (auto& mesh : this->m_MeshList)
@@ -148,7 +150,7 @@ ModelAnime::ModelAnime(const ModelAnime& other)
 			m_NodeTransform[i][j] = other.m_NodeTransform[i][j];
 		}
 	}
-
+	
 
 }
 
@@ -247,10 +249,10 @@ void ModelAnime::Draw(const std::vector<UINT>* order)
 			meshNo = i;
 		}
 
-
+		
 		// 描画コールバック
-		const T_Mesh* pMesh = this->GetMesh(meshNo);
-		const T_Material& pMaterial = *this->GetMaterial(pMesh->materialID);
+		const T_Mesh*		pMesh	= this->GetMesh(meshNo);
+		const T_Material& pMaterial	= *this->GetMaterial(pMesh->materialID);
 
 		m_pPS->SetTexture(0, pMaterial.pTexture);	// テクスチャセット
 		m_pPS->Bind();
@@ -533,8 +535,6 @@ void ModelAnime::SetWVPMatrix(const DirectX::XMFLOAT4X4* matWVP)
 }
 
 
-
-
 /* ========================================
 	セッター(ライト設定(マテリアル))関数
 	-------------------------------------
@@ -584,16 +584,36 @@ void ModelAnime::SetLights(std::vector<ObjectLight*> lights)
 	// ライト情報をセット
 	for (int i = 0; i < lights.size(); ++i)
 	{
-		float			lightType = static_cast<float>(lights[i]->GetLightType());
-		Vector3<float>	lightPos = lights[i]->GetPosition();
-		Vector3<float>	lightColor = lights[i]->GetColor();
-		Vector3<float>	lightDir = lights[i]->GetDirection();
+		float			lightType	= static_cast<float>(lights[i]->GetLightType());
+		Vector3<float>	lightPos	= lights[i]->GetPosition();
+		Vector3<float>	lightColor	= lights[i]->GetColor();
+		Vector3<float>	lightDir	= lights[i]->GetDirection();
 
 		param[i][0] = { lightType, lightPos.x, lightPos.y, lightPos.z };			// ライトタイプ、ライト位置
 		param[i][1] = { lightColor.x, lightColor.y, lightColor.z, 1.0f };			// ライトカラー
 		param[i][2] = { lightDir.x, lightDir.y, lightDir.z, lights[i]->GetRange() };// ライト方向、ライト有効範囲
 		param[i][3] = { lights[i]->GetAngle(), 0.0f, 0.0f, 0.0f };					// スポットライト角度
 	}
+	// 丸影の情報をセット
+	int nParamNum = lights.size();
+	std::vector<ComponentShadow*> shadows = SHADOW_MNG_INST.GetShadowList();
+	for (int i = 0; i < shadows.size(); i++)
+	{
+		if (nParamNum >= MAX_LIGHT_NUM) break;	// ライト、影合計数が最大数を超えたら終了
+
+		Vector3<float>	vShadowPos = shadows.at(i)->GetPosition();
+
+		param[nParamNum][0] = { 4.0f, vShadowPos.x, vShadowPos.y, vShadowPos.z };	// ライトタイプ(影は固定で4)、影の基準座標
+		param[nParamNum][1] = { 0.0f, 0.0f, 0.0f, 0.0f };							// ライトカラー(未使用)
+		param[nParamNum][2] = { 0.0f, 0.0f, 0.0f, shadows[i]->GetCircleSize() };	// ライト方向(未使用)、落影の円の大きさ
+		param[nParamNum][3] = { 0.0f, 0.0f, 0.0f, 0.0f };							// スポットライト角度(未使用)
+
+		nParamNum++;
+	}
 
 	m_pPS->WriteBuffer(2, param);
 }
+
+
+
+
