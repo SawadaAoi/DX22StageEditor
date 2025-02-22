@@ -42,9 +42,13 @@ public:
 	
 
 	DEFINE_OBJECT_TYPE(ObjectFireBar)
+#ifdef _DEBUG
+	void DebugLocal(DebugUI::Window& window);
+#endif // DEBUG
 private:
 	void InitCenterBlock();
 	void InitFireBall();
+	void ResetFireBall();
 private:
 	ObjectBlockGroundAABB*		m_pCenterBlock;		// 中心ブロック
 	ObjectBase*					m_pFireBallParent;	// 火の玉親(回転用)
@@ -52,5 +56,6 @@ private:
 
 	int m_nFireBallNum;	// 火の玉の数
 	float m_fRotateSpeed;	// 回転速度
+	bool m_bStartCreate;
 };
 

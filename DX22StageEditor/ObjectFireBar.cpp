@@ -19,10 +19,10 @@
 
 
 // =============== 定数定義 =======================
-const int DEFAULT_FIREBALL_NUM = 5;	// 火の玉の数
-const float DEFAULT_FIREBALL_COL_SCALE = 0.35f;	// 火の玉のスケール
-const float DEFAULT_FIREBALL_SPEED = 30.0f;	// 火の玉の回転速度
-const float DEFAULT_FIREBALL_SCALE = 1.5f;	// 火の玉のスケール
+const int	DEFAULT_FIREBALL_NUM		= 5;		// 火の玉の数
+const float DEFAULT_FIREBALL_COL_SCALE	= 0.35f;	// 火の玉のスケール
+const float DEFAULT_FIREBALL_SPEED		= 30.0f;	// 火の玉の回転速度
+const float DEFAULT_FIREBALL_SCALE		= 1.5f;		// 火の玉のスケール
 
 /* ========================================
 	コンストラクタ関数
@@ -37,6 +37,8 @@ ObjectFireBar::ObjectFireBar(SceneBase* pScene)
 	, m_pFireBallParent(nullptr)
 	, m_nFireBallNum(DEFAULT_FIREBALL_NUM)
 	, m_fRotateSpeed(DEFAULT_FIREBALL_SPEED)
+	, m_pFireBall()
+	, m_bStartCreate(false)
 {
 }
 
@@ -48,7 +50,11 @@ ObjectFireBar::ObjectFireBar(SceneBase* pScene)
 void ObjectFireBar::InitLocal()
 {
 	InitCenterBlock();
-	InitFireBall();
+
+	// 火の玉親生成
+	m_pFireBallParent = m_pOwnerScene->AddSceneObject<ObjectBase>("FireBallParent");
+	m_pFireBallParent->SetIsSave(false);	// 子オブジェクトはセーブしない
+	AddChildObject(m_pFireBallParent);
 }
 
 /* ========================================
@@ -58,6 +64,18 @@ void ObjectFireBar::InitLocal()
 =========================================== */
 void ObjectFireBar::UpdateLocal()
 {
+	if (!m_bStartCreate)
+	{
+		InitFireBall();
+		m_bStartCreate = true;
+	}
+
+	// 火の玉数が1以下の場合は1にする
+	if (m_nFireBallNum < 1)
+	{
+		m_nFireBallNum = 1;
+	}
+
 	m_pFireBallParent->GetTransform()->RotateY(m_fRotateSpeed * DELTA_TIME);
 }
 
@@ -82,9 +100,6 @@ void ObjectFireBar::InitCenterBlock()
 =========================================== */
 void ObjectFireBar::InitFireBall()
 {
-	m_pFireBallParent = m_pOwnerScene->AddSceneObject<ObjectBase>("FireBallParent");
-	m_pFireBallParent->SetIsSave(false);	// 子オブジェクトはセーブしない
-
 	// 火の玉生成
 	for (int i = 1; i <= m_nFireBallNum; i++)
 	{
@@ -96,13 +111,30 @@ void ObjectFireBar::InitFireBall()
 		pFireBall->AddComponent<ComponentCollisionSphere>()->SetRadius(DEFAULT_FIREBALL_COL_SCALE);
 		pFireBall->GetComponent<ComponentCollisionSphere>()->SetTrigger(true);
 		pFireBall->GetComponent<ComponentCollisionSphere>()->SetRefOwnerTransform(false);
-		pFireBall->GetTransform()->SetPosition({ 0.0f + (1.0f * i), 0.0f, 0.0f });
+
+		Vector3<float> vPos = m_pFireBallParent->GetTransform()->GetPosition();
+		vPos.x += i * 1.0f;
+		pFireBall->GetTransform()->SetPosition(vPos);
+
 		pFireBall->GetTransform()->Scale(DEFAULT_FIREBALL_SCALE);
 		m_pFireBall.push_back(pFireBall);
 		m_pFireBallParent->AddChildObject(pFireBall);
 	}
 
-	AddChildObject(m_pFireBallParent);
+}
+
+/* ========================================
+	火の玉リセット関数
+	-------------------------------------
+	内容：火の玉をリセットする
+=========================================== */
+void ObjectFireBar::ResetFireBall()
+{
+	for (auto& pFireBall : m_pFireBall)
+	{
+		pFireBall->Destroy();
+	}
+	m_pFireBallParent->RemoveAllChildObjects();
 }
 
 /* ========================================
@@ -181,3 +213,42 @@ void ObjectFireBar::SetRotateSpeed(float fRotateSpeed)
 	m_fRotateSpeed = fRotateSpeed;
 }
 
+
+
+#ifdef _DEBUG
+/* ========================================
+	デバッグ関数
+	-------------------------------------
+	内容：デバッグ用の処理
+======================================== */
+void ObjectFireBar::DebugLocal(DebugUI::Window& window)
+{
+	using namespace DebugUI;
+
+	Item* pGroupFireBar = Item::CreateGroup("FireBar");
+
+	// 以下の値を変更すると生成し直す
+	// コイン数
+	pGroupFireBar->AddGroupItem(Item::CreateCallBack("FireBallNum", Item::Kind::Int,
+		[this](bool isWrite, void* arg)
+	{
+		int* nNum = reinterpret_cast<int*>(arg);
+		if (isWrite)
+		{
+			m_nFireBallNum = *nNum;
+			ResetFireBall();
+			InitFireBall();
+		}
+		else
+		{
+			*nNum = m_nFireBallNum;
+		}
+	}));
+
+	// 回転速度
+	pGroupFireBar->AddGroupItem(Item::CreateBind("RotateSpeed", Item::Kind::Float, &m_fRotateSpeed));
+
+
+	window.AddItem(pGroupFireBar);
+}
+#endif // _DEBUG
