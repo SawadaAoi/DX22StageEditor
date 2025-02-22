@@ -59,7 +59,6 @@ void ComponentCollisionSphere::Update()
 		m_fRadius = m_vScale.GetMax() / 2;
 	}
 
-	m_fRadius += 0.003f;	// 少し余裕を持たせる(メッシュに重ならないように)
 
 	// 表示用球のスケールを設定
 	m_pShape->SetScale({ m_fRadius * 2, m_fRadius * 2, m_fRadius * 2 });

@@ -27,6 +27,9 @@ ComponentTransform::ComponentTransform(ObjectBase* pOwner)
 	, m_vLocalPosition(0.0f, 0.0f, 0.0f)
 	, m_qLocalRotation()
 	, m_vLocalScale(1.0f, 1.0f, 1.0f)
+	, m_vWorldPosition(0.0f, 0.0f, 0.0f)
+	, m_qWorldRotation()
+	, m_vWorldScale(1.0f, 1.0f, 1.0f)
 	, m_bMoveTo(false)
 	, m_vMoveStartPos(0.0f, 0.0f, 0.0f)
 	, m_vMoveEndPos(0.0f, 0.0f, 0.0f)
@@ -42,7 +45,7 @@ ComponentTransform::ComponentTransform(ObjectBase* pOwner)
 =========================================== */
 void ComponentTransform::Init()
 {
-	
+
 }
 
 /* ========================================
@@ -67,7 +70,7 @@ void ComponentTransform::Update()
 	内容：ワールド座標を更新する
 =========================================== */
 void ComponentTransform::UpdateWorldTransform()
-{	
+{
 	// 親オブジェクトがある場合
 	if (m_pOwnerObj->GetParentObject())
 	{
@@ -83,10 +86,10 @@ void ComponentTransform::UpdateWorldTransform()
 		DirectX::XMMATRIX parentMat =
 			pParentTran->GetRotation().ToDirectXMatrix() *		// 回転
 			DirectX::XMMatrixTranslation(							// 座標		
-				pParentTran->GetPosition().x, 
-				pParentTran->GetPosition().y, 
+				pParentTran->GetPosition().x,
+				pParentTran->GetPosition().y,
 				pParentTran->GetPosition().z);
-		
+
 		// ローカルと親の行列を掛け合わせてワールド行列(回転、座標)を生成
 		DirectX::XMMATRIX matrix = localMat * parentMat;
 
@@ -161,7 +164,6 @@ void ComponentTransform::RecalculateLocalTransform()
 	m_vLocalScale = m_vWorldScale / pParentTran->GetScale();
 
 }
-
 
 /* ========================================
 	座標移動関数
@@ -356,6 +358,18 @@ void ComponentTransform::Scale(float x, float y, float z)
 }
 
 /* ========================================
+	スケール変更関数
+	-------------------------------------
+	内容：引数のスケールを加える
+	-------------------------------------
+	引数1：スケール	float
+=========================================== */
+void ComponentTransform::Scale(float scale)
+{
+	this->Scale(Vector3<float>(scale, scale, scale));
+}
+
+/* ========================================
 	X軸スケール変更関数
 	-------------------------------------
 	内容：X軸のスケールを加える
@@ -415,8 +429,8 @@ void ComponentTransform::LookAt(const Vector3<float>& target, const Vector3<floa
 
 	// 回転行列を生成(行方向)
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixSet(
-		right.x, right.y, right.z, 0.0f,		
-		newUp.x, newUp.y, newUp.z, 0.0f,	
+		right.x, right.y, right.z, 0.0f,
+		newUp.x, newUp.y, newUp.z, 0.0f,
 		forward.x, forward.y, forward.z, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
@@ -453,7 +467,7 @@ void ComponentTransform::MoveTo(const Vector3<float>& target, float fTime)
 	引数2：限界距離	float
 	引数3：移動速度	float
 =========================================== */
-void ComponentTransform::MoveToward(const Vector3<float>& target,  float fSpeed, float fDistance)
+void ComponentTransform::MoveToward(const Vector3<float>& target, float fSpeed, float fDistance)
 {
 	Vector3<float> fDirVec	= target - m_vWorldPosition;	// 目標までのベクトル
 	float fLength			= fDirVec.Length();				// ベクトルの長さ
@@ -525,7 +539,7 @@ void ComponentTransform::UpdateMoveTo()
 	if (m_fMoveCurrentTime >= m_fMoveTime)
 	{
 		SetPosition(m_vMoveEndPos);	// 目標座標に合わせる
-		m_bMoveTo	= false;			// 移動中フラグを下げる
+		m_bMoveTo = false;			// 移動中フラグを下げる
 	}
 }
 
@@ -673,8 +687,8 @@ void ComponentTransform::SetPosition(const Vector3<float>& position)
 		// 親オブジェクトのTransformコンポーネントを取得
 		ComponentTransform* pParentTran = m_pOwnerObj->GetParentObject()->GetTransform();
 		// 親オブジェクトのワールド行列(座標)を生成
-		DirectX::XMMATRIX parentMat = DirectX::XMMatrixTranslation(	
-			pParentTran->GetPosition().x,	pParentTran->GetPosition().y,pParentTran->GetPosition().z);
+		DirectX::XMMATRIX parentMat = DirectX::XMMatrixTranslation(
+			pParentTran->GetPosition().x, pParentTran->GetPosition().y, pParentTran->GetPosition().z);
 
 		// ローカル行列(座標)を生成
 		DirectX::XMMATRIX localMat = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
@@ -865,7 +879,7 @@ void ComponentTransform::Debug(DebugUI::Window& window)
 		// 回転
 		// 表示だけオイラー角に変換(クォータニオンは直接入力できないため)
 		pGroupTran->AddGroupItem(Item::CreateCallBack("Rotation", Item::Kind::Vector,
-		[this](bool isWrite, void* arg)	// isWrite:入力があるかどうか arg:入力値
+			[this](bool isWrite, void* arg)	// isWrite:入力があるかどうか arg:入力値
 		{
 			CallbackRotation(isWrite, arg, m_qWorldRotation);
 		}));

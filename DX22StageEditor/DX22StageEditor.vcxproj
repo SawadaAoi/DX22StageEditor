@@ -206,6 +206,7 @@
     <ClCompile Include="ObjectEnemyLinear.cpp" />
     <ClCompile Include="ObjectEnemyRandom.cpp" />
     <ClCompile Include="ObjectExplosion.cpp" />
+    <ClCompile Include="ObjectFireBar.cpp" />
     <ClCompile Include="ObjectGameStateManager.cpp" />
     <ClCompile Include="ObjectGoal.cpp" />
     <ClCompile Include="ObjectLight.cpp" />
@@ -322,6 +323,7 @@
     <ClInclude Include="ObjectEnemyLinear.h" />
     <ClInclude Include="ObjectEnemyRandom.h" />
     <ClInclude Include="ObjectExplosion.h" />
+    <ClInclude Include="ObjectFireBar.h" />
     <ClInclude Include="ObjectGameStateManager.h" />
     <ClInclude Include="ObjectGoal.h" />
     <ClInclude Include="ObjectLight.h" />

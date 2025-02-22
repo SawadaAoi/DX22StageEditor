@@ -563,6 +563,9 @@
     <ClCompile Include="ShadowManager.cpp">
       <Filter>ソース ファイル\System\Light</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectFireBar.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">
@@ -921,6 +924,9 @@
     </ClInclude>
     <ClInclude Include="ShadowManager.h">
       <Filter>ソース ファイル\System\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFireBar.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

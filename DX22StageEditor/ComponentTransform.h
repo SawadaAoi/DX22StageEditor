@@ -47,6 +47,7 @@ public:
 	// スケール変換
 	void Scale(const Vector3<float>& scale);
 	void Scale(float x, float y, float z);
+	void Scale(float scale);
 	void ScaleX(float x);	
 	void ScaleY(float y);
 	void ScaleZ(float z);
@@ -93,6 +94,7 @@ public:
 	void Debug(DebugUI::Window& window) override;
 	void CallbackRotation(bool bIsWrite, void* arg, Quaternion& qRotation);
 #endif // _DEBUG
+
 
 	DEFINE_COMPONENT_TYPE	// コンポーネントの種類ID取得関数
 private:
