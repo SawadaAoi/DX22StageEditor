@@ -99,6 +99,9 @@ public:
 	int GetGenerationCount();						// 世代数の取得
 	bool CheckIsDescendant(ObjectBase* pObject);	// 子孫かどうかの判定
 
+	// オブジェクトタグ
+	bool CheckTag(E_ObjectTag eTag);	// タグのチェック
+
 	// コピー関数
 	ObjectBase* Copy();								// オブジェクトのコピー
 	virtual void CopyLocal(ObjectBase* pObject);	// オブジェクトのコピー(個別処理)

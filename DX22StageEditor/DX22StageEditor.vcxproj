@@ -201,6 +201,7 @@
     <ClCompile Include="ObjectCoin.cpp" />
     <ClCompile Include="ObjectCoinGroupCircle.cpp" />
     <ClCompile Include="ObjectCoinGroupLinear.cpp" />
+    <ClCompile Include="ObjectDropFloor.cpp" />
     <ClCompile Include="ObjectEnemy.cpp" />
     <ClCompile Include="ObjectEnemyChase.cpp" />
     <ClCompile Include="ObjectEnemyLinear.cpp" />
@@ -318,6 +319,7 @@
     <ClInclude Include="ObjectCoin.h" />
     <ClInclude Include="ObjectCoinGroupCircle.h" />
     <ClInclude Include="ObjectCoinGroupLinear.h" />
+    <ClInclude Include="ObjectDropFloor.h" />
     <ClInclude Include="ObjectEnemy.h" />
     <ClInclude Include="ObjectEnemyChase.h" />
     <ClInclude Include="ObjectEnemyLinear.h" />

@@ -30,6 +30,7 @@
 #include "ObjectMoveFloor.h"
 #include "ObjectBlockBreakable.h"
 #include "ObjectFireBar.h"
+#include "ObjectDropFloor.h"
 
 // アイテム
 #include "ObjectCoin.h"
@@ -89,6 +90,7 @@ void ObjectTypeRegistry::RegisterAllObjectTypes()
 	REGISTER_OBJECT_TYPE(ObjectMoveFloor, OCT_GIMMICK);
 	REGISTER_OBJECT_TYPE(ObjectBlockBreakable, OCT_GIMMICK);
 	REGISTER_OBJECT_TYPE(ObjectFireBar, OCT_GIMMICK);
+	REGISTER_OBJECT_TYPE(ObjectDropFloor, OCT_GIMMICK);
 
 	// アイテム
 	REGISTER_OBJECT_TYPE(ObjectCoin, OCT_ITEM);

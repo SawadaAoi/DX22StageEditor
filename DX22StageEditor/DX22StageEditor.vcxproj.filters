@@ -566,6 +566,9 @@
     <ClCompile Include="ObjectFireBar.cpp">
       <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectDropFloor.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppController.h">
@@ -926,6 +929,9 @@
       <Filter>ソース ファイル\System\Light</Filter>
     </ClInclude>
     <ClInclude Include="ObjectFireBar.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectDropFloor.h">
       <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
