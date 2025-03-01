@@ -60,5 +60,7 @@ private:
 
 	Vector3<float>	m_vStartPos;	// 移動開始座標
 	Quaternion		m_qStartRot;	// 移動開始角度
+
+	bool m_bIsStartPos;	// 移動開始座標フラグ
 };
 

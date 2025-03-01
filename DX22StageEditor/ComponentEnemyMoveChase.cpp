@@ -40,6 +40,7 @@ ComponentEnemyMoveChase::ComponentEnemyMoveChase(ObjectBase* pOwner)
 	, m_pDistLine(nullptr)
 	, m_vStartPos(Vector3<float>::Zero())
 	, m_qStartRot()
+	, m_bIsStartPos(false)
 {
 }
 
@@ -66,6 +67,13 @@ void ComponentEnemyMoveChase::Init()
 ========================================= */
 void ComponentEnemyMoveChase::Update()
 {
+	if (!m_bIsStartPos)
+	{
+		m_vStartPos = m_pCompTransform->GetPosition();
+		m_qStartRot = m_pCompTransform->GetRotation();
+		m_bIsStartPos = true;
+	}
+
 #ifdef _DEBUG
 	if (CHECK_DISP_COMP("EnemyMoveChase"))
 	{

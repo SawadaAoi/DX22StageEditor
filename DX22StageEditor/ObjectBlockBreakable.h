@@ -15,8 +15,13 @@
 
 // =============== クラス定義 ===================
 class ObjectBlockBreakable :
-	public ObjectBlock
+    public ObjectBlock
 {
+public:
+	struct S_SaveData
+	{
+		int nHp;	// HP
+	};
 public:
 	ObjectBlockBreakable(SceneBase* pScene);
 	void InitLocal() override;
@@ -24,7 +29,18 @@ public:
 
 	void OnCollisionEnter(ObjectBase* pHit) override;
 
+	void CopyLocal(ObjectBase* pObject) override;
+
+	void OutPutLocalData(std::ofstream& file) override;
+	void InputLocalData(std::ifstream& file) override;
+
+	// セッター
+	void SetHp(int nHp);
+
 	DEFINE_OBJECT_TYPE(ObjectBlockBreakable)
+#ifdef _DEBUG
+	void DebugLocal(DebugUI::Window& window);
+#endif // DEBUG
 private:
 	int m_nHp;		// HP
 	int m_nHpOld;	// HP(前回)

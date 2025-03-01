@@ -75,3 +75,53 @@ public:
 
 	DEFINE_SCENE_TYPE(SceneStageSave_5)
 };
+
+class SceneStageSave_6 :
+    public SceneBase
+{
+public:
+    void InitLocal() override { FILE_INPUT(6); };
+    void UninitLocal() override { FILE_OUTPUT(6); };
+
+    DEFINE_SCENE_TYPE(SceneStageSave_6)
+};
+
+class SceneStageSave_7 :
+    public SceneBase
+{
+public:
+    void InitLocal() override { FILE_INPUT(7); };
+    void UninitLocal() override { FILE_OUTPUT(7); };
+
+    DEFINE_SCENE_TYPE(SceneStageSave_7)
+};
+
+class SceneStageSave_8 :
+    public SceneBase
+{
+public:
+    void InitLocal() override { FILE_INPUT(8); };
+    void UninitLocal() override { FILE_OUTPUT(8); };
+
+    DEFINE_SCENE_TYPE(SceneStageSave_8)
+};
+
+class SceneStageSave_9 :
+    public SceneBase
+{
+public:
+    void InitLocal() override { FILE_INPUT(9); };
+    void UninitLocal() override { FILE_OUTPUT(9); };
+
+    DEFINE_SCENE_TYPE(SceneStageSave_9)
+};
+
+class SceneStageSave_10 :
+    public SceneBase
+{
+public:
+    void InitLocal() override { FILE_INPUT(10); };
+    void UninitLocal() override { FILE_OUTPUT(10); };
+
+    DEFINE_SCENE_TYPE(SceneStageSave_10)
+};

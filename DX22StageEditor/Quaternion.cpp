@@ -432,29 +432,29 @@ Vector3<float> Quaternion::ToEulerAngle(bool bRange360) const
 		// ヨー
 		float a = 2.0f * (m_fAxis.x * m_fAxis.y + m_fAxis.z * m_fAngle);
 		float b = (2.0f * (m_fAngle * m_fAngle)) + (2.0f * (m_fAxis.x * m_fAxis.x)) - 1.0f;
-		fYaw = atan2f(a , b);
+		fYaw = atan2f(a, b);
 	}
 	else
 	{
 		// ピッチ
 		float a = 2.0f * (m_fAxis.x * m_fAxis.z - m_fAxis.y * m_fAngle);
 		float b = (2.0f * (m_fAngle * m_fAngle)) + (2.0f * (m_fAxis.z * m_fAxis.z)) - 1.0f;
-		fPitch = atan2f(-a , b);
+		fPitch = atan2f(-a, b);
 
 		// ヨー
 		float c = 2.0f * (m_fAxis.x * m_fAxis.y - m_fAxis.z * m_fAngle);
 		float d = (2.0f * (m_fAngle * m_fAngle)) + (2.0f * (m_fAxis.y * m_fAxis.y)) - 1.0f;
 		fYaw = atanf(-(c / d));
-		fYaw = atan2f(-c , d);
+		fYaw = atan2f(-c, d);
 
 	}
 
 	// 0～360に変換
 	if (bRange360)
 	{
-		fRoll	= MathUtils::ConvertTo0To2Pi(fRoll);
-		fPitch	= MathUtils::ConvertTo0To2Pi(fPitch);
-		fYaw	= MathUtils::ConvertTo0To2Pi(fYaw);
+		fRoll = MathUtils::ConvertTo0To2Pi(fRoll);
+		fPitch = MathUtils::ConvertTo0To2Pi(fPitch);
+		fYaw = MathUtils::ConvertTo0To2Pi(fYaw);
 	}
 
 	return Vector3<float>(fRoll, fPitch, fYaw);
@@ -500,7 +500,7 @@ Quaternion Quaternion::FromEulerAngle(Vector3<float> fEulerAngle)
 	Quaternion 	qPitch = Quaternion::FromAxisAngleNormalized(Vector3<float>::Up(), fEulerAngle.y);		// ピッチ回転
 	Quaternion	qYaw = Quaternion::FromAxisAngleNormalized(Vector3<float>::Forward(), fEulerAngle.z);	// ヨー回転
 
-	Quaternion reQ = qYaw * qRoll * qPitch;// ヨー、ピッチ、ロールの順で掛ける
+	Quaternion reQ = qYaw * qRoll * qPitch;// ヨー、ロール、ピッチ(Z,X,Y)の順で掛ける
 
 	return reQ;
 }

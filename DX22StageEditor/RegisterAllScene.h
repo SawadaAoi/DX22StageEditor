@@ -26,4 +26,9 @@ void SceneManager::RegisterAllScene()
 	REGISTER_SCENE(SceneStageSave_3);
 	REGISTER_SCENE(SceneStageSave_4);
 	REGISTER_SCENE(SceneStageSave_5);
+	REGISTER_SCENE(SceneStageSave_6);
+	REGISTER_SCENE(SceneStageSave_7);
+	REGISTER_SCENE(SceneStageSave_8);
+	REGISTER_SCENE(SceneStageSave_9);
+	REGISTER_SCENE(SceneStageSave_10);
 }

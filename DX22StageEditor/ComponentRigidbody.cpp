@@ -71,7 +71,7 @@ void ComponentRigidbody::Update()
 	// 重力を使用する場合は重力を加算
 	if (m_bUseGravity)
 	{
-		m_vAcceleration += Vector3<float>(0.0f, GRAVITY_FORCE * m_fMass, 0.0f);
+		m_vAcceleration += Vector3<float>(0.0f, GRAVITY_FORCE, 0.0f);
 	}
 
 	// 抵抗力の計算（空気中と地面で異なる係数を使用）

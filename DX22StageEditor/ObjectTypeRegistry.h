@@ -16,6 +16,8 @@
 
 // =============== 定数定義 =======================
 #define OBJ_TYPE_REGISTRY_INST ObjectTypeRegistry::GetInstance()    // インスタンス取得用マクロ
+
+// クラス種類マップ登録用マクロ
 #define REGISTER_OBJECT_TYPE(className, cateNum)									\
     ObjectTypeRegistry::GetInstance().Register(#className,                          \
         []() -> ObjectBase* { return new className(SceneManager::GetScene()); });   \

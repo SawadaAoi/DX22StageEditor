@@ -88,3 +88,83 @@ void ObjectBlockBreakable::OnCollisionEnter(ObjectBase* pHit)
 		}
 	}
 }
+
+/* ========================================
+	コピー関数(個別処理)
+	-------------------------------------
+	内容：オブジェクト個別のコピー処理
+	-------------------------------------
+	引数1：コピーされたオブジェクト
+=========================================== */
+void ObjectBlockBreakable::CopyLocal(ObjectBase* pObject)
+{
+	__super::CopyLocal(pObject);	// 親クラスのコピー関数を呼ぶ
+
+	ObjectBlockBreakable* pObj = dynamic_cast<ObjectBlockBreakable*>(pObject);
+
+	// HP
+	pObj->m_nHp = m_nHp;
+}
+
+
+/* ========================================
+	ローカルデータ出力関数
+	-------------------------------------
+	内容：オブジェクトのローカルデータをファイルに書き込む
+	-------------------------------------
+	引数1：ファイル
+=========================================== */
+void ObjectBlockBreakable::OutPutLocalData(std::ofstream& file)
+{
+	S_SaveData data;
+
+	// HP
+	data.nHp = m_nHp;
+
+	file.write((char*)&data, sizeof(S_SaveData));
+}
+
+/* ========================================
+	ローカルデータ入力関数
+	-------------------------------------
+	内容：ファイルからオブジェクトのローカルデータを読み込む
+	-------------------------------------
+	引数1：ファイル
+=========================================== */
+void ObjectBlockBreakable::InputLocalData(std::ifstream& file)
+{
+	S_SaveData data;
+
+	file.read((char*)&data, sizeof(S_SaveData));
+
+	// HP
+	m_nHp = data.nHp;
+}
+
+/* ========================================
+	セッター(HP)関数
+	-------------------------------------
+	引数：int HP
+=========================================== */
+void ObjectBlockBreakable::SetHp(int nHp)
+{
+	m_nHp = nHp;
+}
+
+#ifdef _DEBUG
+/* ========================================
+	デバッグ関数
+	-------------------------------------
+	内容：デバッグ用の処理
+======================================== */
+void ObjectBlockBreakable::DebugLocal(DebugUI::Window& window)
+{
+	using namespace DebugUI;
+
+	Item* pGroupBlockBreakable = Item::CreateGroup("BlockBreakable");
+	// HP
+	pGroupBlockBreakable->AddGroupItem(Item::CreateBind("HP", Item::Kind::Int, &m_nHp));
+
+	window.AddItem(pGroupBlockBreakable);
+}
+#endif // _DEBUG
