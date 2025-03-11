@@ -63,6 +63,9 @@ private:
 	void CheckRaycastGround();		// 地面接触判定
 	void ResolveOverlapCollision();	// 衝突時のめり込み解決
 	void SetCollisionComponent();	// 衝突判定コンポーネント取得
+
+	bool CheckOBBBlockGround(std::string sMtvObjName);	// 地面ブロック判定
+
 private:
 	ComponentTransform*		m_pCompTransform;		// 座標、回転、スケール
 	ComponentGroundRaycast* m_pCompGroundRay;		// 地面接触判定

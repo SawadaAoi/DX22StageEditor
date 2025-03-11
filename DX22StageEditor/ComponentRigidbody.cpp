@@ -15,6 +15,7 @@
 #include "ComponentCollisionOBB.h"
 #include "ComponentCollisionSphere.h"
 #include "ObjectBase.h"
+#include "SceneBase.h"
 
 
 // =============== 定数定義 =======================
@@ -196,9 +197,8 @@ void ComponentRigidbody::ResolveOverlapCollision()
 		if (!mtv.bIsCol) continue;										// 衝突していない場合は次のオブジェクトへ
 		if (mtv.bIsTrigger) continue;									// トリガーの場合は次のオブジェクトへ
 		if (m_pCompCollisionBase->GetTrigger()) continue;				// トリガーの場合は次のオブジェクトへ
-		// レイ衝突地面は無視
-		// ※地面ブロックが斜めの場合に、めり込み解消があると、滑り落ちるのを防ぐため
-		if (m_pCompGroundRay != nullptr && mtv.sName == m_pCompGroundRay->GetHitObjName()) continue;
+		
+		if (CheckOBBBlockGround(mtv.sName)) continue;					// OBB地面ブロックの場合は次のオブジェクトへ(斜めの場合に滑り落ちるのを防ぐ)
 
 		// めり込み方向
 		Vector3<float> vReturnDir	= mtv.vAxis * -1.0f;	// 衝突軸の反対方向
@@ -240,6 +240,29 @@ void ComponentRigidbody::SetCollisionComponent()
 	{
 		m_pCompCollisionBase = m_pOwnerObj->GetComponent<ComponentCollisionSphere>();
 	}
+}
+
+/* ========================================
+	OBB地面ブロック判定関数
+	-------------------------------------
+	内容：OBB地面ブロックの場合はtrueを返す
+	-------------------------------------
+	引数1：std::string	めり込んでいるオブジェクト名
+	-------------------------------------
+	戻値：bool	地面ブロックの場合はtrue
+========================================= */
+bool ComponentRigidbody::CheckOBBBlockGround(std::string sMtvObjName)
+{
+	if (m_pCompGroundRay == nullptr)						return false;	// 地面接触判定がない場合はfalse
+	if (sMtvObjName != m_pCompGroundRay->GetHitObjName())	return false;	// 衝突しているオブジェクトが地面でない場合はfalse
+
+	// 衝突オブジェクトを取得
+	ObjectBase* pHitObj = m_pOwnerObj->GetOwnerScene()->FindSceneObject(sMtvObjName);
+
+	// 衝突オブジェクトにOBBコンポーネントがない場合はfalse
+	if (!pHitObj->GetComponent<ComponentCollisionOBB>()) return false;
+
+	return true;
 }
 
 
