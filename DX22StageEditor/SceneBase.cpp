@@ -141,7 +141,8 @@ void SceneBase::UpdateObject()
 	// 所持オブジェクト配列の全要素を更新
 	for (auto& pObject : m_pObjects)
 	{
-		if (pObject->GetState() == OBJ_PAUSE) continue;	// 一時停止中のオブジェクトは更新しない
+		if (pObject->GetState() == OBJ_PAUSE) continue;			// 一時停止中のオブジェクトは更新しない
+		if (pObject->GetParentObject() != nullptr) continue;	// 親オブジェクトがある場合は更新しない(親オブジェクトで更新するため
 
 		pObject->Update();
 	}
@@ -151,8 +152,9 @@ void SceneBase::UpdateObject()
 	// 一時保存オブジェクト配列
 	for (auto& pObject : m_pStandbyObjects)
 	{
-		if (pObject->GetState() == OBJ_PAUSE) continue;	// 一時停止中のオブジェクトは更新しない
-		pObject->Update();
+		if (pObject->GetState() == OBJ_PAUSE) continue;					// 一時停止中のオブジェクトは更新しない
+		if (pObject->GetParentObject() == nullptr)	pObject->Update();	// 親オブジェクトがない場合のみ更新
+
 		m_pObjects.emplace_back(std::move(pObject));	// オブジェクト配列に移動
 	}
 	m_pStandbyObjects.clear();	// クリア
@@ -174,7 +176,6 @@ void SceneBase::RemoveDeadObjects()
 	for (auto& pObject : m_pObjects)
 		pObjectStateMap.insert(std::make_pair(pObject.get(), pObject->GetState()));
 
-
 	// 死亡状態のオブジェクトを削除
 	for (auto it = m_pObjects.begin(); it != m_pObjects.end();)
 	{
@@ -182,6 +183,14 @@ void SceneBase::RemoveDeadObjects()
 		// 死亡状態かどうか
 		if (pObjectStateMap.at(pObject) == OBJ_DEAD)
 		{
+			// 子オブジェクトがある場合はスキップ
+			// ※削除の順番を子→親にするため
+			if (pObject->GetChildObjects().size() > 0)
+			{
+				++it;	// 次の要素へ
+				continue;
+			}
+
 #ifdef _DEBUG
 			// 削除対象オブジェクトが一覧で選択中の場合
 			if (m_nObjectListSelectNo == ITEM_OBJ_LIST.GetListNo(pObject->GetListName().c_str()))
@@ -191,16 +200,7 @@ void SceneBase::RemoveDeadObjects()
 				m_nObjectListSelectNo = -1;								// 選択番号をリセット
 				ITEM_OBJ_LIST.SetListNo(-1);	// 選択番号をリセット
 			}
-#endif
-
-			// 子オブジェクトがある場合
-			if (pObject->GetChildObjects().size() > 0)
-			{
-				for (auto& pChild : pObject->GetChildObjects())
-				{
-					this->RemoveSceneObject(pChild);	// 子オブジェクトを削除
-				}
-			}
+#endif // _DEBUG
 			// 親オブジェクトがある場合
 			if (pObject->GetParentObject())
 			{
@@ -264,30 +264,6 @@ ObjectBase* SceneBase::FindSceneObject(std::string sName)
 
 	return nullptr;
 }
-
-/* ========================================
-	オブジェクト削除関数
-	-------------------------------------
-	内容：シーンに所属するオブジェクトを削除
-		　※死亡状態のオブジェクトを削除する場合に使用(子オブジェクトの削除時)
-	-------------------------------------
-	引数：pObject	削除するオブジェクトポインタ
-=========================================== */
-void SceneBase::RemoveSceneObject(ObjectBase* pObject)
-{
-	if (pObject->GetChildObjects().size() > 0)
-	{
-		for (auto& pChild : pObject->GetChildObjects())
-		{
-			this->RemoveSceneObject(pChild);	// 子オブジェクトを削除
-		}
-	}
-
-	pObject->RemoveParentObject();	// 親オブジェクトから削除
-	pObject->Destroy();				// オブジェクト削除
-
-}
-
 
 /* ========================================
 	衝突判定配列追加関数

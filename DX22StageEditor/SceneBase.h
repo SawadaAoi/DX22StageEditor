@@ -64,8 +64,6 @@ public:
 	void AddSceneObjectBase(ObjectBase* pObject);	// オブジェクト追加
 	ObjectBase* FindSceneObject(std::string sName);	// オブジェクト検索
 
-	void RemoveSceneObject(ObjectBase* pObject);	// オブジェクト削除
-
 
 	// 衝突判定関連
 	void AddObjectCollision(ComponentCollisionBase* pCollision);	// 衝突判定コンポーネント追加
