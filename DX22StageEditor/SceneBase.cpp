@@ -141,6 +141,8 @@ void SceneBase::UpdateObject()
 	// 所持オブジェクト配列の全要素を更新
 	for (auto& pObject : m_pObjects)
 	{
+		if (pObject->GetState() == OBJ_PAUSE) continue;	// 一時停止中のオブジェクトは更新しない
+
 		pObject->Update();
 	}
 
@@ -149,6 +151,7 @@ void SceneBase::UpdateObject()
 	// 一時保存オブジェクト配列
 	for (auto& pObject : m_pStandbyObjects)
 	{
+		if (pObject->GetState() == OBJ_PAUSE) continue;	// 一時停止中のオブジェクトは更新しない
 		pObject->Update();
 		m_pObjects.emplace_back(std::move(pObject));	// オブジェクト配列に移動
 	}

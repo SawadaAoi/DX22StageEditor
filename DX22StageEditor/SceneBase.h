@@ -97,7 +97,7 @@ private:
 	void AddObjectListChild(ObjectBase* pObject);
 
 #endif // _DEBUG
-private:
+protected:
 	std::vector<std::unique_ptr<ObjectBase>>	m_pObjects;			// シーンに所属するオブジェクト一覧
 	std::vector<std::unique_ptr<ObjectBase>>	m_pStandbyObjects;	// オブジェクトを一時的に保存しておく配列
 	std::vector<ComponentCollisionBase*>		m_pObjectCollision;	// 各オブジェクトが持つ衝突判定コンポーネント

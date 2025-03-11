@@ -141,10 +141,11 @@ void ComponentCollisionBase::UpdateCollision(ComponentCollisionBase* otherCol)
 {
 	ObjectBase* pOtherObj = otherCol->GetOwnerObject();	// 相手のオブジェクトを取得
 
-	if (pOtherObj->GetState() == OBJ_DEAD) return;	// 相手のオブジェクトが死亡状態なら処理しない
-	if (!m_bIsEnabled) return;										// このコリジョンが無効なら処理しない
-	if (!otherCol->GetEnable()) return;								// 相手のコリジョンが無効なら処理しない
-	if (!m_bIsDynamic && !otherCol->GetDynamic()) return;			// 両方のコリジョンが静的なら処理しない
+	if (m_pOwnerObj->GetState() == OBJ_PAUSE) return;		// 所有オブジェクトが一時停止状態なら処理しない
+	if (pOtherObj->GetState() == OBJ_DEAD) return;			// 相手のオブジェクトが死亡状態なら処理しない
+	if (!m_bIsEnabled) return;								// このコリジョンが無効なら処理しない
+	if (!otherCol->GetEnable()) return;						// 相手のコリジョンが無効なら処理しない
+	if (!m_bIsDynamic && !otherCol->GetDynamic()) return;	// 両方のコリジョンが静的なら処理しない
 
 	// 衝突オブジェクトが一覧にない場合、追加
 	if (m_bColStatesMap.find(pOtherObj) == m_bColStatesMap.end())
