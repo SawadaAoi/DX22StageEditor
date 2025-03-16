@@ -222,6 +222,9 @@
     <Filter Include="リソース ファイル\VertexShader\Shape">
       <UniqueIdentifier>{3e5abdaf-f4e7-4d95-81ee-38329bf2ce90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\GameObject\StageObject\Gimmick\JumpPad">
+      <UniqueIdentifier>{397b1ce9-1d87-4a52-b964-3adfd9357875}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -568,6 +571,12 @@
     </ClCompile>
     <ClCompile Include="ObjectDropFloor.cpp">
       <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectJumpSwitch.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick\JumpPad</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectJumpPad.cpp">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick\JumpPad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -933,6 +942,12 @@
     </ClInclude>
     <ClInclude Include="ObjectDropFloor.h">
       <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectJumpPad.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick\JumpPad</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectJumpSwitch.h">
+      <Filter>ソース ファイル\App\GameObject\StageObject\Gimmick\JumpPad</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

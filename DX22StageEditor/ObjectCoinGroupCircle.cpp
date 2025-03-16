@@ -15,7 +15,8 @@
 #include "ComponentRigidbody.h"
 
 #ifdef _DEBUG
-#include "ComponentCollisionSphere.h"	// debugの見た目用
+#include "ComponentBillboard.h"			// debugの見た目用
+#include "TextureManager.h"
 #endif // DEBUG
 
 // =============== 定数定義 =======================
@@ -48,7 +49,7 @@ ObjectCoinGroupCircle::ObjectCoinGroupCircle(SceneBase* pScene)
 void ObjectCoinGroupCircle::InitLocal()
 {
 #ifdef _DEBUG
-	AddComponent<ComponentCollisionSphere>()->SetTrigger(true);	// debugの見た目用
+	AddComponent<ComponentBillboard>()->SetTexture(GET_TEXTURE_DATA(TEX_KEY::UI_COIN_ICON));	// テクスチャ設定
 #endif // DEBUG
 }
 

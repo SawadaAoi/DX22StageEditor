@@ -48,12 +48,14 @@ public:
 	// ゲッター
 	float GetMoveSpeed();
 	float GetRotateSpeed();
+	float GetJumpPower();
 	bool GetUseJump();
 	Vector3<float> GetMoveDir();
 
 	// セッター
 	void SetMoveSpeed(float fMoveSpeed);
 	void SetRotateSpeed(float fRotateSpeed);
+	void SetJumpPower(float fJumpPower);
 	void SetUseJump(bool bUseJump);
 	void SetInputEnable(bool bEnable);
 

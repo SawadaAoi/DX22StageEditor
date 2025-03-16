@@ -405,6 +405,16 @@ float ComponentPlayerController::GetRotateSpeed()
 }
 
 /* ========================================
+	ゲッター(ジャンプ力)関数
+	-------------------------------------
+	戻値：float		ジャンプ力
+=========================================== */
+float ComponentPlayerController::GetJumpPower()
+{
+	return m_fJumpPower;
+}
+
+/* ========================================
 	ゲッター(ジャンプ有効フラグ)関数
 	-------------------------------------
 	戻値：bool		ジャンプ有効フラグ
@@ -442,6 +452,16 @@ void ComponentPlayerController::SetMoveSpeed(float fMoveSpeed)
 void ComponentPlayerController::SetRotateSpeed(float fRotateSpeed)
 {
 	m_fRotateSpeed = fRotateSpeed;
+}
+
+/* ========================================
+	セッター(ジャンプ力)関数
+	-------------------------------------
+	戻値：float		ジャンプ力
+=========================================== */
+void ComponentPlayerController::SetJumpPower(float fJumpPower)
+{
+	m_fJumpPower = fJumpPower;
 }
 
 /* ========================================

@@ -49,13 +49,17 @@ public:
 		BG_STAGE_SELECT,	// ステージセレクト背景
 		FADE_IRIS_OUT,		// アイリスアウト
 		EFFECT_FIREBALL,	// 火の玉エフェクト
+		UI_COIN_ICON,		// コインアイコン
+		UI_FRAME_1,			// フレーム1
+		UI_FRAME_2,			// フレーム2
+		UI_FRAME_3,			// フレーム3
 		MAX,
 	};
 
 	// 画像データ保存先パス
 	const std::unordered_map < TextureManager::E_TEX_KEY, std::string > MODEL_TEX_PATH
 	{
-		{TEX_KEY::TEST,					"Assets/Texture/Test.png"						},	
+		{TEX_KEY::TEST,					"Assets/Texture/Test.png"						},
 		{TEX_KEY::DEBUG_CAMERA_ICON,	"Assets/Texture/Debug/Debug_Camera_Icon.png"	},
 		{TEX_KEY::DEBUG_LIGHT_ICON,		"Assets/Texture/Debug/Debug_Light_Icon.png"		},
 		{TEX_KEY::DEBUG_PLAYER_START,	"Assets/Texture/Debug/Debug_PlayerStart.png"	},
@@ -77,6 +81,10 @@ public:
 		{TEX_KEY::BG_STAGE_SELECT,		"Assets/Texture/UI/BG_StageSelect.png"			},
 		{TEX_KEY::FADE_IRIS_OUT,		"Assets/Texture/UI/Fade_IrisOut.png"			},
 		{TEX_KEY::EFFECT_FIREBALL,		"Assets/Texture/Effect_Fireball.png"			},
+		{TEX_KEY::UI_COIN_ICON,			"Assets/Texture/UI/UI_CoinIcon.png"				},
+		{TEX_KEY::UI_FRAME_1,			"Assets/Texture/UI/UI_Frame_1.png"				},
+		{TEX_KEY::UI_FRAME_2,			"Assets/Texture/UI/UI_Frame_2.png"				},
+		{TEX_KEY::UI_FRAME_3,			"Assets/Texture/UI/UI_Frame_3.png"				},
 
 	};
 

@@ -33,6 +33,7 @@ public:
 		PLAYER_CAT,
 		SKYBOX_SUNNY,
 		GOAL_NIKUKYU,
+		GIMMICK_SPRING,	// ジャンプ台
 		MAX,
 	};
 
@@ -42,6 +43,7 @@ public:
 		{MODEL_KEY::PLAYER_CAT,		"Assets/Model/Static/Player/Cat.fbx"},
 		{MODEL_KEY::SKYBOX_SUNNY,	"Assets/Model/Static/Skybox/Sunny/SkyBox_Sunny.fbx"},
 		{MODEL_KEY::GOAL_NIKUKYU,	"Assets/Model/Static/Goal/Goal_Nikukyu.fbx"},
+		{MODEL_KEY::GIMMICK_SPRING,	"Assets/Model/Static/Gimmick/Spring/Gimmick_Spring.fbx"},
 	};
 
 	// 各モデルデータ大きさ指定
@@ -51,6 +53,7 @@ public:
 		{MODEL_KEY::PLAYER_CAT,		0.6f},
 		{MODEL_KEY::SKYBOX_SUNNY,	1.0f},
 		{MODEL_KEY::GOAL_NIKUKYU,	0.4f},
+		{MODEL_KEY::GIMMICK_SPRING,	1.0f},
 	};
 
 public:
