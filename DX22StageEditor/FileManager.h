@@ -14,6 +14,11 @@
 #include "Vector3.h"
 #include "Quaternion.h"
 
+
+// =============== ‘O•ûéŒ¾ =======================
+class ObjectBase;
+
+
 // =============== ’è”’è‹` =======================
 const int MAX_TEXT_SIZE = 256;
 
@@ -39,5 +44,9 @@ public:
 
 	static void StageObjectOutput(std::string sPath);
 	static void StageObjectInput(std::string sPath);
+	static void StageSelectOutput(std::string sPath);
+private:
+	static void RegistStageSelectSample(std::ofstream& file);
+	static void AdjustObjectParameter(ObjectBase* pObject);
 };
 

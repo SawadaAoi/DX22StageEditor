@@ -44,6 +44,9 @@ public:
 	void OutPutLocalData(std::ofstream& file) override;
 	void InputLocalData(std::ifstream& file) override;
 
+	// ÉQÉbÉ^Å[
+	ComponentGimmickMoveLinear* GetCompMoveLinear();
+
 	DEFINE_OBJECT_TYPE(ObjectMoveFloor)
 private:
 	ComponentGimmickMoveLinear* m_pCompMoveLinear;

@@ -197,6 +197,14 @@ namespace DebugUI
 			FileManager::StageObjectInput(sPath + "/" + sFileName + sExtension);
 		}, false, true));
 
+		// ステージセレクト見本出力
+		WIN_DATA_INOUT.AddItem(Item::CreateCallBack("StageSelectOutPut", Item::Kind::Command, [](bool isWrite, void* arg)
+		{
+			std::string sPath = WIN_DATA_INOUT["SavePath"].GetPath();
+			std::string sFileName = WIN_DATA_INOUT["FileName"].GetPath();
+			FileManager::StageSelectOutput(sPath + "/" + sFileName + ".slc");
+		}, false, true));
+
 		// データ入出力時のオプション
 		WIN_DATA_INOUT.AddItem(Item::CreateValue("TransformOnly", Item::Kind::Bool, true, true));	// トランスフォーム情報のみ(オブジェクト個々のデータは含まない)
 		WIN_DATA_INOUT.AddItem(Item::CreateValue("Camera", Item::Kind::Bool, true));			// カメラオブジェクトを含むか

@@ -175,3 +175,13 @@ void ObjectMoveFloor::InputLocalData(std::ifstream& file)
 		m_pCompMoveLinear->AddWayPoint(wayPoint);
 	}
 }
+
+/* ========================================
+	ゲッター(移動床コンポーネント)関数
+	-------------------------------------
+	戻値: コンポーネントポインタ
+=========================================== */
+ComponentGimmickMoveLinear* ObjectMoveFloor::GetCompMoveLinear()
+{
+	return m_pCompMoveLinear;
+}

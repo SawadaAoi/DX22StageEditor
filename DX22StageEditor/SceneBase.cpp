@@ -538,6 +538,26 @@ void SceneBase::InitObjectList()
 
 	}, false, true));
 
+	// 全オブジェクト削除ボタン
+	WIN_OBJ_LIST.AddItem(Item::CreateCallBack("AllRemove", Item::Kind::Command, [this](bool isWrite, void* arg)
+	{
+		// 確認用メッセージ(はい、いいえ)表示(誤操作防止)
+		if (MessageBox(nullptr, "全てのオブジェクトを削除しますか？", "確認", MB_YESNO) == IDNO)
+		{
+			return;	// キャンセル
+		}
+
+		RemoveAllObject();	// 全オブジェクト削除
+
+		// オブジェクトの選択を解除
+		m_nObjectListSelectNo = -1;								// 選択番号をリセット
+		m_pSelectObj = nullptr;									// 選択中のオブジェクトをクリア
+		WIN_OBJ_LIST[ITEM_OBJ_LIST_NAME.c_str()].SetListNo(-1);	// 選択番号をリセット
+		WIN_OBJ_INFO.Clear();									// 表示リセット
+
+
+	}, false, true));
+
 	// オブジェクト選択時のコールバック関数
 	Item::ConstCallback  FuncListClick = [this](const void* arg) 
 	{
@@ -796,6 +816,29 @@ void SceneBase::AddObjectListChild(ObjectBase* pObject)
 	{
 		return;
 	}
+}
+
+/* ========================================
+	デバッグ用全オブジェクト削除関数
+	-------------------------------------
+	内容：メインカメラ以外の全てのオブジェクトを削除
+=========================================== */
+void SceneBase::RemoveAllObject()
+{
+	// 所持オブジェクト配列の全要素を削除
+	for (auto& pObject : m_pObjects)
+	{// カメラオブジェクトがアクティブの場合、削除不可
+		if (CAMERA_MNG_INST.GetActiveCamera() == pObject.get())	continue;
+		pObject->Destroy();	// オブジェクト削除
+	}
+
+	// 一時保存オブジェクト配列
+	for (auto& pObject : m_pStandbyObjects)
+	{
+		if (CAMERA_MNG_INST.GetActiveCamera() == pObject.get())	continue;
+		pObject->Destroy();	// オブジェクト削除
+	}
+
 }
 
 

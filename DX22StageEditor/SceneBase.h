@@ -94,6 +94,8 @@ private:
 	void UpdateTransformEdit();	// 変形エディタの更新
 	void AddObjectListChild(ObjectBase* pObject);
 
+	void RemoveAllObject();	// 全オブジェクト削除ボタン用
+
 #endif // _DEBUG
 protected:
 	std::vector<std::unique_ptr<ObjectBase>>	m_pObjects;			// シーンに所属するオブジェクト一覧
