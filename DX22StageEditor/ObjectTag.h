@@ -24,4 +24,5 @@ enum E_ObjectTag
 	Goal,				// ゴール
 	Coin,				// コイン
 	StageSampleParent,	// ステージサンプル親
+	SkyBox,				// スカイボックス
 };

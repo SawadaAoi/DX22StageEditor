@@ -40,20 +40,13 @@ public:
 	// セッター
 	void SetIsGoal(bool bIsGoal);	// データ保存
 
-	void OutPutLocalData(std::ofstream& file) override;
-	void InputLocalData(std::ifstream& file) override;
-
 	DEFINE_OBJECT_TYPE(ObjectGoal)
-#ifdef _DEBUG
-	void DebugLocal(DebugUI::Window& window);
-#endif // DEBUG
 private:
 	ComponentModelStatic* m_pModel;	// モデルコンポーネント
 
 	bool			m_bIsGoal;			// true: ゴール / false: 未ゴール
 	float			m_fAnimeTimeCnt;	// アニメーション時間カウント
-	Vector3<float>	m_vBasePos;			// 基準座標
 
-	bool m_bOnFloatAnime;				// 上下アニメーションフラグ
+	ObjectBase* m_pModelObj;
 };
 

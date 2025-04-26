@@ -249,6 +249,7 @@ void FileManager::StageSelectOutput(std::string sPath)
 		if (pObject->GetTag() == E_ObjectTag::Light)		continue;
 		if (pObject->GetTag() == E_ObjectTag::PlayerStart)	continue;
 		if (pObject->GetTag() == E_ObjectTag::Enemy)		continue;	// ToDo: 余裕があれば不具合(すごい速さで回転する)を修正する
+		if (pObject->GetTag() == E_ObjectTag::SkyBox)		continue;
 
 		if (!pObject->GetIsSave()) continue;	// 保存フラグが立っていない場合はスキップ
 

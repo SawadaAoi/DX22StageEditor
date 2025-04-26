@@ -22,6 +22,7 @@ ObjectSkyBox::ObjectSkyBox(SceneBase* pScene)
 	: ObjectBase(pScene)
 	, m_pCompModelStatic(nullptr)
 {
+	SetTag(E_ObjectTag::SkyBox);	// É^ÉOÇÃê›íË
 }
 
 /* ========================================
