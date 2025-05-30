@@ -52,9 +52,14 @@ public:
 	// シーン再読み込み
 	static void ReloadScene(float fFadeTime = 1.0f);	// シーン再読み込みを呼び出す
 
+	// 再生フラグ
+	static void PlayGame();
+	static void StopGame();
+
 	// ゲッター
 	static SceneBase* GetScene();	// シーン取得
 	static std::vector<std::string> GetSceneNameList();	// シーン名リスト取得
+	static bool GetPlayGameFlg();
 
 private:
 	static void CommitSceneChange();	// シーン変更を確定する
@@ -65,6 +70,8 @@ private:
 	static inline std::unordered_map<std::string, CreateSceneFunc> m_SceneMap;	// シーン生成関数マップ
 	static inline std::string	m_sNextSceneName = "";		// 次のシーン名
 	static inline bool			m_isSceneChange = false;	// シーン切り替えフラグ
+
+	static inline bool m_bPlayGame = false;	// 再生フラグ(床の移動や、重力、敵の移動など)
 
 };
 

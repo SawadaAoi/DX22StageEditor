@@ -483,8 +483,6 @@ ObjectBase* SceneBase::GetSceneObjectTag(E_ObjectTag tag)
 
 
 
-
-
 // デバッグ用 ========================================================
 #ifdef _DEBUG
 
@@ -840,6 +838,5 @@ void SceneBase::RemoveAllObject()
 	}
 
 }
-
 
 #endif

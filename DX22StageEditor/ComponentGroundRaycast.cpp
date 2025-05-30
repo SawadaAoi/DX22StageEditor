@@ -17,6 +17,8 @@
 #include "SceneBase.h"
 #include <vector>
 
+#include "SceneManager.h"		// シーン管理クラス
+
 /* ========================================
 	コンストラクタ関数
 	-------------------------------------
@@ -68,11 +70,19 @@ void ComponentGroundRaycast::Init()
 =========================================== */
 void ComponentGroundRaycast::Update()
 {
+	// ゲームプレイ中のみ更新
+	if (!SceneManager::GetPlayGameFlg())
+	{
+		m_bIsHit = false;	// ゲームプレイ中でない場合は接触判定を無効化
+		return;
+	}
+
+	// レイの始点をオーナーオブジェクトの位置とオフセットを加えた位置に更新
 	m_vStartPos = m_pOwnerObj->GetTransform()->GetPosition() + m_vStartPosOffset;
+	// レイの更新
 	m_pRayLine->UpdateLine(1, m_vStartPos, m_vStartPos + (m_vDirection * m_fRayLength), ColorVec3::RED);
 
-	CheckGround();
-
+	CheckGround();	// 地面判定処理
 
 #ifdef _DEBUG
 	// 接触判定表示用

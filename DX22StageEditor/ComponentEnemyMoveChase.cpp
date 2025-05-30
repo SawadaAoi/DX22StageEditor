@@ -15,6 +15,8 @@
 #include "ShapeLine.h"
 #include "ColorVec3.h"
 
+#include "SceneManager.h"
+
 // =============== 定数定義 =======================
 const float DEFAULT_CHASE_START_DIST	= 10.0f;		// 追跡開始距離
 const float LIMIT_DIST_SQ_TO_PLYR		= 1.0f * 1.0f;	// 移動先に到達する距離の2乗
@@ -67,6 +69,10 @@ void ComponentEnemyMoveChase::Init()
 ========================================= */
 void ComponentEnemyMoveChase::Update()
 {
+	// ゲームプレイ中でなければ何もしない
+	if (!SceneManager::GetPlayGameFlg()) return;
+
+	// 開始座標、開始回転を1度だけ設定する(セーブ関係)
 	if (!m_bIsStartPos)
 	{
 		m_vStartPos = m_pCompTransform->GetPosition();

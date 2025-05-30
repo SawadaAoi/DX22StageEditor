@@ -14,6 +14,7 @@
 #include "CameraManager.h"
 #include "ModelAnimeManager.h"
 #include "LightManager.h"
+#include "SceneManager.h"
 
 /* ========================================
 	コンストラクタ関数
@@ -69,7 +70,8 @@ void ComponentModelAnime::Uninit()
 =========================================== */
 void ComponentModelAnime::Update()
 {
-	if (!m_pModel) return;
+	if (!SceneManager::GetPlayGameFlg())	return;	// ゲームプレイ中でない場合は更新しない
+	if (!m_pModel)							return;	// モデルがない場合は更新しない
 
 	m_pModel->Update(DELTA_TIME);	// アニメーション更新
 
@@ -130,7 +132,7 @@ void ComponentModelAnime::PlayAnime(int animeNo, bool loop, float speed)
 {
 	if (!m_pModel) return;
 	m_pModel->Play(animeNo, loop, speed);
-
+	m_pModel->Update(DELTA_TIME);			// 一度更新を行うことで、アニメーションの初期状態を反映させる
 }
 
 /* ========================================
@@ -147,6 +149,7 @@ void ComponentModelAnime::PlayAnimeBlend(int animeNo, float blendTime, bool loop
 {
 	if (!m_pModel) return;
 	m_pModel->PlayBlend(animeNo, blendTime, loop, speed);
+	m_pModel->Update(DELTA_TIME);			// 一度更新を行うことで、アニメーションの初期状態を反映させる
 }
 
 /* ========================================
@@ -164,6 +167,7 @@ void ComponentModelAnime::PlayAnimeParametric(int animeNo1, int animeNo2, float 
 	m_pModel->SetParametric(animeNo1, animeNo2);
 	m_pModel->SetParametricBlend(blendRate);
 	m_pModel->Play(ModelAnime::PARAMETRIC_ANIME, true);
+	m_pModel->Update(DELTA_TIME);			// 一度更新を行うことで、アニメーションの初期状態を反映させる
 }
 
 /* ========================================
@@ -184,6 +188,7 @@ void ComponentModelAnime::PlayAnimeParametricBlend(int animeNo1, int animeNo2, f
 	m_pModel->SetParametric(animeNo1, animeNo2);
 	m_pModel->SetParametricBlend(blendRate);
 	m_pModel->PlayBlend(ModelAnime::PARAMETRIC_ANIME, blendTime, loop, speed);
+	m_pModel->Update(DELTA_TIME);			// 一度更新を行うことで、アニメーションの初期状態を反映させる
 }
 
 /* ========================================

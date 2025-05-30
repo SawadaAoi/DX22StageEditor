@@ -18,6 +18,8 @@
 #include <format>
 #include "ColorVec3.h"
 
+#include "SceneManager.h"
+
 // =============== 定数定義 =======================
 const float DEFAULT_TARGET_SWITCH_TIME = 2.0f;			// 目的座標切り替え時間
 const float DEFAULT_MOVE_RECT_SIZE = 5.0f;			// 移動範囲のサイズ
@@ -82,6 +84,9 @@ void ComponentEnemyMoveRandom::Init()
 ======================================= */
 void ComponentEnemyMoveRandom::Update()
 {
+
+	if (!SceneManager::GetPlayGameFlg()) return;
+
 #ifdef _DEBUG
 	if (m_bMoveStop) return;
 #endif // _DEBUG

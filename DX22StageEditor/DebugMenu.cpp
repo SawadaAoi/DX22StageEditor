@@ -29,6 +29,8 @@ const char* FONT_FILE_PATH	= "Assets/Font/SmartFontUI.otf";
 const float	FONT_SIZE		= 10.0f;
 const int	LIST_WIDTH		= 200;
 
+const bool WINDOW_STATIC_FLG = false;
+
 // =============== 名前空間 ===================
 namespace DebugUI {
 
@@ -227,8 +229,10 @@ void Menu::Draw()
 		if (windowIt->enable)
 		{
 			// ウィンドウ内の描画開始-------------------------------------
-			//ImGui::Begin(windowIt->name.c_str());
-			ImGui::Begin(windowIt->name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);	// 大きさ、位置固定
+			if(WINDOW_STATIC_FLG)			
+				ImGui::Begin(windowIt->name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);	// 大きさ、位置固定
+			else
+				ImGui::Begin(windowIt->name.c_str());
 			// アイテムごとに描画
 			auto itemIt = windowIt->items.begin();
 			while (itemIt != windowIt->items.end())

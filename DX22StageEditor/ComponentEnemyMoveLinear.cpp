@@ -15,6 +15,8 @@
 #include "ShapeLine.h"
 #include "ColorVec3.h"
 
+#include "SceneManager.h"
+
 // =============== 定数定義 =======================
 const float LIMIT_DISTANCE_SQ = 0.35f * 0.35f;	// 移動先に到達する距離の2乗
 
@@ -59,21 +61,9 @@ void ComponentEnemyMoveLinear::Init()
 ========================================= */
 void ComponentEnemyMoveLinear::Update()
 {
-	// 移動座標が1つ以下の場合は処理を行わない
-	if (m_vtWayPoints.size() <= 1)
-	{
-		return;
-	}
-
-	// 逆順フラグが立っている場合は逆順に移動
-	if (m_bIsReverse)
-		ReverseMove();
-	else
-		Move();
-
-
+	// 移動ラインの更新
 	if (m_bDispMoveLine)
-	{	// 移動ラインの更新
+	{	
 		for (int i = 0; i < m_vtWayPoints.size(); i++)
 		{
 			int nNextIndex = (i + 1) % m_vtWayPoints.size();	// 最後の座標の場合は最初の座標に戻る
@@ -82,6 +72,16 @@ void ComponentEnemyMoveLinear::Update()
 			m_pMoveLine->UpdateLine(i + 1, vStart, vEnd, ColorVec3::BLUE);
 		}
 	}
+
+
+	if (!SceneManager::GetPlayGameFlg())	return;	// ゲームプレイ中でない場合は更新しない
+	if (m_vtWayPoints.size() <= 1)			return;	// 移動座標が1つ以下の場合は処理を行わない
+
+	// 逆順フラグが立っている場合は逆順に移動
+	if (m_bIsReverse)
+		ReverseMove();
+	else
+		Move();
 
 }
 

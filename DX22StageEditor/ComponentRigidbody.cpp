@@ -16,6 +16,7 @@
 #include "ComponentCollisionSphere.h"
 #include "ObjectBase.h"
 #include "SceneBase.h"
+#include "SceneManager.h"
 
 
 // =============== 定数定義 =======================
@@ -69,6 +70,8 @@ void ComponentRigidbody::Init()
 ========================================= */
 void ComponentRigidbody::Update()
 {
+	if (!SceneManager::GetPlayGameFlg()) return;
+
 	// 重力を使用する場合は重力を加算
 	if (m_bUseGravity)
 	{
@@ -107,10 +110,6 @@ void ComponentRigidbody::Update()
 	{
 		m_pCompGroundRay = m_pOwnerObj->GetComponent<ComponentGroundRaycast>();
 	}
-
-
-	//DebugConsole::Printf("Velocity: %f, %f, %f", m_vVelocity.x, m_vVelocity.y, m_vVelocity.z);
-	//DebugConsole::Printf("HitFlg: %d", m_pGroundRaycast->GetHitFlg());
 
 #ifdef _DEBUG
 	// 加速度表示用(毎フレームリセットされるので別変数に保存)

@@ -15,14 +15,15 @@
 
 // =============== 定数定義 =======================
 // ウィンドウ呼び出し用マクロ
-#define WIN_BASIC_SETTING	DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::BASIC_SETTINGS])
-#define WIN_CAMERA_INFO		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::CAMERA_INFO])
-#define WIN_SCENE_LIST		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::SCENE_LIST])
-#define WIN_OBJ_LIST		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::OBJECT_LIST])
-#define WIN_OBJ_INFO		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::OBJECT_INFO])
-#define WIN_DATA_INOUT		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::DATA_INOUT])
-#define WIN_OBJ_TYPE_LIST	DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::OBJECT_TYPE_LIST])
-#define WIN_TRANSFORM_EDIT	DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::TRANSFORM_EDIT])
+#define WIN_BASIC_SETTING		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::BASIC_SETTINGS])
+#define WIN_CAMERA_INFO			DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::CAMERA_INFO])
+#define WIN_SCENE_LIST			DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::SCENE_LIST])
+#define WIN_OBJ_LIST			DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::OBJECT_LIST])
+#define WIN_OBJ_INFO			DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::OBJECT_INFO])
+#define WIN_DATA_INOUT			DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::DATA_INOUT])
+#define WIN_OBJ_TYPE_LIST		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::OBJECT_TYPE_LIST])
+#define WIN_TRANSFORM_EDIT		DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::TRANSFORM_EDIT])
+#define WIN_PLAY_STOP_BUTTON	DebugUI::Menu::Get(DebugUI::WIN_NAME[DebugUI::E_WinType::PLAY_STOP_BUTTON])
 
 // アイテム呼び出し用マクロ
 const std::string ITEM_OBJ_LIST_NAME = "Objects";
@@ -58,6 +59,7 @@ namespace DebugUI
 		DATA_INOUT,			// データ入出力
 		OBJECT_TYPE_LIST,	// オブジェクトタイプ一覧
 		TRANSFORM_EDIT,		// オブジェクト変形エディタ
+		PLAY_STOP_BUTTON,	// 再生停止ボタン
 		MAX,
 	};
 
@@ -72,6 +74,7 @@ namespace DebugUI
 	void InitDataInOut();
 	void InitObjectTypeList();
 	void InitTransformEdit();
+	void InitPlayStopButton();
 
 	void ClickObjectTypeList(const void* arg);
 	void CreateObjectTypeList();

@@ -14,6 +14,7 @@
 #include <format>
 #include "ShapeLine.h"
 #include "ColorVec3.h"
+#include "SceneManager.h"
 
 // =============== 定数定義 =======================
 const float LIMIT_DISTANCE_SQ = 0.01f * 0.01f;	// 移動先に到達する距離の2乗
@@ -28,7 +29,6 @@ const float LIMIT_DISTANCE_SQ = 0.01f * 0.01f;	// 移動先に到達する距離の2乗
 ComponentGimmickMoveLinear::ComponentGimmickMoveLinear(ObjectBase* pOwner)
 	: ComponentBase(pOwner, OrderGimmick)
 	, m_pCompTransform(nullptr)
-	//, m_pCompRigidbody(nullptr)
 	, m_fMoveSpeed(0.1f)
 	, m_vtWayPoints()
 	, m_nCurrentWayPoint(0)
@@ -61,11 +61,11 @@ void ComponentGimmickMoveLinear::Init()
 ========================================= */
 void ComponentGimmickMoveLinear::Update()
 {
+
+	if (!SceneManager::GetPlayGameFlg()) return;
+
 	// 移動座標が1つ以下の場合は処理を行わない
-	if (m_vtWayPoints.size() <= 1)
-	{
-		return;
-	}
+	if (m_vtWayPoints.size() <= 1)	 return;
 
 	// 逆順フラグが立っている場合は逆順に移動
 	if (m_bIsReverse)

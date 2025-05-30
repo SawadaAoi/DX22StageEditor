@@ -40,6 +40,7 @@ namespace DebugUI
 		"DataInOut",
 		"ObjectTypeList",
 		"TransformEdit",
+		"PlayStopButton"
 	};
 
 
@@ -62,7 +63,7 @@ namespace DebugUI
 		InitSceneList();
 		InitObjectTypeList();
 		InitTransformEdit();
-
+		InitPlayStopButton();
 
 	}
 
@@ -292,6 +293,37 @@ namespace DebugUI
 		WIN_TRANSFORM_EDIT["ValuePos"].SetFloat(1.0f);
 		WIN_TRANSFORM_EDIT["ValueRot"].SetFloat(10.0f);
 		WIN_TRANSFORM_EDIT["ValueScale"].SetFloat(1.0f);
+	}
+
+
+	/* ========================================
+		ウィンドウ初期化(ゲーム再生停止)関数
+		-------------------------------------
+		内容：ゲーム再生停止の初期化を行う
+	=========================================== */
+	void InitPlayStopButton()
+	{
+		// 再生、停止ボタン
+		WIN_PLAY_STOP_BUTTON.AddItem(Item::CreateCallBack("PLAY/STOP", Item::Kind::Command, [](bool isWrite, void* arg)
+		{
+			if (SceneManager::GetPlayGameFlg())
+			{
+				SceneManager::StopGame();	// 再生中なら停止
+				WIN_PLAY_STOP_BUTTON["Mode"].SetText("Stop");
+			}
+			else
+			{
+				SceneManager::PlayGame();	// 停止中なら再生
+				WIN_PLAY_STOP_BUTTON["Mode"].SetText("Play");
+			}
+
+		}, false));
+
+		// 編集モード表示
+		WIN_PLAY_STOP_BUTTON.AddItem(Item::CreateValue("Mode", Item::Kind::Text, false, true));
+
+
+		WIN_PLAY_STOP_BUTTON["Mode"].SetText("Stop");
 	}
 
 	/* ========================================
