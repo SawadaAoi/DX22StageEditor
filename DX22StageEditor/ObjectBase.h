@@ -123,6 +123,7 @@ public:
 	T_LightParam GetLightMaterial() const;				// ライトパラメータの取得
 	bool GetIsSave() const;								// セーブするかどうかの取得
 	bool GetIsFold() const;								// オブジェクト一覧折りたたみフラグの取得
+	bool GetIsOutLine() const;							// アウトライン描画フラグの取得
 
 	// セッター
 	void SetState(E_State eState);		// 状態の設定
@@ -132,7 +133,7 @@ public:
 	void SetLightUse(bool bUse);		// ライト使用の設定
 	void SetIsSave(bool bIsSave);		// セーブするかどうかの設定
 	void SetIsFold(bool bIsFold);		// オブジェクト一覧折りたたみフラグの設定
-
+	void SetIsOutLine(bool bIsOutLine);	// アウトライン描画フラグの設定
 
 	// コンポーネント関連
 	template<typename T>
@@ -185,6 +186,8 @@ protected:
 	bool m_bIsDestroy;			// オブジェクト破棄フラグ(true:破棄, false:未破棄)
 	float m_fDestroyTime;		// 破棄時間
 	float m_fDestroyTimeCnt;	// 破棄時間カウント
+
+	bool m_bIsOutLine;	// アウトライン描画フラグ(true:描画する, false:描画しない)
 };
 
 #include "ObjectBase.inl"

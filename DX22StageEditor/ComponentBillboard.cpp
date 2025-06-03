@@ -32,6 +32,8 @@ ComponentBillboard::ComponentBillboard(ObjectBase* pOwner)
 	, m_pTexture(nullptr)
 	, m_pVS(nullptr)
 	, m_pPS(nullptr)
+	, m_pOutLineVS(nullptr)
+	, m_pOutLinePS(nullptr)
 	, m_vPosOffset(0.0f, 0.0f, 0.0f)
 	, m_vUvPos(0.0f, 0.0f)
 	, m_vUvScale(1.0f, 1.0f)
@@ -53,6 +55,9 @@ void ComponentBillboard::Init()
 	m_pTexture		= GET_TEXTURE_DATA(TEX_KEY::TEST);	// デフォルトテクスチャ
 	m_pVS			= GET_VS_DATA(VS_KEY::VS_SPRITE);
 	m_pPS			= GET_PS_DATA(PS_KEY::PS_SPRITE);
+	m_pOutLineVS = GET_VS_DATA(VS_KEY::VS_OUTLINE_SPRITE);
+	m_pOutLinePS = GET_PS_DATA(PS_KEY::PS_OUTLINE_SPRITE);
+
 }
 
 /* ========================================
@@ -62,6 +67,13 @@ void ComponentBillboard::Init()
 =========================================== */
 void ComponentBillboard::Draw()
 {
+	// 所有オブジェクトのアウトラインフラグが立っている場合はアウトラインを描画
+	if (m_pOwnerObj->GetIsOutLine())
+	{
+		DrawOutLine();
+	}
+
+
 	DirectX::XMFLOAT4X4 matWVP[3];
 	// ワールド行列
 	matWVP[0] = CreateWorldMatrix();
@@ -89,6 +101,7 @@ void ComponentBillboard::Draw()
 
 	// メッシュ描画
 	m_pMesh->Draw();
+
 }
 
 
@@ -141,6 +154,50 @@ DirectX::XMFLOAT4X4 ComponentBillboard::CreateWorldMatrix()
 		));
 
 	return mat;
+}
+
+/* ========================================
+	アウトライン描画関数
+	-------------------------------------
+	内容：アウトラインを描画する
+=========================================== */
+void ComponentBillboard::DrawOutLine()
+{
+	DirectXManager::SetDepthTest(DirectXManager::DepthState::DEPTH_DISABLE);	// 深度テストを無効化(前後関係を無視して描画するため)
+
+	DirectX::XMFLOAT4X4 matWVP[3];
+	// ワールド行列
+	matWVP[0] = CreateWorldMatrix();
+	// ビュー行列
+	matWVP[1] = CAMERA_MNG_INST.GetActiveCamera()->GetViewMatrix();
+	// プロジェクション行列
+	matWVP[2] = CAMERA_MNG_INST.GetActiveCamera()->GetProjectionMatrix();
+
+
+	Vector3<float> vScale = m_pCompTran->GetScale();
+	// 頂点シェーダに渡すパラメータ
+	DirectX::XMFLOAT4 param[3];
+	param[0] = { 0.0f, 0.0f, vScale.x, vScale.y };		// オフセット、スケール
+	param[1] = { m_vUvPos.x, m_vUvPos.y, m_vUvScale.x, m_vUvScale.y };	// UV座標、UVスケール
+	param[2] = { m_vColor.x, m_vColor.y, m_vColor.z, m_fAlpha };		// 色、透明度
+
+	Vector3<float> fCamPos = CAMERA_MNG_INST.GetActiveCamera()->GetTransform()->GetPosition();
+
+	//頂点シェーダ
+	m_pOutLineVS->WriteBuffer(0, matWVP);
+	m_pOutLineVS->WriteBuffer(1, param);
+	m_pOutLineVS->WriteBuffer(2, &fCamPos);	// オフセットを追加
+	m_pOutLineVS->Bind();
+
+	// ピクセルシェーダ
+	m_pOutLinePS->SetTexture(0, m_pTexture);
+	m_pOutLinePS->Bind();
+
+	// メッシュ描画
+	m_pMesh->Draw();
+
+
+	DirectXManager::SetDepthTest(DirectXManager::DepthState::DEPTH_ENABLE_WRITE_TEST);	// 深度テストを有効化
 }
 
 

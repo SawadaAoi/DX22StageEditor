@@ -378,6 +378,7 @@ std::string SceneBase::CreateUniqueName(std::string sName)
 
 }
 
+
 /* ========================================
 	名前重複チェック関数
 	-------------------------------------
@@ -563,6 +564,9 @@ void SceneBase::InitObjectList()
 		std::string sObjName = reinterpret_cast<const char*>(arg);
 		m_nObjectListSelectNo = ITEM_OBJ_LIST.GetListNo(sObjName.c_str());	// 選択番号を取得
 
+		// 選択中のオブジェクトが存在する場合
+		if (m_pSelectObj)	OffOutLineObject(m_pSelectObj);	// 以前選択中のオブジェクトのアウトラインを無効化
+
 		InitObjectInfo(sObjName);
 	};
 
@@ -607,14 +611,18 @@ void SceneBase::InitObjectInfo(std::string sName)
 		{
 			// オブジェクト情報を表示
 			pObject->Debug();
-			m_pSelectObj = pObject.get();	// 選択中のオブジェクトを保持
+
+			m_pSelectObj = pObject.get();		// 選択中のオブジェクトを保持
 
 			bool bIsFold = pObject->GetIsFold() ? false : true;
 			pObject->SetIsFold(bIsFold);	// 折りたたみ状態を変更
+			OnOutLineObject(pObject.get());	// 選択中のオブジェクトのアウトラインを有効化
 
 			break;
 		}
 	}
+
+
 }
 
 /* ========================================
@@ -837,6 +845,58 @@ void SceneBase::RemoveAllObject()
 		pObject->Destroy();	// オブジェクト削除
 	}
 
+}
+
+/* ========================================
+	アウトラインオブジェクト有効化関数
+	-------------------------------------
+	内容：アウトラインオブジェクトを有効化する
+		　※選択中のオブジェクトを配列の最後に移動する
+	-------------------------------------
+	引数：ObjectBase* アウトラインを有効化するオブジェクトポインタ
+=========================================== */
+void SceneBase::OnOutLineObject(ObjectBase* pObject)
+{
+	pObject->SetIsOutLine(true);	// アウトラインを有効化
+
+	// 自身の子オブジェクトもアウトラインを有効化
+	for (auto& pChild : pObject->GetChildObjects())
+	{
+		OnOutLineObject(pChild);	// 自身の子を辿ってアウトラインを有効化
+	}
+	
+	// 選択オブジェクトを配列の1番後ろに移動
+	// ※選択オブジェクトのアウトラインが他のオブジェクトに隠れないようにするため
+	// 親子関係がある場合は、一番上の親オブジェクトが最後になる
+	auto it = std::find_if(m_pObjects.begin(), m_pObjects.end(),
+		[this, pObject](const std::unique_ptr<ObjectBase>& obj) { return obj.get() == pObject; });
+
+	if (it != m_pObjects.end())
+	{
+		// 選択中のオブジェクトを配列の最後に移動
+		// ※std::rotateを使用して、it+1が先頭になるように回転
+		// 例：itが0番目の場合、it+1は1番目、m_pObjects.end()は最後の要素
+		//     0, 1, 2, 3 → 1, 2, 3, 0
+		std::rotate(it, it + 1, m_pObjects.end());
+	}
+}
+
+/* ========================================
+	アウトラインオブジェクト無効化関数
+	-------------------------------------
+	内容：アウトラインオブジェクトを無効化する
+	-------------------------------------
+	引数：ObjectBase* アウトラインを無効化するオブジェクトポインタ
+=========================================== */
+void SceneBase::OffOutLineObject(ObjectBase* pObject)
+{
+	pObject->SetIsOutLine(false);	// アウトラインを無効化
+
+	// 自身の子オブジェクトもアウトラインを無効化
+	for (auto& pChild : pObject->GetChildObjects())
+	{
+		OffOutLineObject(pChild);	// 子オブジェクトのアウトラインを無効化
+	}
 }
 
 #endif

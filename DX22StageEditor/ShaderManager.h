@@ -30,21 +30,27 @@ public:
 	// 頂点シェーダー種類
 	enum E_VS_KEY
 	{
-		VS_SHAPE,				// 図形描画用
-		VS_LINE,				// ライン描画用
-		VS_SPRITE,				// スプライト描画用
-		VS_MODEL_STATIC,	// 静的モデル用デフォルト
-		VS_MODEL_ANIME,		// アニメーションモデル用デフォルト
+		VS_SHAPE,					// 図形描画用
+		VS_LINE,					// ライン描画用
+		VS_SPRITE,					// スプライト描画用
+		VS_MODEL_STATIC,			// 静的モデル用デフォルト
+		VS_MODEL_ANIME,				// アニメーションモデル用デフォルト
+		VS_OUTLINE,					// アウトライン描画用
+		VS_OUTLINE_MODEL_ANIME,		// アニメーションモデル用アウトライン描画用
+		VS_OUTLINE_MODEL_STATIC,	// 静的モデル用アウトライン描画用
+		VS_OUTLINE_SPRITE,			// スプライト用アウトライン描画用
 	};
 
 	// ピクセルシェーダー種類
 	enum E_PS_KEY
 	{
-		PS_SHAPE,				// 図形描画用
-		PS_LINE,				// ライン描画用
-		PS_SPRITE,				// スプライト描画用
+		PS_SHAPE,			// 図形描画用
+		PS_LINE,			// ライン描画用
+		PS_SPRITE,			// スプライト描画用
 		PS_MODEL_STATIC,	// 静的モデル用デフォルト
 		PS_MODEL_ANIME,		// アニメーションモデル用デフォルト
+		PS_OUTLINE,			// アウトライン描画用
+		PS_OUTLINE_SPRITE,	// スプライト用アウトライン描画用
 	};
 
 public:

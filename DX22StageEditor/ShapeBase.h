@@ -45,6 +45,7 @@ public:
 	virtual void Draw();
 	virtual void MakeMesh() = 0;	// 図形作成
  
+	virtual void DrawOutLine();	// アウトライン描画
 
 	// ゲッター
 	Vector3<float>	GetPosition();
@@ -89,6 +90,9 @@ protected:
 
 	VertexShader*	m_pVS;			// 頂点シェーダ
 	PixelShader*	m_pPS;			// ピクセルシェーダ
+
+	VertexShader*	m_pOutLineVS;			// 頂点シェーダ(アウトライン用)
+	PixelShader*	m_pOutLinePS;			// ピクセルシェーダ(アウトライン用)
 
 	Vector3<float>	m_vPosition;	// 座標
 	Quaternion		m_qRotation;	// 回転(クォータニオン)

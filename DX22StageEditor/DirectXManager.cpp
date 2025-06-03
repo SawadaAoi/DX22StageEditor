@@ -469,7 +469,7 @@ HRESULT DirectXManager::InitDepthStencilState()
 	
 	for (int i = 0; i < DepthState::DEPTH_MAX; i++)
 	{
-		dsDesc.DepthWriteMask		= DEPTH_MASK_PATTERN[i].first;		// 深度書き込みマスク設定
+		dsDesc.DepthWriteMask		= DEPTH_MASK_PATTERN[i].first;	// 深度書き込みマスク設定
 		dsDesc.DepthEnable			= DEPTH_MASK_PATTERN[i].second;	// 深度テスト有効
 		dsDesc.StencilEnable		= DEPTH_MASK_PATTERN[i].second;	// ステンシルテスト有効
 

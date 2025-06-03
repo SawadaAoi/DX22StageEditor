@@ -44,6 +44,9 @@ ShapeBase::ShapeBase()
 	// ピクセルシェーダー読み込み
 	m_pPS = GET_PS_DATA(PS_KEY::PS_SHAPE);
 
+	m_pOutLineVS = GET_VS_DATA(VS_KEY::VS_OUTLINE);	// アウトライン用頂点シェーダー読み込み
+	m_pOutLinePS = GET_PS_DATA(PS_KEY::PS_OUTLINE);	// アウトライン用ピクセルシェーダー読み込み
+
 	m_pTextures.resize(1);
 	m_fUvScale.resize(1);
 	m_fUvOffset.resize(1);
@@ -100,6 +103,27 @@ void ShapeBase::Draw()
 	m_pMeshBuffer[m_eDrawMode]->Draw();	
 	// カリングを元に戻す
 	DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_BACK);	// カリング有効
+}
+
+/* ========================================
+	アウトライン描画関数
+	-------------------------------------
+	内容：アウトライン描画処理
+=========================================== */
+void ShapeBase::DrawOutLine()
+{
+	DirectXManager::SetDepthTest(DirectXManager::DepthState::DEPTH_DISABLE);	// 深度テストを無効化(前後関係を無視して描画するため)
+	DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_FRONT);		// 表面を表示しない
+
+	SetWVPMatrix();							// WVP行列の設定
+	m_pOutLineVS->WriteBuffer(0, m_WVP);	// 定数バッファの更新
+	m_pOutLinePS->SetTexture(0, m_pTextures[0]);	// テクスチャの設定
+	m_pOutLineVS->Bind();
+	m_pOutLinePS->Bind();
+	m_pMeshBuffer[m_eDrawMode]->Draw();		// アウトライン描画
+
+	DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_BACK);				// カリングを戻す
+	DirectXManager::SetDepthTest(DirectXManager::DepthState::DEPTH_ENABLE_WRITE_TEST);	// 深度テストを有効化
 }
 
 
@@ -335,6 +359,8 @@ void ShapeBase::SetLightMaterial(float fDiffuse, float fSpecular, float fAmbient
 void ShapeBase::SetCameraPos(Vector3<float> fCameraPos)
 {
 	m_pPS->WriteBuffer(3, &fCameraPos);
+
+	m_pOutLineVS->WriteBuffer(1, &fCameraPos);	// アウトライン用頂点シェーダーにもカメラ座標をセット
 }
 
 /* ========================================

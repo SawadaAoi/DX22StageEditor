@@ -225,6 +225,12 @@
     <Filter Include="ソース ファイル\App\GameObject\StageObject\Gimmick\JumpPad">
       <UniqueIdentifier>{397b1ce9-1d87-4a52-b964-3adfd9357875}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\VertexShader\OutLine">
+      <UniqueIdentifier>{11d22b5f-7bb2-4ec3-86d5-16c0cda7b51e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\OutLine">
+      <UniqueIdentifier>{8c1c4af9-d65c-44bc-9935-1530444de396}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppController.cpp">
@@ -980,6 +986,24 @@
     </FxCompile>
     <FxCompile Include="VS_Shape.hlsl">
       <Filter>リソース ファイル\VertexShader\Shape</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_OutLine.hlsl">
+      <Filter>リソース ファイル\VertexShader\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_OutLine.hlsl">
+      <Filter>リソース ファイル\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_OutLineModelAnime.hlsl">
+      <Filter>リソース ファイル\VertexShader\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_OutLineSprite.hlsl">
+      <Filter>リソース ファイル\VertexShader\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_OutLineSprite.hlsl">
+      <Filter>リソース ファイル\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_OutLineModelStatic.hlsl">
+      <Filter>リソース ファイル\VertexShader\OutLine</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -57,6 +57,8 @@ public:
 protected:
 	void InitMesh();
 	DirectX::XMFLOAT4X4 CreateWorldMatrix();
+
+	void DrawOutLine();
 protected:
 	ComponentTransform*			m_pCompTran;	// トランスフォームコンポーネント
 	Texture*					m_pTexture;		// テクスチャ
@@ -64,6 +66,9 @@ protected:
 
 	VertexShader*		m_pVS;		// 頂点シェーダ
 	PixelShader*		m_pPS;		// ピクセルシェーダ
+
+	VertexShader*		m_pOutLineVS;			// 頂点シェーダ(アウトライン用)
+	PixelShader*		m_pOutLinePS;			// ピクセルシェーダ(アウトライン用)
 
 	Vector3<float>		m_vPosOffset;	// オフセット
 

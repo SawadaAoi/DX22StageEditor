@@ -17,6 +17,8 @@
 #include "LightManager.h"
 #include "CameraManager.h"
 
+#include "SceneManager.h"
+
 
 // =============== 定数定義 =======================
 const int MAX_TEXTURE_NUM	= 6;	// テクスチャ最大数
@@ -129,7 +131,13 @@ void ComponentGeometry::Draw()
 		ObjectBase::T_LightParam lightParam = m_pOwnerObj->GetLightMaterial();
 		m_pShape->SetLightMaterial(lightParam.fDiffuse, lightParam.fSpecular, lightParam.fAmbient, lightParam.bLightUse);					// ライトパラメー
 		m_pShape->SetLights(LIGHT_MNG_INST.GetLightList());	// ライト設定
-		m_pShape->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetPosition());	// カメラ位置設定
+		m_pShape->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetTransform()->GetPosition());	// カメラ位置設定
+
+		// オブジェクト一覧で選択された場合はアウトライン描画を行う
+		if (m_pOwnerObj->GetIsOutLine())
+		{
+			m_pShape->DrawOutLine();
+		}
 
 		m_pShape->Draw();
 	}

@@ -68,6 +68,8 @@ public:
 	~ModelStatic();
 
 	void Draw();
+	void DrawOutLine();				// アウトライン描画
+
 	void Reset();
 	bool Load(const char* file, float scale = 1.0f, E_Flip flip = E_Flip::None);
 
@@ -103,6 +105,9 @@ private:
 	Materials				m_MaterialList;
 	VertexShader*			m_pVS;
 	PixelShader*			m_pPS;
+
+	VertexShader*			m_pOutLineVS;	// アウトライン用頂点シェーダー
+	PixelShader*			m_pOutLinePS;	// アウトライン用ピクセルシェーダー
 
 };
 

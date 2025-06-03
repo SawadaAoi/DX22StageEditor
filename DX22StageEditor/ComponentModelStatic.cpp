@@ -65,6 +65,12 @@ void ComponentModelStatic::Draw()
 	m_pModel->SetLights(LIGHT_MNG_INST.GetLightList());																	// ライト設定
 	m_pModel->SetCameraPos(CAMERA_MNG_INST.GetActiveCamera()->GetComponent<ComponentTransform>()->GetPosition());	// カメラ位置設定
 
+	// オブジェクト一覧で選択された場合はアウトライン描画を行う
+	if (m_pOwnerObj->GetIsOutLine())
+	{
+		m_pModel->DrawOutLine();
+	}
+
 	m_pModel->Draw();
 
 }

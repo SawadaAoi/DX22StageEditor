@@ -43,6 +43,7 @@ ObjectBase::ObjectBase(SceneBase* pScene)
 	, m_bIsDestroy(false)				// オブジェクト破棄フラグをfalseに設定
 	, m_fDestroyTime(0.0f)				// 破棄時間を0に設定
 	, m_fDestroyTimeCnt(0.0f)			// 破棄時間カウントを0に設定
+	, m_bIsOutLine(false)				// アウトライン描画フラグをfalseに設定
 {
 	// 所有者オブジェクトがnullptrの場合はエラーを出力
 	if (pScene == nullptr)
@@ -596,6 +597,16 @@ bool ObjectBase::GetIsFold() const
 }
 
 /* ========================================
+	ゲッター(アウトライン描画フラグ)関数
+	-------------------------------------
+	戻値：アウトライン描画フラグ
+=========================================== */
+bool ObjectBase::GetIsOutLine() const
+{
+	return m_bIsOutLine;
+}
+
+/* ========================================
 	セッター(状態)関数
 	-------------------------------------
 	引数1：状態
@@ -667,6 +678,16 @@ void ObjectBase::SetIsSave(bool bIsSave)
 void ObjectBase::SetIsFold(bool bIsFold)
 {
 	m_bIsFold = bIsFold;
+}
+
+/* ========================================
+	セッター(アウトライン描画フラグ)関数
+	-------------------------------------
+	引数1：アウトライン描画フラグ
+=========================================== */
+void ObjectBase::SetIsOutLine(bool bIsOutLine)
+{
+	m_bIsOutLine = bIsOutLine;
 }
 
 

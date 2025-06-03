@@ -65,9 +65,11 @@ ModelAnime::ModelAnime()
 	, m_nBoneCnt(0)
 #endif // _DEBUG
 {
-
 	m_pVS = GET_VS_DATA(VS_KEY::VS_MODEL_ANIME);
 	m_pPS = GET_PS_DATA(PS_KEY::PS_MODEL_ANIME);
+
+	m_pOutLineVS = GET_VS_DATA(VS_KEY::VS_OUTLINE_MODEL_ANIME);
+	m_pOutLinePS = GET_PS_DATA(PS_KEY::PS_OUTLINE);
 }
 
 
@@ -114,6 +116,8 @@ ModelAnime::ModelAnime(const ModelAnime& other)
 	this->m_AnimeList				= other.m_AnimeList;
 	this->m_pVS						= other.m_pVS;
 	this->m_pPS						= other.m_pPS;
+	this->m_pOutLineVS				= other.m_pOutLineVS;
+	this->m_pOutLinePS				= other.m_pOutLinePS;
 	this->m_nActiveNo				= other.m_nActiveNo;
 	this->m_nBlendNo				= other.m_nBlendNo;
 	this->m_nParametricAnimeNos[0]	= other.m_nParametricAnimeNos[0];
@@ -274,6 +278,57 @@ void ModelAnime::Draw(const std::vector<UINT>* order)
 		m_MeshList[meshNo].pMesh->Draw();
 	}
 
+}
+
+
+/* ========================================
+	アウトライン描画関数
+	-------------------------------------
+	内容：アウトライン描画
+=========================================== */
+void ModelAnime::DrawOutLine()
+{
+	DirectXManager::SetDepthTest(DirectXManager::DepthState::DEPTH_DISABLE);	// 深度テストを無効化(前後関係を無視して描画するため)
+	DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_FRONT);		// 表面を表示しない
+
+	if (m_pOutLinePS == nullptr || m_pOutLineVS == nullptr) { return; }
+
+	// 描画数設定
+	size_t drawNum = m_MeshList.size();
+
+	// 描画
+	for (UINT i = 0; i < drawNum; ++i)
+	{
+		// メッシュ番号
+		UINT meshNo = i;
+
+		// 描画コールバック
+		const T_Mesh* pMesh = this->GetMesh(meshNo);
+		if (!pMesh) { continue; }
+
+		const T_Material& pMaterial = *this->GetMaterial(pMesh->materialID);
+
+		m_pOutLinePS->SetTexture(0, pMaterial.pTexture);	// テクスチャセット
+		m_pOutLinePS->Bind();
+
+		// ボーン行列をアウトライン用のシェーダーにセット
+		DirectX::XMFLOAT4X4 bones[200];
+		for (int i = 0; i < pMesh->bones.size() && i < 200; ++i)
+		{
+			// この計算はゲームつくろー「スキンメッシュの仕組み」が参考になる
+			DirectX::XMStoreFloat4x4(&bones[i], DirectX::XMMatrixTranspose(
+				pMesh->bones[i].invOffset *
+				this->GetBone(pMesh->bones[i].index)
+			));
+		}
+		m_pOutLineVS->WriteBuffer(2, bones);	// アウトライン用のシェーダーにボーン行列をセット
+
+		m_pOutLineVS->Bind();
+
+		m_MeshList[meshNo].pMesh->Draw();
+	}
+	DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_BACK);				// カリングを戻す
+	DirectXManager::SetDepthTest(DirectXManager::DepthState::DEPTH_ENABLE_WRITE_TEST);	// 深度テストを有効化
 }
 
 /* ========================================
@@ -532,6 +587,8 @@ void ModelAnime::SetPixelShader(PixelShader* ps)
 void ModelAnime::SetWVPMatrix(const DirectX::XMFLOAT4X4* matWVP)
 {
 	m_pVS->WriteBuffer(0, matWVP);
+	// アウトライン用のシェーダーにもセット
+	m_pOutLineVS->WriteBuffer(0, matWVP);
 }
 
 
@@ -561,6 +618,8 @@ void ModelAnime::SetLightMaterial(float fDiffuse, float fSpecular, float fAmbien
 void ModelAnime::SetCameraPos(Vector3<float> fCameraPos)
 {
 	m_pPS->WriteBuffer(1, &fCameraPos);
+	// アウトライン用のシェーダーにもセット
+	m_pOutLineVS->WriteBuffer(1, &fCameraPos);
 }
 
 /* ========================================

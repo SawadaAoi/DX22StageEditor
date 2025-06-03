@@ -21,6 +21,8 @@ public:
 	~ShapePlane() {};
 
 	void MakeMesh() override;
+
+	void DrawOutLine() override;
 	
 private:
 	void MakeMeshNormal();

@@ -29,7 +29,7 @@ const char* FONT_FILE_PATH	= "Assets/Font/SmartFontUI.otf";
 const float	FONT_SIZE		= 10.0f;
 const int	LIST_WIDTH		= 200;
 
-const bool WINDOW_STATIC_FLG = false;
+const bool WINDOW_STATIC_FLG = true;
 
 // =============== –¼‘O‹óŠÔ ===================
 namespace DebugUI {

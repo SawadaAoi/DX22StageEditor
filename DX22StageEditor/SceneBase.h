@@ -97,6 +97,9 @@ private:
 
 	void RemoveAllObject();	// 全オブジェクト削除ボタン用
 
+	void OnOutLineObject(ObjectBase* pObject);	// アウトラインオブジェクトの設定
+	void OffOutLineObject(ObjectBase* pObject);	// アウトラインオブジェクトの解除
+
 #endif // _DEBUG
 protected:
 	std::vector<std::unique_ptr<ObjectBase>>	m_pObjects;			// シーンに所属するオブジェクト一覧

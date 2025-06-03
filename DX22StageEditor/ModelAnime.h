@@ -158,6 +158,7 @@ public:
 	ModelAnime(const ModelAnime& other);
 	void Update(float tick);					// アニメーション更新
 	void Draw(const std::vector<UINT>* order = nullptr);
+	void DrawOutLine();				// アウトライン描画
 
 	void Reset();
 	bool Load(const char* file, float scale = 1.0f, E_Flip flip = E_Flip::None);
@@ -242,6 +243,9 @@ private:
 	Animations		m_AnimeList;		// アニメ配列
 	VertexShader*	m_pVS;			// 設定中の頂点シェーダ
 	PixelShader*	m_pPS;			// 設定中のピクセルシェーダ
+
+	VertexShader*	m_pOutLineVS;			// 頂点シェーダ(アウトライン用)
+	PixelShader*	m_pOutLinePS;			// ピクセルシェーダ(アウトライン用)
 
 	AnimeNo			m_nActiveNo;			// 現在再生中のアニメ番号
 	AnimeNo			m_nBlendNo;				// ブレンド再生を行うアニメ番号

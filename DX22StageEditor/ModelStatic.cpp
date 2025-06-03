@@ -53,6 +53,8 @@ ModelStatic::ModelStatic()
 {
 	m_pVS = GET_VS_DATA(VS_KEY::VS_MODEL_STATIC);
 	m_pPS = GET_PS_DATA(PS_KEY::PS_MODEL_STATIC);
+	m_pOutLineVS = GET_VS_DATA(VS_KEY::VS_OUTLINE_MODEL_STATIC);
+	m_pOutLinePS = GET_PS_DATA(PS_KEY::PS_OUTLINE);
 }
 
 /* ========================================
@@ -82,6 +84,31 @@ void ModelStatic::Draw()
 
 		m_MeshList[i].pMesh->Draw();
 	}
+}
+
+/* ========================================
+	アウトライン描画関数
+	-------------------------------------
+	内容：アウトライン描画
+============================================ */
+void ModelStatic::DrawOutLine()
+{
+	DirectXManager::SetDepthTest(DirectXManager::DepthState::DEPTH_DISABLE);	// 深度テストを無効化(前後関係を無視して描画するため)
+	DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_FRONT);		// 表面を表示しない
+
+	if (m_pOutLinePS == nullptr || m_pOutLineVS == nullptr) { return; }
+
+	for (unsigned int i = 0; i < m_MeshList.size(); ++i)
+	{
+		m_pOutLinePS->SetTexture(0, m_MaterialList[m_MeshList[i].materialID].pTexture);
+		m_pOutLinePS->Bind();
+		m_pOutLineVS->Bind();
+
+		m_MeshList[i].pMesh->Draw();
+	}
+
+	DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_BACK);				// カリングを戻す
+	DirectXManager::SetDepthTest(DirectXManager::DepthState::DEPTH_ENABLE_WRITE_TEST);	// 深度テストを有効化
 }
 
 /* ========================================
@@ -220,6 +247,8 @@ void ModelStatic::SetPixelShader(PixelShader* ps)
 void ModelStatic::SetWVPMatrix(const DirectX::XMFLOAT4X4* matWVP)
 {
 	m_pVS->WriteBuffer(0, matWVP);
+	// アウトライン用のシェーダーにもセット
+	m_pOutLineVS->WriteBuffer(0, matWVP);
 }
 
 /* ========================================
@@ -248,6 +277,8 @@ void ModelStatic::SetLightMaterial(float fDiffuse, float fSpecular, float fAmbie
 void ModelStatic::SetCameraPos(Vector3<float> fCameraPos)
 {
 	m_pPS->WriteBuffer(1, &fCameraPos);
+	// アウトライン用のシェーダーにもセット
+	m_pOutLineVS->WriteBuffer(1, &fCameraPos);
 }
 
 /* ========================================

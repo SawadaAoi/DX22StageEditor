@@ -14,11 +14,15 @@
 // 頂点シェーダー保存先パス
 const std::unordered_map < CShaderManagaer::E_VS_KEY, std::string > VS_SHADER_PATH
 {
-	{VS_KEY::VS_SHAPE,			"Assets/shader/VS_Shape.cso"		},
-	{VS_KEY::VS_LINE,			"Assets/shader/VS_Line.cso"			},
-	{VS_KEY::VS_SPRITE,			"Assets/shader/VS_Sprite.cso"		},
-	{VS_KEY::VS_MODEL_STATIC,	"Assets/shader/VS_ModelStatic.cso"	},
-	{VS_KEY::VS_MODEL_ANIME,	"Assets/shader/VS_ModelAnime.cso"	},
+	{VS_KEY::VS_SHAPE,					"Assets/shader/VS_Shape.cso"				},
+	{VS_KEY::VS_LINE,					"Assets/shader/VS_Line.cso"					},
+	{VS_KEY::VS_SPRITE,					"Assets/shader/VS_Sprite.cso"				},
+	{VS_KEY::VS_MODEL_STATIC,			"Assets/shader/VS_ModelStatic.cso"			},
+	{VS_KEY::VS_MODEL_ANIME,			"Assets/shader/VS_ModelAnime.cso"			},
+	{VS_KEY::VS_OUTLINE,				"Assets/shader/VS_Outline.cso"				},
+	{VS_KEY::VS_OUTLINE_MODEL_ANIME,	"Assets/shader/VS_OutlineModelAnime.cso"	},
+	{VS_KEY::VS_OUTLINE_MODEL_STATIC,	"Assets/shader/VS_OutlineModelStatic.cso"	},
+	{VS_KEY::VS_OUTLINE_SPRITE,			"Assets/shader/VS_OutLineSprite.cso"		},
 };
 
 // ピクセルシェーダー保存先パス
@@ -29,6 +33,8 @@ const std::unordered_map < CShaderManagaer::E_PS_KEY, std::string > PS_SHADER_PA
 	{PS_KEY::PS_SPRITE,			"Assets/shader/PS_Sprite.cso"		},
 	{PS_KEY::PS_MODEL_STATIC,	"Assets/shader/PS_ModelStatic.cso"	},
 	{PS_KEY::PS_MODEL_ANIME,	"Assets/shader/PS_ModelAnime.cso"	},
+	{PS_KEY::PS_OUTLINE,		"Assets/shader/PS_Outline.cso"		},
+	{PS_KEY::PS_OUTLINE_SPRITE,	"Assets/shader/PS_OutLineSprite.cso"	},
 };
 
 

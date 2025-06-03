@@ -31,6 +31,28 @@ void ShapePlane::MakeMesh()
 }
 
 /* ========================================
+	アウトライン描画関数
+	-------------------------------------
+	内容：アウトラインを描画する
+		　板ポリゴンなのでカリングは変更しない
+=========================================== */
+void ShapePlane::DrawOutLine()
+{
+	DirectXManager::SetDepthTest(DirectXManager::DepthState::DEPTH_DISABLE);	// 深度テストを無効化(前後関係を無視して描画するため)
+	//DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_NONE);		// 表面を表示しない
+
+	SetWVPMatrix();							// WVP行列の設定
+	m_pOutLineVS->WriteBuffer(0, m_WVP);	// 定数バッファの更新
+	m_pOutLinePS->SetTexture(0, m_pTextures[0]);	// テクスチャの設定
+	m_pOutLineVS->Bind();
+	m_pOutLinePS->Bind();
+	m_pMeshBuffer[m_eDrawMode]->Draw();		// アウトライン描画
+
+	//DirectXManager::SetCullingMode(DirectXManager::CullMode::CULL_BACK);		// 表面を表示しない
+	DirectXManager::SetDepthTest(DirectXManager::DepthState::DEPTH_ENABLE_WRITE_TEST);	// 深度テストを有効化
+}
+
+/* ========================================
 	メッシュ作成(通常)関数
 	-------------------------------------
 	内容：メッシュを作成する(通常)
